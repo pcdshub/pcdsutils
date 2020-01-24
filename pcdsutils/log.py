@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import queue as queue_module
+import socket
 import sys
 
 import logging.handlers
@@ -43,6 +44,8 @@ _LOGGER_ALLOWED_KEYS = {
     'schema',
     'source',
     'versions',
+    'hostname',
+    'host_info',
 }
 
 _LOGGER_KEY_RENAMES = {
@@ -52,6 +55,7 @@ _LOGGER_KEY_RENAMES = {
     'threadName': 'thread_name',
 }
 
+_SYSTEM_UNAME_INFO = os.uname()
 _CURRENT_HANDLER = None
 
 
@@ -115,6 +119,12 @@ def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     ret['source'] = '{module}.{funcName}:{lineno}'.format(**ret)
     ret['versions'] = dict(_get_module_versions())
     ret['pathname'] = str(os.path.abspath(ret['pathname']))
+    ret['hostname'] = socket.gethostname()
+    ret['host_info'] = {'sysname': _SYSTEM_UNAME_INFO.sysname,
+                        'release': _SYSTEM_UNAME_INFO.release,
+                        'version': _SYSTEM_UNAME_INFO.version,
+                        'machine': _SYSTEM_UNAME_INFO.machine,
+                        }
 
     for from_, to in _LOGGER_KEY_RENAMES.items():
         ret[to] = ret.pop(from_)
