@@ -2,6 +2,7 @@ import json
 import logging
 import socket
 import threading
+import pprint
 import queue
 
 import pytest
@@ -17,6 +18,7 @@ LOGGER = pcdsutils.log.logger
 @pytest.fixture
 def udp_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 
 @pytest.fixture
 def udp_log_listener(udp_socket):
@@ -46,7 +48,8 @@ def udp_listening_port(udp_socket):
     return udp_socket.getsockname()[1]
 
 
-def test_log_warning_udp(udp_listening_port: int, udp_log_listener: queue.Queue):
+def test_log_warning_udp(udp_listening_port: int,
+                         udp_log_listener: queue.Queue):
     pcdsutils.log.configure_pcds_logging(log_host='127.0.0.1',
                                          log_port=udp_listening_port,
                                          protocol='udp')
@@ -54,11 +57,12 @@ def test_log_warning_udp(udp_listening_port: int, udp_log_listener: queue.Queue)
     LOGGER.warning('test1')
     msg, addr = udp_log_listener.get()
     log_dict = json.loads(msg)
-    print('log', log_dict)
+    pprint.pprint(log_dict)
     assert log_dict['msg'] == 'test1'
 
 
-def test_log_exception_udp(udp_listening_port: int, udp_log_listener: queue.Queue):
+def test_log_exception_udp(udp_listening_port: int,
+                           udp_log_listener: queue.Queue):
     pcdsutils.log.configure_pcds_logging(log_host='127.0.0.1',
                                          log_port=udp_listening_port,
                                          protocol='udp')
@@ -69,7 +73,7 @@ def test_log_exception_udp(udp_listening_port: int, udp_log_listener: queue.Queu
 
     msg, addr = udp_log_listener.get()
     log_dict = json.loads(msg)
-    print('log', log_dict)
+    pprint.pprint(log_dict)
 
     assert log_dict['msg'] == 'test2'
     assert 'testabcd' in log_dict['exc_text']
