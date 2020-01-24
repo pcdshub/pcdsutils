@@ -6,8 +6,7 @@ sudo: false
 env: 
    global:
       - OFFICIAL_REPO="pcdshub/pcdsutils"
-      
-      - secure: ""
+      - secure: "DsaNbsliWLcxAIb+FnRvw6zA1qE9FUkSq3rN4oTp4ioCu67/q6La6LCbusI1cu5swt0F2mfD+MiCF1/3vkUqEz7bgu330ndFfeouzSnDhdr5/NlTb798XIYQz6RmXNwy9hz0Eu7LisJZtOAR4hnqt4V1Cj1rx42IzBPvKlts/Rp92h1APARKy00f5sPNBsUEAhnVeRpKEO9S5WVILJxdtE0dGnd9k/Uj6+hhlqYJ69S+BxQ4qiMiXOTcAj0HTkdj/6JZL5aTDLEfciecSWcCeSdDTkd2nBSLErgvZvQ1OEHaHgENkkld7IYeh56riTi77d/7EPTcKMTdQoia3isJYjXAZ7R1+OzsqOvNM1UfGpoxInfuzKFCgiLdYMHHe5IgTKSR3u7EzG641cGH2SosVOmH66x5Cri+cKB08tyZGuCUSky9WJmpuYt5ouHy5ChaaLwLjSEP70J+HJRPMKgL0cSi6A7QWx9SyKdIp063nJV7r5zuMPFQEcxWgIaCHZKTWcRyKT94k8KJEkkxmprdtKYYJGdeinXEcIY7cqd9FQdwH6NehkrOC/nrphyeKdTOaQaHQDxQzJwGInYw2aFTlxndqBVqpkjEViRqKNZ0wZBVVSlG2yo60RGEpiHd7kGwQ5daDRvOeHmD6wiQz5viK5e46zaF0scZ7hn6NEPC8QA="
       
 
 matrix: 
