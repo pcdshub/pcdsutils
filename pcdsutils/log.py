@@ -55,7 +55,13 @@ _LOGGER_KEY_RENAMES = {
     'threadName': 'thread_name',
 }
 
-_SYSTEM_UNAME_INFO = os.uname()
+_SYSTEM_UNAME_DICT = {
+    'sysname': os.uname().sysname,
+    'release': os.uname().release,
+    'version': os.uname().version,
+    'machine': os.uname().machine,
+}
+
 _CURRENT_HANDLER = None
 
 
@@ -95,6 +101,11 @@ def _get_module_versions():
             yield name, version
 
 
+def _get_module_version_dict():
+    'Returns module version dictionary: {module_name: module_version}'
+    return dict(_get_module_versions())
+
+
 def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     '''
     Create a PCDS logging-compliant dictionary from a given logging.LogRecord
@@ -116,15 +127,20 @@ def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     ret = dict(record if isinstance(record, dict) else vars(record))
 
     ret['schema'] = f'python-event-{_LOGGER_SCHEMA_VERSION}'
-    ret['source'] = '{module}.{funcName}:{lineno}'.format(**ret)
-    ret['versions'] = dict(_get_module_versions())
-    ret['pathname'] = str(os.path.abspath(ret['pathname']))
-    ret['hostname'] = socket.gethostname()
-    ret['host_info'] = {'sysname': _SYSTEM_UNAME_INFO.sysname,
-                        'release': _SYSTEM_UNAME_INFO.release,
-                        'version': _SYSTEM_UNAME_INFO.version,
-                        'machine': _SYSTEM_UNAME_INFO.machine,
-                        }
+
+    def failsafe_call(func, *args, value_on_failure=None, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as ex:
+            if value_on_failure is None:
+                return f'FAILURE: {type(ex).__name__}: {ex}'
+            return value_on_failure
+
+    ret['source'] = failsafe_call('{module}.{funcName}:{lineno}'.format, **ret)
+    ret['versions'] = failsafe_call(_get_module_version_dict)
+    ret['pathname'] = str(failsafe_call(os.path.abspath, ret['pathname']))
+    ret['hostname'] = failsafe_call(socket.gethostname)
+    ret['host_info'] = _SYSTEM_UNAME_DICT
 
     for from_, to in _LOGGER_KEY_RENAMES.items():
         ret[to] = ret.pop(from_)
