@@ -1,0 +1,126 @@
+language: python
+dist: xenial
+sudo: false
+
+
+env: 
+   global:
+      - OFFICIAL_REPO="pcdshub/pcdsutils"
+      
+      - secure: ""
+      
+
+matrix: 
+  fast_finish: true
+  include:
+    - name: Style checking
+      python: 3.6
+      env: LINT_PYTHON=pcdsutils
+    - name: Python 3.6 Unit Tests
+      python: 3.6
+      env:
+        - UNIT_TEST=1
+        - UPLOAD=1
+    - name: Python 3.7 Unit Tests
+      python: 3.7
+      env: UNIT_TEST=1
+    - name: Python 3.8 Unit Tests
+      python: 3.8
+      env: UNIT_TEST=1
+    - name: Build Docs
+      python: 3.6
+      env: BUILD_DOCS=1
+  allow_failures:
+    - name: Python 3.8 Unit Tests
+      python: 3.8
+      env: UNIT_TEST=1
+
+
+install:
+  # Import the helper scripts
+  - git clone --depth 1 git://github.com/pcdshub/pcds-ci-helpers.git
+  # Start the helper-script initialization + run based on environment variables
+  - source pcds-ci-helpers/travis/init.sh
+
+  # Install and configure miniconda
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - source $HOME/miniconda/etc/profile.d/conda.sh
+  - conda activate base
+  - conda config --set always_yes yes --set changeps1 no
+
+  # Ensure all packages are up-to-date
+  - conda update -q conda
+  - conda install conda-build
+  - conda config --append channels pcds-tag
+  - conda config --append channels conda-forge
+  - conda info -a
+
+  # Test conda build and create test environment
+  - |
+    if [[ $UNIT_TEST || $BUILD_DOCS ]]; then
+      echo "Building full environment"
+      set -e
+      conda build -q conda-recipe --python $TRAVIS_PYTHON_VERSION --output-folder bld-dir
+      conda config --add channels "file://`pwd`/bld-dir"
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pcdsutils --file dev-requirements.txt
+      set +e
+    fi
+
+  - conda activate test-environment
+  # Install any additional development requirements
+  - pip install -Ur dev-requirements.txt
+  # Install the package itself
+  - pip install -e .
+
+
+
+script:
+  - |
+    if [[ $UNIT_TEST ]]; then
+      echo "Running tests"
+      coverage run run_tests.py
+    fi
+  - |
+    if [[ $UNIT_TEST ]]; then
+      coverage report -m
+    fi
+  
+  - |
+    if [[ -n "$DOCTR_DEPLOY_ENCRYPTION_KEY_PCDSHUB_PCDSUTILS" && $BUILD_DOCS ]]; then
+      # Create HTML documentation  
+      set -e
+      pushd docs
+      make html
+      popd
+      #Publish docs.
+      doctr deploy . --built-docs docs/build/html --deploy-branch-name gh-pages --command "touch .nojekyll; git add .nojekyll"
+      set +e
+    fi
+   
+
+after_success:
+  - |
+    if [[ $UPLOAD ]]; then
+      pip install codecov
+      echo "Uploading to codecov"
+      codecov
+    fi
+  - |
+    if [[ $UPLOAD && $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == $OFFICIAL_REPO && $TRAVIS_BRANCH == $TRAVIS_TAG  && $TRAVIS_TAG != '' && $CONDA_UPLOAD_TOKEN_TAG != '' ]]; then
+      echo "Installing anaconda-client"
+      conda activate base
+      conda install anaconda-client
+      echo "Uploading to pcds-tag channel"
+      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN_TAG
+      anaconda upload bld-dir/noarch/*.tar.bz2
+    fi
+  - |
+    if [[ $UPLOAD && $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == $OFFICIAL_REPO && $TRAVIS_BRANCH == 'master' && $TRAVIS_TAG == '' && $CONDA_UPLOAD_TOKEN_DEV != '' ]]; then
+      echo "Installing anaconda-client"
+      conda activate base
+      conda install anaconda-client
+      echo "Uploading to pcds-dev channel"
+      export ANACONDA_API_TOKEN=$CONDA_UPLOAD_TOKEN_DEV
+      anaconda upload bld-dir/noarch/*.tar.bz2
+    fi
