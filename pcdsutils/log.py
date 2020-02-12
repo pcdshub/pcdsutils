@@ -98,7 +98,7 @@ def _get_module_versions():
                 version = fix_version(module.__version__)
             except Exception:
                 version = repr(module.__version__)
-            yield name, version
+            yield name.replace('.', '_'), version
 
 
 def _get_module_version_dict():
