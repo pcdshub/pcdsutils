@@ -68,7 +68,7 @@ _CURRENT_HANDLER = None
 class _PassthroughStreamHandler(logging.handlers.SocketHandler):
     def makePickle(self, record):
         'Overrides super().makePickle'
-        return record.encode('utf-8')
+        return record.encode('utf-8') + b'\n'
 
 
 class _PassthroughDatagramHandler(logging.handlers.DatagramHandler):
