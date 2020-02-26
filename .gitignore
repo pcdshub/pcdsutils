@@ -1,3 +1,5 @@
+#PyCharm file
+.idea
 # Ignore the cache dir
 cache/*
 
