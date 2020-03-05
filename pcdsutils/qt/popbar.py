@@ -307,10 +307,18 @@ class QPopBarOverlay(QtWidgets.QFrame):
         else:
             self.activate()
 
+    def _get_optimal_width(self):
+        remaining_window_width = self.window().width() - self.bar.width()
+        hinted_widget_width = self.widget.sizeHint().width() \
+                              or self._DEFAULT_WIDTH
+        end_width = min(hinted_widget_width, remaining_window_width)
+        return end_width
+
     def _animate(self, closing=False, duration=100):
         bh = self.bar.height()
         start_value = QtCore.QSize(0, bh)
-        end_width = self._DEFAULT_WIDTH
+
+        end_width = self._get_optimal_width()
         end_value = QtCore.QSize(end_width, bh)
         if closing:
             start_value = QtCore.QSize(self.width(), bh)
