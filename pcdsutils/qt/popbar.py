@@ -128,13 +128,12 @@ class QPopBar(QtWidgets.QFrame):
             self.overlay.toggle_active()
         elif event.type() == QtCore.QEvent.MouseButtonDblClick:
             logger.debug('Double-clicked PopBar')
+            self._debounce_timer.stop()
             pin = not self._pinned
-            if pin:
-                self._debounce_timer.stop()
-                self.overlay.toggle_active()
-
             self.overlay.pin_check.setChecked(pin)
-            # self.pin(pin)
+            if not pin:
+                self.overlay.deactivate(force=True, animate=False)
+
         elif event.type() == QtCore.QEvent.HoverEnter and \
                 not self.overlay.is_active():
             self._debounce_timer.start()
@@ -258,7 +257,9 @@ class QPopBarOverlay(QtWidgets.QFrame):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.HoverLeave:
             QtCore.QTimer.singleShot(500,
-                                     functools.partial(self.deactivate, True))
+                                     functools.partial(self.deactivate,
+                                                       hover_leave=True)
+                                     )
             return True
 
         return False
@@ -286,18 +287,19 @@ class QPopBarOverlay(QtWidgets.QFrame):
         duration = 100 if animate else 0
         self._animate(duration=duration)
 
-    def deactivate(self, hover_leave=False):
+    def deactivate(self, hover_leave=False, force=False, animate=True):
         logger.debug('Overlay - deactivate')
-        if self._pinned:
+        if self._pinned and not force:
             logger.debug('Overlay - deactivate abort - pinned')
             return
-        if hover_leave and (self.underMouse() or self.bar.underMouse()):
+        if hover_leave and (self.underMouse() or self.bar.underMouse()) and not force:
             logger.debug('Overlay - deactivate abort - mouse at overlay/bar')
             return
-        if self.underMouse():
+        if self.underMouse() and not force:
             logger.debug('Overlay - deactivate abort - mouse at overlay')
             return
-        self._animate(closing=True)
+        duration = 100 if animate else 0
+        self._animate(closing=True, duration=duration)
 
     def toggle_active(self):
         if self.is_active():
