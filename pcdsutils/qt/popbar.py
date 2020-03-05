@@ -84,6 +84,7 @@ class QPopBar(QtWidgets.QFrame):
         self._debounce_timer.setInterval(300)
         self._debounce_timer.timeout.connect(self.overlay.activate)
 
+        self._pinned = False
         self.pin(pinned=False)
 
     def _label_resized(self):
@@ -101,6 +102,8 @@ class QPopBar(QtWidgets.QFrame):
         pinned : bool
             Wether or not to pin the toolbar
         """
+        self._pinned = bool(pinned)
+
         if pinned:
             self.setMouseTracking(False)
             self.overlay.setMouseTracking(False)
@@ -123,6 +126,15 @@ class QPopBar(QtWidgets.QFrame):
             logger.debug('Mouse Press at PopBar')
             self._debounce_timer.stop()
             self.overlay.toggle_active()
+        elif event.type() == QtCore.QEvent.MouseButtonDblClick:
+            logger.debug('Double-clicked PopBar')
+            pin = not self._pinned
+            if pin:
+                self._debounce_timer.stop()
+                self.overlay.toggle_active()
+
+            self.overlay.pin_check.setChecked(pin)
+            # self.pin(pin)
         elif event.type() == QtCore.QEvent.HoverEnter and \
                 not self.overlay.is_active():
             self._debounce_timer.start()
