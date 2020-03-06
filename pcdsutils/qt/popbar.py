@@ -19,13 +19,26 @@ class QVerticalLabel(QtWidgets.QLabel):
                            QtWidgets.QSizePolicy.Minimum)
         self.setAlignment(QtCore.Qt.AlignCenter)
 
-    def setText(self, text):
-        vert_text = os.linesep.join(text)
-        super().setText(vert_text)
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+
+        hint = self.sizeHint()
+        center_shift = (self.height() - hint.height()) / 2.0
+        painter.translate(hint.width(), hint.height() + center_shift)
+        painter.rotate(270)
+        painter.drawText(0, 0, self.text())
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.resized.emit()
+
+    def minimumSizeHint(self):
+        hint = super().minimumSizeHint()
+        return QtCore.QSize(hint.height(), hint.width())
+
+    def sizeHint(self):
+        hint = super().sizeHint()
+        return QtCore.QSize(hint.height(), hint.width())
 
 
 class QPopBar(QtWidgets.QFrame):
@@ -34,22 +47,22 @@ class QPopBar(QtWidgets.QFrame):
 
     Parameters
     ----------
-    title : str
+    title : str, optional
         The title to be used
-    widget : QWidget
+    widget : QWidget, optional
         The widget that will be displayed
+    pin : bool, optional
+        Pin the toolbar at the start
     """
-    def __init__(self, parent=None, title="Pop Bar", widget=None,
+    def __init__(self, parent=None, title="Pop Bar", widget=None, pin=False,
                  *args, **kwargs):
         super(QPopBar, self).__init__(parent=parent, *args, **kwargs)
         self._title = title
         self._label_font = None
-        self._setup()
-        self.font = QtWidgets.QApplication.font()
-        if widget:
-            self.setWidget(widget)
+        self._pin_at_startup = pin
+        self._setup(widget=widget)
 
-    def _setup(self):
+    def _setup(self, widget=None):
         self.installEventFilter(self)
         self.setAttribute(QtCore.Qt.WA_Hover)
 
@@ -73,6 +86,9 @@ class QPopBar(QtWidgets.QFrame):
         self.title_label.setText(self._title)
         self.title_label.setMouseTracking(False)
         self.title_label.resized.connect(self._label_resized)
+
+        # Property which sets the title label font:
+        self.font = QtWidgets.QApplication.font()
         self.bar_frame.layout().addWidget(self.title_label)
 
         self.layout().addWidget(self.bar_frame)
@@ -84,7 +100,15 @@ class QPopBar(QtWidgets.QFrame):
         self._debounce_timer.setInterval(300)
         self._debounce_timer.timeout.connect(self.overlay.activate)
 
+        self._pinned = False
         self.pin(pinned=False)
+
+        if widget is not None:
+            self.setWidget(widget)
+
+            if self._pin_at_startup:
+                self.overlay.activate(force=True, animate=False)
+                self.overlay.pin_check.setChecked(self._pin_at_startup)
 
     def _label_resized(self):
         w = self.title_label.width() + 10
@@ -101,28 +125,36 @@ class QPopBar(QtWidgets.QFrame):
         pinned : bool
             Wether or not to pin the toolbar
         """
+        self._pinned = bool(pinned)
+
+        mouse_tracking = not pinned
+        self.setMouseTracking(mouse_tracking)
+        self.overlay.setMouseTracking(mouse_tracking)
+
         if pinned:
-            self.setMouseTracking(False)
-            self.overlay.setMouseTracking(False)
-            self.resize(self.width() + self.overlay.width(),
-                        self.height())
+            self.resize(self.width() + self.overlay.width(), self.height())
             self.layout().addWidget(self.overlay)
             self.overlay.setParent(self)
-            self.update()
         else:
-            self.setMouseTracking(True)
-            self.overlay.setMouseTracking(True)
             self.layout().removeWidget(self.overlay)
             self.overlay.setParent(self.parent())
-            self.resize(self.bar_frame.width(),
-                        self.height())
-            self.update()
+            self.resize(self.bar_frame.width(), self.height())
+
+        self.update()
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.MouseButtonPress:
             logger.debug('Mouse Press at PopBar')
             self._debounce_timer.stop()
             self.overlay.toggle_active()
+        elif event.type() == QtCore.QEvent.MouseButtonDblClick:
+            logger.debug('Double-clicked PopBar')
+            self._debounce_timer.stop()
+            pin = not self._pinned
+            self.overlay.pin_check.setChecked(pin)
+            if not pin:
+                self.overlay.deactivate(force=True, animate=False)
+
         elif event.type() == QtCore.QEvent.HoverEnter and \
                 not self.overlay.is_active():
             self._debounce_timer.start()
@@ -190,7 +222,12 @@ class QPopBar(QtWidgets.QFrame):
         ----------
         widget: QWidget
         """
+        pin = self.overlay.widget is None and self._pin_at_startup
         self.overlay.widget = widget
+
+        if pin:
+            self.overlay.activate(force=True, animate=False)
+            self.overlay.pin_check.setChecked(self._pin_at_startup)
 
 
 class QPopBarOverlay(QtWidgets.QFrame):
@@ -246,7 +283,9 @@ class QPopBarOverlay(QtWidgets.QFrame):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.HoverLeave:
             QtCore.QTimer.singleShot(500,
-                                     functools.partial(self.deactivate, True))
+                                     functools.partial(self.deactivate,
+                                                       hover_leave=True)
+                                     )
             return True
 
         return False
@@ -274,18 +313,19 @@ class QPopBarOverlay(QtWidgets.QFrame):
         duration = 100 if animate else 0
         self._animate(duration=duration)
 
-    def deactivate(self, hover_leave=False):
+    def deactivate(self, hover_leave=False, force=False, animate=True):
         logger.debug('Overlay - deactivate')
-        if self._pinned:
+        if self._pinned and not force:
             logger.debug('Overlay - deactivate abort - pinned')
             return
-        if hover_leave and (self.underMouse() or self.bar.underMouse()):
+        if hover_leave and (self.underMouse() or self.bar.underMouse()) and not force:
             logger.debug('Overlay - deactivate abort - mouse at overlay/bar')
             return
-        if self.underMouse():
+        if self.underMouse() and not force:
             logger.debug('Overlay - deactivate abort - mouse at overlay')
             return
-        self._animate(closing=True)
+        duration = 100 if animate else 0
+        self._animate(closing=True, duration=duration)
 
     def toggle_active(self):
         if self.is_active():
@@ -293,10 +333,18 @@ class QPopBarOverlay(QtWidgets.QFrame):
         else:
             self.activate()
 
+    def _get_optimal_width(self):
+        remaining_window_width = self.window().width() - self.bar.width()
+        hinted_widget_width = self.widget.sizeHint().width() \
+                              or self._DEFAULT_WIDTH
+        end_width = min(hinted_widget_width, remaining_window_width)
+        return end_width
+
     def _animate(self, closing=False, duration=100):
         bh = self.bar.height()
         start_value = QtCore.QSize(0, bh)
-        end_width = self._DEFAULT_WIDTH
+
+        end_width = self._get_optimal_width()
         end_value = QtCore.QSize(end_width, bh)
         if closing:
             start_value = QtCore.QSize(self.width(), bh)
