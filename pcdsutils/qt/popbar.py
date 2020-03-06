@@ -19,13 +19,26 @@ class QVerticalLabel(QtWidgets.QLabel):
                            QtWidgets.QSizePolicy.Minimum)
         self.setAlignment(QtCore.Qt.AlignCenter)
 
-    def setText(self, text):
-        vert_text = os.linesep.join(text)
-        super().setText(vert_text)
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+
+        hint = self.sizeHint()
+        center_shift = (self.height() - hint.height()) / 2.0
+        painter.translate(hint.width(), hint.height() + center_shift)
+        painter.rotate(270)
+        painter.drawText(0, 0, self.text())
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.resized.emit()
+
+    def minimumSizeHint(self):
+        hint = super().minimumSizeHint()
+        return QtCore.QSize(hint.height(), hint.width())
+
+    def sizeHint(self):
+        hint = super().sizeHint()
+        return QtCore.QSize(hint.height(), hint.width())
 
 
 class QPopBar(QtWidgets.QFrame):
