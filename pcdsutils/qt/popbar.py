@@ -114,22 +114,20 @@ class QPopBar(QtWidgets.QFrame):
         """
         self._pinned = bool(pinned)
 
+        mouse_tracking = not pinned
+        self.setMouseTracking(mouse_tracking)
+        self.overlay.setMouseTracking(mouse_tracking)
+
         if pinned:
-            self.setMouseTracking(False)
-            self.overlay.setMouseTracking(False)
-            self.resize(self.width() + self.overlay.width(),
-                        self.height())
+            self.resize(self.width() + self.overlay.width(), self.height())
             self.layout().addWidget(self.overlay)
             self.overlay.setParent(self)
-            self.update()
         else:
-            self.setMouseTracking(True)
-            self.overlay.setMouseTracking(True)
             self.layout().removeWidget(self.overlay)
             self.overlay.setParent(self.parent())
-            self.resize(self.bar_frame.width(),
-                        self.height())
-            self.update()
+            self.resize(self.bar_frame.width(), self.height())
+
+        self.update()
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.MouseButtonPress:
