@@ -34,22 +34,22 @@ class QPopBar(QtWidgets.QFrame):
 
     Parameters
     ----------
-    title : str
+    title : str, optional
         The title to be used
-    widget : QWidget
+    widget : QWidget, optional
         The widget that will be displayed
+    pin : bool, optional
+        Pin the toolbar at the start
     """
-    def __init__(self, parent=None, title="Pop Bar", widget=None,
+    def __init__(self, parent=None, title="Pop Bar", widget=None, pin=False,
                  *args, **kwargs):
         super(QPopBar, self).__init__(parent=parent, *args, **kwargs)
         self._title = title
         self._label_font = None
-        self._setup()
-        self.font = QtWidgets.QApplication.font()
-        if widget:
-            self.setWidget(widget)
+        self._pin_at_startup = pin
+        self._setup(widget=widget)
 
-    def _setup(self):
+    def _setup(self, widget=None):
         self.installEventFilter(self)
         self.setAttribute(QtCore.Qt.WA_Hover)
 
@@ -73,6 +73,9 @@ class QPopBar(QtWidgets.QFrame):
         self.title_label.setText(self._title)
         self.title_label.setMouseTracking(False)
         self.title_label.resized.connect(self._label_resized)
+
+        # Property which sets the title label font:
+        self.font = QtWidgets.QApplication.font()
         self.bar_frame.layout().addWidget(self.title_label)
 
         self.layout().addWidget(self.bar_frame)
@@ -86,6 +89,13 @@ class QPopBar(QtWidgets.QFrame):
 
         self._pinned = False
         self.pin(pinned=False)
+
+        if widget is not None:
+            self.setWidget(widget)
+
+            if self._pin_at_startup:
+                self.overlay.activate(force=True, animate=False)
+                self.overlay.pin_check.setChecked(self._pin_at_startup)
 
     def _label_resized(self):
         w = self.title_label.width() + 10
@@ -201,7 +211,12 @@ class QPopBar(QtWidgets.QFrame):
         ----------
         widget: QWidget
         """
+        pin = self.overlay.widget is None and self._pin_at_startup
         self.overlay.widget = widget
+
+        if pin:
+            self.overlay.activate(force=True, animate=False)
+            self.overlay.pin_check.setChecked(self._pin_at_startup)
 
 
 class QPopBarOverlay(QtWidgets.QFrame):

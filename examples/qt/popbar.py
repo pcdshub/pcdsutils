@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QWidget):
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
-        self.explorer_bar = QPopBar(self)
+        self.explorer_bar = QPopBar(self, pin=True)
         self.explorer_bar.title = "Devices"
 
         font = QtGui.QFont()
