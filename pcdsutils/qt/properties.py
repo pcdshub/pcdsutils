@@ -110,6 +110,15 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
     if condition is None:
         def condition(prop):
             return prop.isDesignable()
+    elif isinstance(condition, (tuple, set, list)):
+        allowed_names = condition
+
+        def condition(prop):
+            return prop.name() in allowed_names
+    else:
+        if not callable(condition):
+            raise ValueError(
+                'Condition must be callable and accept a Property argument')
 
     supercls_properties = set([
         prop.name()
