@@ -57,7 +57,7 @@ class ReadonlyPassthroughProperty(PassthroughProperty):
 
 
 def forward_properties(locals_dict, attr_name, cls, superclasses, *,
-                       prefix_attr='', condition=None, designable=True):
+                       prefix=None, condition=None, designable=True):
     '''
     Forward properties from a QObject attribute in a class given its name
 
@@ -75,8 +75,8 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
         The class type of the attribute
     superclasses : list
         The superclasses of the newly-defined class
-    prefix_attr : str, optional
-        Prefix the properties with this string
+    prefix : str, optional
+        Prefix the properties with this string. Defaults to ``'{attr_name}_'``
     condition : callable, optional
         Condition for inclusion of the property.  Defaults to
         checking ``isDesignable``
@@ -123,6 +123,8 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
         if prop.name() not in bad_names and condition(prop)
     }
 
+    prefix = prefix or f'{attr_name}_'
+
     passthrough_properties = {}
     for name, prop in properties.items():
         prop_cls = (PassthroughProperty
@@ -139,6 +141,6 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
             constant=prop.isConstant(),
             final=prop.isFinal(),
         )
-        passthrough_properties[prefix_attr + name] = passthru
+        passthrough_properties[prefix + name] = passthru
 
     return passthrough_properties
