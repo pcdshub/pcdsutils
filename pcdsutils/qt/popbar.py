@@ -1,6 +1,5 @@
 import functools
 import logging
-import os
 
 from qtpy import QtCore, QtGui, QtWidgets
 
@@ -315,15 +314,16 @@ class QPopBarOverlay(QtWidgets.QFrame):
 
     def deactivate(self, hover_leave=False, force=False, animate=True):
         logger.debug('Overlay - deactivate')
-        if self._pinned and not force:
-            logger.debug('Overlay - deactivate abort - pinned')
-            return
-        if hover_leave and (self.underMouse() or self.bar.underMouse()) and not force:
-            logger.debug('Overlay - deactivate abort - mouse at overlay/bar')
-            return
-        if self.underMouse() and not force:
-            logger.debug('Overlay - deactivate abort - mouse at overlay')
-            return
+        if not force:
+            if self._pinned:
+                logger.debug('Overlay deactivate abort: pinned')
+                return
+            if hover_leave and (self.underMouse() or self.bar.underMouse()):
+                logger.debug('Overlay deactivate abort: mouse at overlay/bar')
+                return
+            if self.underMouse():
+                logger.debug('Overlay deactivate abort: mouse at overlay')
+                return
         duration = 100 if animate else 0
         self._animate(closing=True, duration=duration)
 
@@ -335,8 +335,8 @@ class QPopBarOverlay(QtWidgets.QFrame):
 
     def _get_optimal_width(self):
         remaining_window_width = self.window().width() - self.bar.width()
-        hinted_widget_width = self.widget.sizeHint().width() \
-                              or self._DEFAULT_WIDTH
+        hinted_widget_width = (self.widget.sizeHint().width() or
+                               self._DEFAULT_WIDTH)
         end_width = min(hinted_widget_width, remaining_window_width)
         return end_width
 
