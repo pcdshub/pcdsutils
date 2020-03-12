@@ -125,14 +125,14 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
         for supercls in superclasses
         for prop in get_qt_properties(supercls)
     ])
+
+    prefix = prefix or f'{attr_name}_'
     bad_names = supercls_properties.union(set(locals_dict))
     properties = {
         prop.name(): prop
         for prop in get_qt_properties(cls)
-        if prop.name() not in bad_names and condition(prop)
+        if (prefix + prop.name()) not in bad_names and condition(prop)
     }
-
-    prefix = prefix or f'{attr_name}_'
 
     passthrough_properties = {}
     for name, prop in properties.items():
