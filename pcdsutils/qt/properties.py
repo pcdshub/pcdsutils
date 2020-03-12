@@ -116,8 +116,7 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
     properties = {
         prop.name(): prop
         for prop in get_qt_properties(cls)
-        if prop.isDesignable() and prop.name() not in bad_names and
-        condition(prop)
+        if prop.name() not in bad_names and condition(prop)
     }
 
     passthrough_properties = {}
