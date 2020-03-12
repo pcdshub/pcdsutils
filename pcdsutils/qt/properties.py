@@ -139,17 +139,20 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
         prop_cls = (PassthroughProperty
                     if prop.isWritable()
                     else ReadonlyPassthroughProperty)
-        passthru = prop_cls(
-            object_attr_name=attr_name,
-            property_name=name,
-            type_=prop.typeName(),
-            designable=designable,
-            scriptable=prop.isScriptable(),
-            stored=prop.isStored(),
-            user=prop.isUser(),
-            constant=prop.isConstant(),
-            final=prop.isFinal(),
-        )
-        passthrough_properties[prefix + name] = passthru
+        try:
+            passthrough_properties[prefix + name] = prop_cls(
+                object_attr_name=attr_name,
+                property_name=name,
+                type_=prop.typeName(),
+                designable=designable,
+                scriptable=prop.isScriptable(),
+                stored=prop.isStored(),
+                user=prop.isUser(),
+                constant=prop.isConstant(),
+                final=prop.isFinal(),
+            )
+        except TypeError as ex:
+            # Some types such as SizeConstraint are not supported in PyQt5
+            logger.debug('Unable to create %s', prop_cls.__name__, exc_info=ex)
 
     return passthrough_properties
