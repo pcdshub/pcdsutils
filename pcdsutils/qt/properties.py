@@ -52,6 +52,10 @@ class PassthroughProperty(QtCore.Property):
                 f'{self.object_attr_name} {self.type_}>')
 
 
+class ReadonlyPassthroughProperty(PassthroughProperty):
+    setter = None
+
+
 def forward_properties(locals_dict, attr_name, cls, superclasses, *,
                        prefix_attr='', condition=None, designable=True):
     '''
@@ -121,11 +125,19 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
 
     passthrough_properties = {}
     for name, prop in properties.items():
-        passthru = PassthroughProperty(
+        prop_cls = (PassthroughProperty
+                    if prop.isWritable()
+                    else ReadonlyPassthroughProperty)
+        passthru = prop_cls(
             object_attr_name=attr_name,
             property_name=name,
             type_=prop.typeName(),
             designable=designable,
+            scriptable=prop.isScriptable(),
+            stored=prop.isStored(),
+            user=prop.isUser(),
+            constant=prop.isConstant(),
+            final=prop.isFinal(),
         )
         passthrough_properties[prefix_attr + name] = passthru
 
