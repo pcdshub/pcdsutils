@@ -1,2 +1,2 @@
-coloredlogs
 versioneer
+qtpy
