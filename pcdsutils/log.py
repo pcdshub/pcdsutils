@@ -2,6 +2,7 @@ import copy
 import json
 import logging
 import os
+import platform
 import queue as queue_module
 import socket
 import sys
@@ -55,13 +56,7 @@ _LOGGER_KEY_RENAMES = {
     'threadName': 'thread_name',
 }
 
-_SYSTEM_UNAME_DICT = {
-    'sysname': os.uname().sysname,
-    'release': os.uname().release,
-    'version': os.uname().version,
-    'machine': os.uname().machine,
-}
-
+_SYSTEM_UNAME_DICT = dict(platform.uname()._asdict())
 _CURRENT_HANDLER = None
 
 
