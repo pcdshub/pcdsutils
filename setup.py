@@ -51,7 +51,7 @@ setup(
     url='https://github.com/pcdshub/pcdsutils',
     entry_points={
         'console_scripts': [
-            # 'some.module:some_function',
+            'requirements-from-conda=pcdsutils.requirements:_requirements_from_conda',
             ],
         },
     include_package_data=True,
