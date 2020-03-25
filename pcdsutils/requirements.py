@@ -33,6 +33,7 @@ def find_meta_yaml(repo_root):
 
 
 def find_conda_deps(repo_root):
+    'Get conda-recipe meta.yaml requirements as a dictionary from a repo'
     metayaml = find_meta_yaml(repo_root)
     with open(metayaml, 'rt') as f:
         text = f.read()
@@ -54,7 +55,8 @@ def find_conda_deps(repo_root):
 
 
 def get_pip_requirements(repo_root):
-    requirements = {}
+    'Get pip requirements from a repo'
+    requirements = {fn: [] for fn in PIP_REQUIREMENT_FILES}
     for filename, requirement_key in PIP_REQUIREMENT_FILES.items():
         req_file = repo_root / filename
         if req_file.exists():
@@ -68,10 +70,19 @@ def get_pip_requirements(repo_root):
 
 
 def get_dependency_name(dependency):
+    '''
+    Dependency line to dependency name
+
+    Example::
+
+        >>> print(get_dependency_name('python>=3.6'))
+        python
+    '''
     return RE_DEPENDENCY_NAME.match(dependency).groups()[0]
 
 
 def requirements_from_conda(repo_root, ignore_deps=None):
+    'Build pip-style requirements from conda-recipe meta.yaml'
     ignore_deps = ignore_deps or {'python', 'pip', 'setuptools'}
     requirements = find_conda_deps(repo_root)
     ret = {}
@@ -83,17 +94,22 @@ def requirements_from_conda(repo_root, ignore_deps=None):
     return ret
 
 
-def write_requirements(repo_root, conda_deps):
-    for req_file, conda_keys in PIP_REQUIREMENT_FILES.items():
-        deps_for_file = set()
-        for key in conda_keys:
-            for dep in conda_deps.get(key, []):
-                dep_name = get_dependency_name(dep)
-                if dep_name in CONDA_NAME_TO_PYPI_NAME:
-                    dep = dep.replace(dep_name,
-                                      CONDA_NAME_TO_PYPI_NAME[dep_name])
-                deps_for_file.add(dep)
+def _combine_conda_deps(deps, keys):
+    'Combine conda dependencies from multiple keys'
+    ret = set()
+    for key in keys:
+        for dep in deps.get(key, []):
+            dep_name = get_dependency_name(dep)
+            if dep_name in CONDA_NAME_TO_PYPI_NAME:
+                dep = dep.replace(dep_name, CONDA_NAME_TO_PYPI_NAME[dep_name])
+            ret.add(dep)
+    return ret
 
+
+def write_requirements(repo_root, conda_deps):
+    'Write pip requirements to the repository root from conda requirements'
+    for req_file, conda_keys in PIP_REQUIREMENT_FILES.items():
+        deps_for_file = _combine_conda_deps(conda_deps, conda_keys)
         if deps_for_file:
             logger.info('Writing requirements file in repo %s: %s', repo_root,
                         req_file)
@@ -103,17 +119,69 @@ def write_requirements(repo_root, conda_deps):
 
 
 def _requirements_from_conda():
-    logging.basicConfig()
+    '(Console entry-point)'
     parser = argparse.ArgumentParser()
     parser.description = 'Build requirements.txt files from conda meta.yaml'
-
-    parser.add_argument(
-        'REPO_ROOT',
-        type=str,
-        help='Repository root path',
-    )
+    parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
+    parser.add_argument('--verbose', '-v', type=str, help='Increase verbosity')
+    args = parser.parse_args()
+    logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
+                        format='%(message)s')
 
     args = parser.parse_args()
     repo_root = pathlib.Path(args.REPO_ROOT)
     conda_deps = requirements_from_conda(repo_root=repo_root)
     write_requirements(repo_root, conda_deps)
+
+
+def compare_requirements(conda_deps, pip_deps):
+    'Compare two lists of dependencies'
+    conda_deps = set(dep.replace(' ', '') for dep in conda_deps)
+    conda_deps_name = {get_dependency_name(dep): dep
+                       for dep in conda_deps
+                       }
+    pip_deps = set(pip_deps)
+    pip_deps_name = {get_dependency_name(dep): dep
+                     for dep in pip_deps
+                     }
+
+    missing_in_pip = set(conda_deps_name) - set(pip_deps_name)
+    missing_in_conda = set(pip_deps_name) - set(conda_deps_name)
+    version_mismatch = set(
+        dict(conda=conda_deps_name[dep], pip=pip_deps_name[dep])
+        for dep in conda_deps_name
+        if dep not in missing_in_pip
+        and conda_deps_name[dep] != pip_deps_name[dep]
+    )
+
+    return {
+        'missing_in_pip': missing_in_pip,
+        'missing_in_conda': missing_in_conda,
+        'version_mismatch': version_mismatch,
+    }
+
+
+def _compare_requirements():
+    '(Console entry-point)'
+    parser = argparse.ArgumentParser()
+    parser.description = 'Build requirements.txt files from conda meta.yaml'
+    parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
+    parser.add_argument('--verbose', '-v', type=str, help='Increase verbosity')
+    args = parser.parse_args()
+    logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
+                        format='%(message)s')
+
+    repo_root = pathlib.Path(args.REPO_ROOT)
+    conda_deps = requirements_from_conda(repo_root=repo_root)
+    pip_deps = get_pip_requirements(repo_root=repo_root)
+    for fn, conda_keys in PIP_REQUIREMENT_FILES.items():
+        logger.info('--- %s: %s ---', fn, '/'.join(conda_keys))
+        cdeps = _combine_conda_deps(conda_deps, conda_keys)
+        pdeps = pip_deps[fn]
+        for name, difference in compare_requirements(cdeps, pdeps).items():
+            if difference:
+                display_name = name.replace('_', ' ').capitalize()
+                logger.info('%s:', display_name)
+                for item in difference:
+                    logger.info('- %s', item)
+        logger.info('')
