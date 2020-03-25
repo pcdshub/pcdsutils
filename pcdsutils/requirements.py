@@ -116,33 +116,40 @@ def _combine_conda_deps(deps, keys):
     return ret
 
 
-def write_requirements(repo_root, conda_deps):
+def write_requirements(repo_root, conda_deps, *, dry_run=True):
     'Write pip requirements to the repository root from conda requirements'
     for req_file, conda_keys in PIP_REQUIREMENT_FILES.items():
         deps_for_file = _combine_conda_deps(conda_deps, conda_keys)
         if deps_for_file:
             logger.info('Writing requirements file in repo %s: %s', repo_root,
                         req_file)
-            with open(repo_root / req_file, 'wt') as f:
+
+            if dry_run:
+                logger.info('Dry-run mode. Write %s:', repo_root / req_file)
                 for dep in deps_for_file:
-                    print(dep, file=f)
+                    logger.info('%s', dep)
+            else:
+                with open(repo_root / req_file, 'wt') as f:
+                    for dep in deps_for_file:
+                        print(dep, file=f)
 
 
-def _requirements_from_conda():
+def _requirements_from_conda(args=None):
     '(Console entry-point)'
     parser = argparse.ArgumentParser()
     parser.description = 'Build requirements.txt files from conda meta.yaml'
     parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Increase verbosity')
-    args = parser.parse_args()
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Do not write the files')
+    args = parser.parse_args(args=args)
     logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
                         format='%(message)s')
 
-    args = parser.parse_args()
     repo_root = pathlib.Path(args.REPO_ROOT)
     conda_deps = requirements_from_conda(repo_root=repo_root)
-    write_requirements(repo_root, conda_deps)
+    write_requirements(repo_root, conda_deps, dry_run=args.dry_run)
 
 
 def compare_requirements(conda_deps, pip_deps):
@@ -175,14 +182,14 @@ def compare_requirements(conda_deps, pip_deps):
     }
 
 
-def _compare_requirements():
+def _compare_requirements(args=None):
     '(Console entry-point)'
     parser = argparse.ArgumentParser()
     parser.description = 'Build requirements.txt files from conda meta.yaml'
     parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Increase verbosity')
-    args = parser.parse_args()
+    args = parser.parse_args(args=args)
     logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
                         format='%(message)s')
 
