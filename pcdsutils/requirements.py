@@ -123,7 +123,8 @@ def _requirements_from_conda():
     parser = argparse.ArgumentParser()
     parser.description = 'Build requirements.txt files from conda meta.yaml'
     parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
-    parser.add_argument('--verbose', '-v', type=str, help='Increase verbosity')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='Increase verbosity')
     args = parser.parse_args()
     logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
                         format='%(message)s')
@@ -145,6 +146,8 @@ def compare_requirements(conda_deps, pip_deps):
                      for dep in pip_deps
                      }
 
+    logger.debug('Found conda deps: %s', list(sorted(set(conda_deps_name))))
+    logger.debug('Found pip deps: %s', list(sorted(set(pip_deps_name))))
     missing_in_pip = set(conda_deps_name) - set(pip_deps_name)
     missing_in_conda = set(pip_deps_name) - set(conda_deps_name)
     version_mismatch = set(
@@ -166,7 +169,8 @@ def _compare_requirements():
     parser = argparse.ArgumentParser()
     parser.description = 'Build requirements.txt files from conda meta.yaml'
     parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
-    parser.add_argument('--verbose', '-v', type=str, help='Increase verbosity')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='Increase verbosity')
     args = parser.parse_args()
     logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
                         format='%(message)s')
