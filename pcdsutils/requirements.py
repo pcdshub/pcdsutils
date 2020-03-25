@@ -61,10 +61,12 @@ def get_pip_requirements(repo_root):
         req_file = repo_root / filename
         if req_file.exists():
             with open(req_file, 'rt') as f:
-                requirements[requirement_key] = [
+                requirements[filename] = [
                     req.strip() for req in f.read().splitlines()
                     if req.strip()
                 ]
+            logger.debug('Found pip requirements file: %s with deps: %s',
+                         req_file, requirements[filename])
 
     return requirements
 
@@ -182,10 +184,11 @@ def _compare_requirements():
         logger.info('--- %s: %s ---', fn, '/'.join(conda_keys))
         cdeps = _combine_conda_deps(conda_deps, conda_keys)
         pdeps = pip_deps[fn]
+        logger.debug('Comparing dependencies. cdeps=%s pdeps=%s', cdeps, pdeps)
         for name, difference in compare_requirements(cdeps, pdeps).items():
             if difference:
                 display_name = name.replace('_', ' ').capitalize()
                 logger.info('%s:', display_name)
-                for item in difference:
+                for item in sorted(difference):
                     logger.info('- %s', item)
         logger.info('')
