@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 PIP_REQUIREMENT_FILES = {
     'requirements.txt': ('host', 'build', 'run'),
     'dev-requirements.txt': ('test', ),
-    # 'doc-requirements.txt': 'build',  # ?
+    # 'docs-requirements.txt': 'build',  # ?
 }
 
 RE_DEPENDENCY_NAME = re.compile(r'^([a-z0-9_-]+)\s*([><=]?.*)$', re.IGNORECASE)
