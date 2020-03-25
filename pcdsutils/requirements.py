@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 PIP_REQUIREMENT_FILES = {
     'requirements.txt': ('host', 'build', 'run'),
     'dev-requirements.txt': ('test', ),
-    # 'docs-requirements.txt': 'build',  # ?
+    'docs-requirements.txt': ('docs', ),
 }
 
 RE_DEPENDENCY_NAME = re.compile(r'^([a-z0-9_-]+)\s*([><=]?.*)$', re.IGNORECASE)
@@ -50,6 +50,7 @@ def find_conda_deps(repo_root):
         'host': requirements.get('host', []),
         'build': requirements.get('build', []),
         'run': requirements.get('run', []),
+        'docs': requirements.get('docs', []),
         'test': test.get('requires', []),
     }
 
