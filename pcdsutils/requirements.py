@@ -80,6 +80,10 @@ def get_dependency_name(dependency):
         >>> print(get_dependency_name('python>=3.6'))
         python
     '''
+    if dependency.lstrip() and dependency.lstrip()[0] == '#':
+        # A comment
+        return ''
+
     return RE_DEPENDENCY_NAME.match(dependency).groups()[0]
 
 
@@ -91,6 +95,7 @@ def requirements_from_conda(repo_root, ignore_deps=None):
     for category_key, deps in requirements.items():
         ret[category_key] = [dep for dep in deps
                              if get_dependency_name(dep) not in ignore_deps
+                             and get_dependency_name(dep).strip()
                              ]
 
     return ret
@@ -102,6 +107,8 @@ def _combine_conda_deps(deps, keys):
     for key in keys:
         for dep in deps.get(key, []):
             dep_name = get_dependency_name(dep)
+            if not dep_name:
+                continue
             if dep_name in CONDA_NAME_TO_PYPI_NAME:
                 dep = dep.replace(dep_name, CONDA_NAME_TO_PYPI_NAME[dep_name])
             ret.add(dep)
@@ -146,6 +153,7 @@ def compare_requirements(conda_deps, pip_deps):
     pip_deps = set(pip_deps)
     pip_deps_name = {get_dependency_name(dep): dep
                      for dep in pip_deps
+                     if get_dependency_name(dep)
                      }
 
     logger.debug('Found conda deps: %s', list(sorted(set(conda_deps_name))))
