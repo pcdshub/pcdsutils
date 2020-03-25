@@ -152,12 +152,12 @@ def compare_requirements(conda_deps, pip_deps):
     logger.debug('Found pip deps: %s', list(sorted(set(pip_deps_name))))
     missing_in_pip = set(conda_deps_name) - set(pip_deps_name)
     missing_in_conda = set(pip_deps_name) - set(conda_deps_name)
-    version_mismatch = set(
+    version_mismatch = [
         dict(conda=conda_deps_name[dep], pip=pip_deps_name[dep])
         for dep in conda_deps_name
         if dep not in missing_in_pip
         and conda_deps_name[dep] != pip_deps_name[dep]
-    )
+    ]
 
     return {
         'missing_in_pip': missing_in_pip,
@@ -190,5 +190,10 @@ def _compare_requirements():
                 display_name = name.replace('_', ' ').capitalize()
                 logger.info('%s:', display_name)
                 for item in sorted(difference):
-                    logger.info('- %s', item)
-        logger.info('')
+                    if isinstance(item, dict):
+                        pretty_diff = ' | '.join(f'{k}: {v}'
+                                                 for k, v in item.items())
+                        logger.info('- %s', pretty_diff)
+                    else:
+                        logger.info('- %s', item)
+                logger.info('')
