@@ -39,6 +39,11 @@ if git_requirements:
     print()
 
 
+console_scripts = [
+    'requirements-from-conda=pcdsutils.requirements:_requirements_from_conda',
+    'requirements-compare=pcdsutils.requirements:_compare_requirements',
+]
+
 setup(
     name='pcdsutils',
     version=versioneer.get_version(),
@@ -49,11 +54,7 @@ setup(
     description='PCDS Python Utilities',
     long_description=readme,
     url='https://github.com/pcdshub/pcdsutils',
-    entry_points={
-        'console_scripts': [
-            # 'some.module:some_function',
-            ],
-        },
+    entry_points={'console_scripts': console_scripts},
     include_package_data=True,
     package_data={
         'pcdsutils': [
