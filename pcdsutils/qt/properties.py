@@ -5,6 +5,8 @@ from qtpy import QtCore
 
 logger = logging.getLogger(__name__)
 
+SKIP_TYPENAMES = {'Shadow', 'Shape'}
+
 
 def get_qt_properties(cls):
     'Yields all QMetaProperty instances from a given class'
@@ -57,7 +59,10 @@ class ReadonlyPassthroughProperty(PassthroughProperty):
 
 
 def forward_properties(locals_dict, attr_name, cls, superclasses, *,
-                       prefix=None, condition=None, designable=True):
+                       prefix=None, predicate=None, designable=True,
+                       rw_class=PassthroughProperty,
+                       ro_class=ReadonlyPassthroughProperty,
+                       ):
     '''
     Forward properties from a QObject attribute in a class given its name
 
@@ -77,11 +82,15 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
         The superclasses of the newly-defined class
     prefix : str, optional
         Prefix the properties with this string. Defaults to ``'{attr_name}_'``
-    condition : callable, optional
-        Condition for inclusion of the property.  Defaults to
+    predicate : callable, optional
+        Condition (predicate) for inclusion of the property.  Defaults to
         checking ``isDesignable``
     designable : bool, optional
         Passed to the resulting ``PassthroughProperty``, defaults to True
+    rw_class : subclass of ``PassthroughProperty``, optional
+        The class to use for a read-write property
+    ro_class : subclass of ``PassthroughProperty``, optional
+        The class to use for a read-only property
 
     Returns
     -------
@@ -96,7 +105,8 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
     following::
 
         class CustomWidget(QtWidgets.QFrame):
-            def __init__(self):
+            def __init__(self, parent=None):
+                super().__init__(parent=parent)
                 self.label = QtWidgets.QLabel()
 
             locals().update(**forward_properties(
@@ -107,18 +117,20 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
             ))
 
     '''
-    if condition is None:
-        def condition(prop):
-            return prop.isDesignable()
-    elif isinstance(condition, (tuple, set, list)):
-        allowed_names = condition
+    if predicate is None:
+        def predicate(prop):
+            return (prop.isDesignable()
+                    and prop.typeName() not in SKIP_TYPENAMES)
+    elif isinstance(predicate, (tuple, set, list)):
+        allowed_names = predicate
 
-        def condition(prop):
-            return prop.name() in allowed_names
+        def predicate(prop):
+            return (prop.name() in allowed_names
+                    and prop.typeName() not in SKIP_TYPENAMES)
     else:
-        if not callable(condition):
+        if not callable(predicate):
             raise ValueError(
-                'Condition must be callable and accept a Property argument')
+                'predicate must be callable and accept a Property argument')
 
     supercls_properties = set([
         prop.name()
@@ -131,14 +143,12 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
     properties = {
         prop.name(): prop
         for prop in get_qt_properties(cls)
-        if (prefix + prop.name()) not in bad_names and condition(prop)
+        if (prefix + prop.name()) not in bad_names and predicate(prop)
     }
 
     passthrough_properties = {}
     for name, prop in properties.items():
-        prop_cls = (PassthroughProperty
-                    if prop.isWritable()
-                    else ReadonlyPassthroughProperty)
+        prop_cls = rw_class if prop.isWritable() else ro_class
         try:
             passthrough_properties[prefix + name] = prop_cls(
                 object_attr_name=attr_name,
@@ -156,3 +166,79 @@ def forward_properties(locals_dict, attr_name, cls, superclasses, *,
             logger.debug('Unable to create %s', prop_cls.__name__, exc_info=ex)
 
     return passthrough_properties
+
+
+def forward_property(
+        attr_name, cls, prop_name, *,
+        designable=None, scriptable=None, stored=None, user=None,
+        rw_class=PassthroughProperty, ro_class=ReadonlyPassthroughProperty
+        ):
+    '''
+    Forward one property from a QObject attribute in a class given its name
+
+    For use in class definitions. As the usage is somewhat nonstandard, be sure
+    to look at the example below.
+
+    Parameters
+    ----------
+    attr_name : str
+        The attribute name of the object
+    cls : subclass of QObject
+        The class type of the attribute
+    prop_name : str
+        The property name of ``cls``
+    designable : bool, optional
+        Override the designable attribute
+    scriptable : bool, optional
+        Override the scriptable attribute
+    stored : bool, optional
+        Override the stored attribute
+    user : bool, optional
+        Override the user attribute
+    rw_class : subclass of ``PassthroughProperty``, optional
+        The class to use for a read-write property
+    ro_class : subclass of ``PassthroughProperty``, optional
+        The class to use for a read-only property
+
+    Returns
+    -------
+    property : Property
+        The forwarded property
+
+    Example
+    -------
+    For example, if CustomWidget has a QLabel as an attribute 'label', a single
+    property of that label can be forwarded to the new class using the
+    following::
+
+        class CustomWidget(QtWidgets.QFrame):
+            def __init__(self, parent=None):
+                super().__init__(parent=parent)
+                self.label = QtWidgets.QLabel()
+
+            label_text = forward_property('label', QtWidgets.QLabel, 'text')
+
+    '''
+    try:
+        prop, = [prop for prop in get_qt_properties(cls)
+                 if prop.name() == prop_name]
+    except Exception as ex:
+        raise AttributeError(f'Unable to get find property {prop_name!r} in '
+                             f'{cls.__name__}') from ex
+
+    prop_cls = rw_class if prop.isWritable() else ro_class
+
+    def value_or_default(value, default):
+        return value if default is None else default
+
+    return prop_cls(
+        object_attr_name=attr_name,
+        property_name=prop_name,
+        type_=prop.typeName(),
+        designable=value_or_default(prop.isDesignable(), designable),
+        scriptable=value_or_default(prop.isScriptable(), scriptable),
+        stored=value_or_default(prop.isStored(), stored),
+        user=value_or_default(prop.isUser(), user),
+        constant=prop.isConstant(),
+        final=prop.isFinal(),
+    )
