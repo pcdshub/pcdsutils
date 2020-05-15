@@ -1,12 +1,8 @@
-
 {% set data = load_setup_py_data() %}
-
 
 package:
     name    : pcdsutils
-
     version : {{ data.get('version') }}
-
 
 source:
     path: ..
@@ -19,16 +15,18 @@ requirements:
     build:
       - python >=3.6
       - setuptools
-
     run:
       - python >=3.6
+      - qtpyinheritance
 
 test:
     imports:
       - pcdsutils
-
+      - pcdsutils.qt
     requires:
       - pytest
+      - qtpy
+      - pyqt
 
 about:
   home: https://github.com/pcdshub/pcdsutils
