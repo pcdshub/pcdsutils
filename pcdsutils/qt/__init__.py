@@ -1,6 +1,15 @@
-from .popbar import QPopBar
-from .properties import (PassthroughProperty, get_qt_properties,
-                         forward_properties)
+from qtpyinheritance.properties import (PassthroughProperty,
+                                        ReadonlyPassthroughProperty,
+                                        forward_properties, forward_property,
+                                        get_qt_properties)
 
-__all__ = ["QPopBar", "PassthroughProperty", "get_qt_properties",
-           "forward_properties"]
+from .popbar import QPopBar
+
+__all__ = [
+    "QPopBar",
+    "PassthroughProperty",
+    "ReadonlyPassthroughProperty",
+    "forward_properties",
+    "forward_property",
+    "get_qt_properties",
+]
