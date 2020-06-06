@@ -219,4 +219,3 @@ def _compare_requirements(args=None):
                         logger.info('- %s', item)
                 logger.info('')
     return 1 if has_diff else 0
-    
