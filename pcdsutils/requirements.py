@@ -185,10 +185,12 @@ def compare_requirements(conda_deps, pip_deps):
 def _compare_requirements(args=None):
     '(Console entry-point)'
     parser = argparse.ArgumentParser()
-    parser.description = 'Build requirements.txt files from conda meta.yaml'
+    parser.description = 'Compare requirements.txt files with conda meta.yaml'
     parser.add_argument('REPO_ROOT', type=str, help='Repository root path')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='Increase verbosity')
+    parser.add_argument('--ignore-docs', action='store_true',
+                        help='Ignore documentation differences')
     args = parser.parse_args(args=args)
     logging.basicConfig(level='DEBUG' if args.verbose else 'INFO',
                         format='%(message)s')
@@ -196,6 +198,7 @@ def _compare_requirements(args=None):
     repo_root = pathlib.Path(args.REPO_ROOT)
     conda_deps = requirements_from_conda(repo_root=repo_root)
     pip_deps = get_pip_requirements(repo_root=repo_root)
+    has_diff = False
     for fn, conda_keys in PIP_REQUIREMENT_FILES.items():
         logger.info('--- %s: %s ---', fn, '/'.join(conda_keys))
         cdeps = _combine_conda_deps(conda_deps, conda_keys)
@@ -203,6 +206,8 @@ def _compare_requirements(args=None):
         logger.debug('Comparing dependencies. cdeps=%s pdeps=%s', cdeps, pdeps)
         for name, difference in compare_requirements(cdeps, pdeps).items():
             if difference:
+                if not ('docs' in fn and args.ignore_docs):
+                    has_diff = True
                 display_name = name.replace('_', ' ').capitalize()
                 logger.info('%s:', display_name)
                 for item in sorted(difference):
@@ -213,3 +218,4 @@ def _compare_requirements(args=None):
                     else:
                         logger.info('- %s', item)
                 logger.info('')
+    return 1 if has_diff else 0
