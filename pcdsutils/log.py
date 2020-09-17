@@ -1,16 +1,18 @@
 import copy
 import json
 import logging
+import logging.handlers
 import os
 import platform
 import queue as queue_module
 import socket
 import sys
 
-import logging.handlers
-
 # The special logger:
 logger = logging.getLogger('pcds-logging')
+
+# Do not propagate messages to the root logger:
+logger.propagate = False
 
 DEFAULT_LOG_HOST = os.environ.get('PCDS_LOG_HOST', 'ctl-logsrv01.pcdsn')
 DEFAULT_LOG_PORT = int(os.environ.get('PCDS_LOG_PORT', 54320))
@@ -241,8 +243,7 @@ def validate_log_level(level) -> int:
 
     if isinstance(levelno, int):
         return levelno
-    else:
-        raise ValueError("Log level is invalid")
+    raise ValueError("Log level is invalid")
 
 
 def get_handler():
