@@ -75,6 +75,8 @@ def get_hutch_name(timeout=10):
     The current hutch is defined by which server we call
     this function from.
 
+    This function caches the output.
+
     Parameters
     ----------
     timeout : int or float, optional
@@ -129,6 +131,8 @@ def get_run_number(hutch=None, live=False, timeout=1):
 def get_ami_proxy(hutch, timeout=10):
     """
     Call procmgr to determine the lcls-I ami proxy hostname.
+
+    This function caches the output.
 
     This works using a regex on the output text from procmgr ami status.
 
