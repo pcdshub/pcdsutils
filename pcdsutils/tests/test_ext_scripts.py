@@ -20,7 +20,7 @@ def test_call_script():
     assert isinstance(ext.call_script(bad_args, ignore_return_code=True), str)
 
 
-def test_hutch_name(nosim, monkeypatch):
+def test_hutch_name(monkeypatch):
     logger.debug('test_hutch_name')
 
     def fake_hutch_name(*args, **kwargs):
@@ -30,7 +30,7 @@ def test_hutch_name(nosim, monkeypatch):
     assert ext.get_hutch_name() == 'tst'
 
 
-def test_run_number(nosim, monkeypatch):
+def test_run_number(monkeypatch):
     logger.debug('test_run_number')
 
     def fake_run_number(*args, **kwargs):
