@@ -1,4 +1,3 @@
-import functools
 import logging
 import re
 import socket
@@ -50,15 +49,31 @@ def call_script(args, timeout=None, ignore_return_code=False):
         raise
 
 
-@functools.lru_cache(maxsize=None)
+cache = {}
+
+
+def cache_script(args, timeout=None, ignore_return_code=False):
+    key = ' '.join(args)
+    try:
+        return cache[key]
+    except KeyError:
+        output = call_script(args, timeout=timeout,
+                             ignore_return_code=ignore_return_code)
+        cache[key] = output
+        return output
+
+
+def clear_script_cache():
+    global cache
+    cache = {}
+
+
 def get_hutch_name(timeout=10):
     """
     Call get_hutch_name to return the name of the current hutch.
 
     The current hutch is defined by which server we call
     this function from.
-
-    This function's output is cached.
 
     Parameters
     ----------
@@ -71,7 +86,7 @@ def get_hutch_name(timeout=10):
     hutch_name : str
     """
     script = SCRIPTS.format('latest', 'get_hutch_name')
-    name = call_script(script, timeout=timeout)
+    name = cache_script(script, timeout=timeout)
     return name.lower().strip(' \n')
 
 
@@ -111,12 +126,9 @@ def get_run_number(hutch=None, live=False, timeout=1):
     return int(run_number)
 
 
-@functools.lru_cache(maxsize=None)
 def get_ami_proxy(hutch, timeout=10):
     """
     Call procmgr to determine the lcls-I ami proxy hostname.
-
-    This function's output is cached.
 
     This works using a regex on the output text from procmgr ami status.
 
@@ -147,9 +159,9 @@ def get_ami_proxy(hutch, timeout=10):
     hutch = hutch.lower()
     cnf = CNF.format(hutch)
     procmgr = TOOLS.format('procmgr', 'procmgr')
-    output = call_script([procmgr, 'status', cnf, 'ami_proxy'],
-                         timeout=timeout,
-                         ignore_return_code=True)
+    output = cache_script([procmgr, 'status', cnf, 'ami_proxy'],
+                          timeout=timeout,
+                          ignore_return_code=True)
     for line in output.split('\n'):
         proxy_match = proxy_re.search(line)
         if proxy_match:
