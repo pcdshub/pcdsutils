@@ -1,4 +1,6 @@
-versioneer
+pypandoc
+pyyaml
 qtpy
 qtpyinheritance
-pyyaml
+requests
+versioneer
