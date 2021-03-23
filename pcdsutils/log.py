@@ -1,4 +1,5 @@
 import copy
+import getpass
 import json
 import logging
 import logging.handlers
@@ -48,6 +49,7 @@ _LOGGER_ALLOWED_KEYS = {
     'source',
     'versions',
     'hostname',
+    'username',
     'host_info',
 }
 
@@ -138,6 +140,7 @@ def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     ret['pathname'] = str(failsafe_call(os.path.abspath, ret['pathname']))
     ret['hostname'] = failsafe_call(socket.gethostname)
     ret['host_info'] = _SYSTEM_UNAME_DICT
+    ret['username'] = getpass.getuser()
 
     for from_, to in _LOGGER_KEY_RENAMES.items():
         ret[to] = ret.pop(from_)
