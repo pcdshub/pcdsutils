@@ -3,4 +3,3 @@ pyyaml
 qtpy
 qtpyinheritance
 requests
-versioneer
