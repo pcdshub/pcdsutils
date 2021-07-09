@@ -17,7 +17,7 @@ logger.propagate = False
 
 DEFAULT_LOG_HOST = os.environ.get('PCDS_LOG_HOST', 'ctl-logsrv01.pcdsn')
 DEFAULT_LOG_PORT = int(os.environ.get('PCDS_LOG_PORT', 54320))
-DEFAULT_LOG_PROTO = os.environ.get('PCDS_LOG_PROTO', 'udp')
+DEFAULT_LOG_PROTO = os.environ.get('PCDS_LOG_PROTO', 'tcp')
 
 _LOGGER_SCHEMA_VERSION = 0
 
