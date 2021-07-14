@@ -2,8 +2,8 @@ import argparse
 import logging
 import pathlib
 import re
-import yaml
 
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -169,7 +169,7 @@ def compare_requirements(conda_deps, pip_deps):
     missing_in_pip = set(conda_deps_name) - set(pip_deps_name)
     missing_in_conda = set(pip_deps_name) - set(conda_deps_name)
     version_mismatch = [
-        dict(conda=conda_deps_name[dep], pip=pip_deps_name[dep])
+        f"conda: {conda_deps_name[dep]} pip: {pip_deps_name[dep]}"
         for dep in conda_deps_name
         if dep not in missing_in_pip
         and conda_deps_name[dep] != pip_deps_name[dep]
