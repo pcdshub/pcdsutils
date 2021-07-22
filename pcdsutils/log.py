@@ -15,6 +15,9 @@ logger = logging.getLogger('pcds-logging')
 # Do not propagate messages to the root logger:
 logger.propagate = False
 
+# Exceptions that should just be ignored entirely:
+NO_LOG_EXCEPTIONS = (KeyboardInterrupt, SystemExit)
+
 DEFAULT_LOG_HOST = os.environ.get('PCDS_LOG_HOST', 'ctl-logsrv01.pcdsn')
 DEFAULT_LOG_PORT = int(os.environ.get('PCDS_LOG_PORT', 54320))
 DEFAULT_LOG_PROTO = os.environ.get('PCDS_LOG_PROTO', 'tcp')
@@ -258,3 +261,52 @@ def get_handler():
     ``None``.
     """
     return _CURRENT_HANDLER
+
+
+def log_exception(
+    exc_info,
+    *,
+    context='exception',
+    message=None,
+    level=logging.ERROR,
+    stacklevel=1,
+):
+    """
+    Log an exception to the central server (i.e., logstash/grafana).
+
+    Parameters
+    ----------
+    exc_info : (exc_type, exc_value, exc_traceback)
+        The exception information.
+
+    context : str, optional
+        Additional context for the log message.
+
+    message : str, optional
+        Override the default log message.
+
+    level : int, optional
+        The log level to use.  Defaults to ERROR.
+
+    stacklevel : int, optional
+        The stack level of the message being reported.  Defaults to 1, meaning
+        that the message will be reported as having come from the caller of
+        ``log_exception_to_central_server``.  Applies only to Python 3.8+, and
+        ignored below.
+    """
+    exc_type, exc_value, _ = exc_info
+    if issubclass(exc_type, NO_LOG_EXCEPTIONS):
+        return
+
+    if not logger.handlers:
+        # Do not allow log messages unless the central logger has been
+        # configured with a log handler.  Otherwise, the log message will hit
+        # the default handler and output to the terminal.
+        return
+
+    message = message or f'[{context}] {exc_value}'
+    kwargs = dict()
+    if sys.version_info >= (3, 8):
+        kwargs = dict(stacklevel=stacklevel + 1)
+
+    logger.log(level, message, exc_info=exc_info, **kwargs)
