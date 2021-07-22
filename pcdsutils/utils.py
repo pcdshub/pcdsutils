@@ -1,7 +1,9 @@
-import sys
+import functools
 import importlib
 import inspect
 import logging
+import socket
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -75,3 +77,17 @@ def get_instance_by_name(klass, *args, **kwargs):
         logger.exception('Failed to instantiate object for class %s '
                          'using %s and %s', klass, args, kwargs)
         raise
+
+
+@functools.lru_cache(maxsize=1)
+def get_fully_qualified_domain_name():
+    """Get the fully qualified domain name of this host."""
+    try:
+        return socket.getfqdn()
+    except Exception:
+        logger.warning(
+            "Unable to get machine name.  Things like centralized "
+            "logging may not work."
+        )
+        logger.debug("getfqdn failed", exc_info=True)
+        return ""

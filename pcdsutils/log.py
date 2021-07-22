@@ -9,6 +9,8 @@ import queue as queue_module
 import socket
 import sys
 
+from .utils import get_fully_qualified_domain_name
+
 # The special logger:
 logger = logging.getLogger('pcds-logging')
 
@@ -21,6 +23,9 @@ NO_LOG_EXCEPTIONS = (KeyboardInterrupt, SystemExit)
 DEFAULT_LOG_HOST = os.environ.get('PCDS_LOG_HOST', 'ctl-logsrv01.pcdsn')
 DEFAULT_LOG_PORT = int(os.environ.get('PCDS_LOG_PORT', 54320))
 DEFAULT_LOG_PROTO = os.environ.get('PCDS_LOG_PROTO', 'tcp')
+ALLOWED_LOG_DOMAINS = set(
+    os.environ.get("PCDS_LOG_DOMAINS", ".pcdsn .slac.stanford.edu").split(" ")
+)
 
 _LOGGER_SCHEMA_VERSION = 0
 
@@ -310,3 +315,9 @@ def log_exception(
         kwargs = dict(stacklevel=stacklevel + 1)
 
     logger.log(level, message, exc_info=exc_info, **kwargs)
+
+
+def centralized_logging_enabled() -> bool:
+    """Returns True if centralized logging should be enabled."""
+    fqdn = get_fully_qualified_domain_name()
+    return any(fqdn.endswith(domain) for domain in ALLOWED_LOG_DOMAINS)
