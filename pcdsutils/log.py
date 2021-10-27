@@ -417,7 +417,7 @@ def log_warning_handler(
             'warning_line': line,
         },
     )
-    
+
 
 def install_log_warning_handler(
     logger: logging.Logger = warnings_logger,
@@ -440,6 +440,9 @@ def install_log_warning_handler(
 
 @dataclasses.dataclass(eq=True, frozen=True)
 class WarningRecordInfo:
+    """
+    Hashable collection of the unique information from a warnings.warn call.
+    """
     message: str
     category: type[Warning]
     filename: str
@@ -447,6 +450,12 @@ class WarningRecordInfo:
 
     @staticmethod
     def from_record(record: logging.LogRecord) -> "WarningRecordInfo":
+        """
+        Create a WarningRecordInfo from a LogRecord.
+
+        This can be used as a utility to inspect or compare warnings log
+        messages inside a log filter.
+        """
         try:
             return WarningRecordInfo(
                 message=str(record.warning_message),
@@ -489,13 +498,17 @@ class LogWarningLevelFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
         """
-        Adjust the level of the log message if we've seen it before.
+        Adjust the level of the warnings log message if we've seen it before.
 
         Always returns "True" to let the log pass through.
         """
         if not hasattr(record, 'warning_message'):
             return True
-        info = WarningRecordInfo.from_record(record)
+        try:
+            info = WarningRecordInfo.from_record(record)
+        except ValueError:
+            # Must not be a warnings log record, skip
+            return True
         if info in self.cache:
             record.levelno = self.levelno
             record.levelname = self.levelname
