@@ -1,4 +1,5 @@
 import copy
+import dataclasses
 import functools
 import getpass
 import json
@@ -420,7 +421,7 @@ def log_warning_handler(
 
 def install_log_warning_handler(
     logger: logging.Logger = warnings_logger,
-):
+) -> None:
     """
     Replaces warnings.showwarning with the log_warning_handler above.
 
@@ -435,6 +436,29 @@ def install_log_warning_handler(
         log_warning_handler,
         logger=logger,
     )
+
+
+@dataclasses.dataclass(eq=True, frozen=True)
+class WarningRecordInfo:
+    message: str
+    category: type[Warning]
+    filename: str
+    lineno: int
+
+    @staticmethod
+    def from_record(record: logging.LogRecord) -> "WarningRecordInfo":
+        try:
+            return WarningRecordInfo(
+                message=str(record.warning_message),
+                category=record.warning_category,
+                filename=record.warning_filename,
+                lineno=record.warning_lineno,
+            )
+        except AttributeError as exc:
+            raise ValueError(
+                'Recieved invalid record, must be from '
+                'the log_warning_handler'
+            ) from exc
 
 
 class LogWarningLevelFilter(logging.Filter):
@@ -469,12 +493,55 @@ class LogWarningLevelFilter(logging.Filter):
 
         Always returns "True" to let the log pass through.
         """
-        print(record)
         if not hasattr(record, 'warning_message'):
             return True
-        if record.warning_message in self.cache:
+        info = WarningRecordInfo.from_record(record)
+        if info in self.cache:
             record.levelno = self.levelno
             record.levelname = self.levelname
         else:
-            self.cache.add(record.warning_message)
+            self.cache.add(info)
         return True
+
+    @staticmethod
+    def install(
+        level: typing.Union[str, int] = logging.DEBUG,
+        logger: logging.Logger = warnings_logger,
+    ) -> "LogWarningLevelFilter":
+        """
+        Apply the LogWarningLevelFilter to the warnings logger.
+
+        Parameters
+        ----------
+        level : str or int, optional
+            The log level or name of the log level to reduce dupliacte
+            log messages to. Defaults to logging.DEBUG.
+        logger : LogRecord, optional
+            The logger to apply the filter to. Defaults to the warnings_logger.
+
+        Returns
+        -------
+        filt : LogWarningLevelFilter
+            The filter object that we've applied to the logger. Useful for
+            debugging.
+        """
+        filt = LogWarningLevelFilter(level=level)
+        logger.addFilter(filt)
+        return filt
+
+
+def standard_warnings_config() -> LogWarningLevelFilter:
+    """
+    Use the standard pcds warnings config.
+
+    This installs the log warning handler pointed to the "warnings_logger"
+    and also installs the LogWarningLevelFilter at logging.DEBUG level
+    and returns it.
+
+    Returns
+    -------
+    filt : LogWarningLevelFilter
+        The filter installed on the warnings logger.
+    """
+    install_log_warning_handler()
+    return LogWarningLevelFilter.install()
