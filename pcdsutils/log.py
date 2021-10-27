@@ -502,8 +502,6 @@ class LogWarningLevelFilter(logging.Filter):
 
         Always returns "True" to let the log pass through.
         """
-        if not hasattr(record, 'warning_message'):
-            return True
         try:
             info = WarningRecordInfo.from_record(record)
         except ValueError:
