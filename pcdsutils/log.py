@@ -490,7 +490,7 @@ class LogWarningLevelFilter(logging.Filter):
     """
     def __init__(
         self,
-        level: typing.Union[int, str] = logging.DEBUG
+        level: typing.Union[str, int] = logging.DEBUG
     ):
         self.levelno = validate_log_level(level)
         self.levelname = logging.getLevelName(self.levelno)
