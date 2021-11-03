@@ -465,8 +465,8 @@ class WarningRecordInfo:
     filename: str
     lineno: int
 
-    @staticmethod
-    def from_record(record: logging.LogRecord) -> WarningRecordInfo:
+    @classmethod
+    def from_record(cls, record: logging.LogRecord) -> WarningRecordInfo:
         """
         Create a WarningRecordInfo from a LogRecord.
 
@@ -474,7 +474,7 @@ class WarningRecordInfo:
         messages inside a log filter.
         """
         try:
-            return WarningRecordInfo(
+            return cls(
                 message=str(record.warning_message),
                 category=record.warning_category,
                 filename=record.warning_filename,
@@ -543,8 +543,9 @@ class LogWarningLevelFilter(logging.Filter):
             self.cache.add(info)
         return True
 
-    @staticmethod
+    @classmethod
     def install(
+        cls,
         level: typing.Union[str, int] = logging.DEBUG,
         logger: logging.Logger = warnings_logger,
     ) -> LogWarningLevelFilter:
@@ -565,7 +566,7 @@ class LogWarningLevelFilter(logging.Filter):
             The filter object that we've applied to the logger. Useful for
             debugging.
         """
-        filt = LogWarningLevelFilter(level=level)
+        filt = cls(level=level)
         logger.addFilter(filt)
         filt._logger = logger
         return filt
