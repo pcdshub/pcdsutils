@@ -572,16 +572,27 @@ class LogWarningLevelFilter(logging.Filter):
             debugging.
         """
         filt = cls(level=level)
-        logger.addFilter(filt)
-        filt._logger = logger
+        filt.install_self(logger=logger)
         return filt
+
+    def install_self(self, logger: logging.Logger = warnings_logger) -> None:
+        """
+        Convenience method for adding this filter to a logger.
+
+        Parameters
+        ----------
+        logger : logging.Logger, optional
+            The logger to apply the filter to. Defaults to the warnings_logger.
+        """
+        logger.addFilter(self)
+        self._logger = logger
 
     def uninstall(self) -> None:
         """
         Convenience method for removing this filter.
 
         Requires the filter to have been originally created and applied using
-        the "install" class method.
+        the "install" class method or the "install_self" method.
 
         Intended to help with the unit testing.
         """
@@ -606,6 +617,9 @@ def standard_warnings_config() -> LogWarningLevelFilter:
     return LogWarningLevelFilter.install()
 
 
+objects_logger = logging.getLogger('ophyd.objects')
+
+
 @dataclasses.dataclass(eq=True, frozen=True)
 class OphydObjectRecordInfo:
     """
@@ -616,8 +630,8 @@ class OphydObjectRecordInfo:
     exc_info: typing.Optional[tuple]
     object_name: str
 
-    @staticmethod
-    def from_record(record: logging.LogRecord) -> "OphydObjectRecordInfo":
+    @classmethod
+    def from_record(cls, record: logging.LogRecord) -> OphydObjectRecordInfo:
         """
         Create a OphydObjectRecordInfo from a LogRecord.
 
@@ -625,7 +639,7 @@ class OphydObjectRecordInfo:
         messages inside a log filter.
         """
         try:
-            return OphydObjectRecordInfo(
+            return cls(
                 message=record.getMessage(),
                 pathname=record.pathname,
                 exc_info=record.exc_info,
@@ -668,29 +682,81 @@ class OphydCallbackExceptionDemoter(logging.Filter):
     """
     levelno: int
     levelname: str
-    logger: logging.Logger
     only_duplicates: bool
+    _logger: typing.Optional[logging.Logger]
     counter: int
     info: set[OphydObjectRecordInfo]
 
     def __init__(
         self,
         level: typing.Union[str, int] = logging.DEBUG,
-        logger: logging.Logger = logging.getLogger('ophyd.objects'),
         only_duplicates: bool = True,
     ):
         self.levelno = validate_log_level(level)
         self.levelname = logging.getLevelName(self.levelno)
-        self.logger = logger
         self.only_duplicates = only_duplicates
+        self._logger = None
         self.counter = 0
         self.info = set()
 
-    def install(self):
-        self.logger.addFilter(self)
+    @classmethod
+    def install(
+        cls,
+        level: typing.Union[str, int] = logging.DEBUG,
+        only_duplicates: bool = True,
+        logger: logging.Logger = objects_logger,
+    ) -> OphydCallbackExceptionDemoter:
+        """
+        Apply the OphydCallbackExceptionDemoter to the objects logger.
+
+        Parameters
+        ----------
+        level : str or int, optional
+            The log level or name of the log level to reduce dupliacte
+            log messages to. Defaults to logging.DEBUG.
+        only_duplicates: bool, optional
+            If True, the default, only apply this to duplicated log messages.
+            If False, apply it to all log messages.
+        logger : logging.Logger, optional
+            The logger to apply the filter to. Defaults to the ophyd.objects
+            logger.
+
+        Returns
+        -------
+        filt : OphydCallbackExceptionDemoter
+            The filter object that we've applied to the logger. Useful for
+            debugging.
+        """
+        filt = cls(
+            level=level,
+            only_duplicates=only_duplicates,
+        )
+        filt.install_self(logger=logger)
+        return filt
+
+    def install_self(self, logger: logging.Logger = objects_logger) -> None:
+        """
+        Convenience method for adding this filter to a logger.
+
+        Parameters
+        ----------
+        logger : logging.Logger, optional
+            The logger to apply the filter to. Defaults to the ophyd.objects
+            logger.
+        """
+        logger.addFilter(self)
+        self._logger = logger
 
     def uninstall(self):
-        self.logger.removeFilter(self)
+        """
+        Convenience method for removing this filter.
+
+        Requires the filter to have been originally created and applied using
+        the "install" class method or the "install_self" method.
+
+        Intended to help with the unit testing.
+        """
+        self._logger.removeFilter(self)
 
     def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
         """
