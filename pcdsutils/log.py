@@ -576,7 +576,7 @@ class LogWarningLevelFilter(logging.Filter):
         Convenience method for removing this filter.
 
         Requires the filter to have been originally created and applied using
-        the "install" static method.
+        the "install" class method.
 
         Intended to help with the unit testing.
         """
