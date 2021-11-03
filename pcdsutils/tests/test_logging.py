@@ -101,6 +101,7 @@ def test_warning_redirects(
 
     def showwarnmsg_and_count(msg):
         nonlocal normal_warning_count
+        normal_warning_count += 1
         original_impl(msg)
 
     monkeypatch.setattr(warnings, "_showwarnmsg_impl", showwarnmsg_and_count)
