@@ -93,6 +93,7 @@ def test_warning_redirects(
     monkeypatch: pytest.MonkeyPatch,
     warnings_filter: pcdsutils.log.LogWarningLevelFilter,
 ):
+    caplog.set_level(logging.DEBUG)
     normal_warning_count = 0
 
     def showwarnmsg_and_count(msg):
@@ -107,6 +108,7 @@ def test_warning_redirects(
         warnings.warn(message)
         assert normal_warning_count == 0, "Saw a normal warning!"
         assert caplog.records, "Did not find any log records!"
+        assert len(caplog.records) == 1, "Expected only 1 record!"
         assert message in caplog.records[0].message, "Wrong record!"
 
     pcdsutils.log.uninstall_log_warning_handler()
@@ -122,6 +124,8 @@ def test_warning_filter(
     caplog: pytest.LogCaptureFixture,
     warnings_filter: pcdsutils.log.LogWarningLevelFilter,
 ):
+    caplog.set_level(logging.DEBUG)
+
     def inner_test(filtered: bool):
         for message in (
             "test_warning_filter",
@@ -132,6 +136,7 @@ def test_warning_filter(
                 caplog.clear()
                 warnings.warn(message)
                 assert caplog.records, "Did not find any log records!"
+                assert len(caplog.records) == 1, "Expected only 1 record!"
                 record = caplog.records[0]
                 if not filtered or num == 0:
                     assert record.levelno == logging.WARNING
