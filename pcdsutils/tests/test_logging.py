@@ -83,7 +83,9 @@ def test_log_exception_udp(udp_listening_port: int,
 @pytest.fixture(scope='function')
 def warnings_filter():
     filter = pcdsutils.log.standard_warnings_config()
+    warnings.simplefilter('always')
     yield filter
+    warnings.resetwarnings()
     filter.uninstall()
     pcdsutils.log.uninstall_log_warning_handler()
 
@@ -103,21 +105,21 @@ def test_warning_redirects(
     monkeypatch.setattr(warnings, "_showwarnmsg_impl", showwarnmsg_and_count)
 
     message = "test_warning_redirects"
-    for _ in range(10):
+    for cnt in range(10):
         caplog.clear()
         warnings.warn(message)
-        assert normal_warning_count == 0, "Saw a normal warning!"
-        assert caplog.records, "Did not find any log records!"
-        assert len(caplog.records) == 1, "Expected only 1 record!"
-        assert message in caplog.records[0].message, "Wrong record!"
+        assert normal_warning_count == 0, f"Saw a normal warning! {cnt=}"
+        assert caplog.records, f"Did not find log records! {cnt=}"
+        assert len(caplog.records) == 1, f"Expected only 1 record! {cnt=}"
+        assert message in caplog.records[0].message, f"Wrong record! {cnt=}"
 
     pcdsutils.log.uninstall_log_warning_handler()
 
-    for num in range(10):
+    for cnt in range(10):
         caplog.clear()
         warnings.warn(message)
-        assert not caplog.records, "Found log records after uninstall!"
-        assert normal_warning_count == num + 1, "Missed normal warning!"
+        assert not caplog.records, f"Has log records after uninstall! {cnt=}"
+        assert normal_warning_count == cnt + 1, f"No normal warning! {cnt=}"
 
 
 def test_warning_filter(
@@ -132,13 +134,13 @@ def test_warning_filter(
             "some other message",
             "a third message maybe?",
         ):
-            for num in range(10):
+            for cnt in range(10):
                 caplog.clear()
                 warnings.warn(message)
-                assert caplog.records, "Did not find any log records!"
-                assert len(caplog.records) == 1, "Expected only 1 record!"
+                assert caplog.records, f"Did not find log records! {cnt=}"
+                assert len(caplog.records) == 1, f"Too many records! {cnt=}"
                 record = caplog.records[0]
-                if not filtered or num == 0:
+                if not filtered or cnt == 0:
                     assert record.levelno == logging.WARNING
                 else:
                     assert record.levelno == logging.DEBUG
