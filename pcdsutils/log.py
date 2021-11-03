@@ -272,6 +272,8 @@ def validate_log_level(level: typing.Union[str, int]) -> int:
         return level
     if isinstance(level, str):
         levelno = logging.getLevelName(level)
+    else:
+        raise TypeError(f"Invalid type {type(level)} of argument level. Must be of type int or str.")
 
     if not isinstance(levelno, int):
         raise ValueError(
