@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import dataclasses
 import functools
@@ -356,16 +358,16 @@ def log_warning_handler(
     file: typing.Optional[typing.TextIO] = None,
     line: typing.Optional[str] = None,
     logger: logging.Logger = warnings_logger,
-):
+) -> None:
     """
     Warning handler that redirects all of the warnings to a logger.
 
     This can be used as a drop-in replacement for warnings.showwarning to
     redirect unfiltered warnings into the logging stream.
 
-    Rather than duplicate the warning display text, this handler opts to simplify it
-    and put the extra details into the "extra" dictionary argument in the
-    logging library.
+    Rather than duplicate the warning display text, this handler opts to
+    simplify it and put the extra details into the "extra" dictionary
+    argument in the logging library.
 
     The warnings module displays the warnings as:
     filename:lineno: category: message\\nline
@@ -464,7 +466,7 @@ class WarningRecordInfo:
     lineno: int
 
     @staticmethod
-    def from_record(record: logging.LogRecord) -> "WarningRecordInfo":
+    def from_record(record: logging.LogRecord) -> WarningRecordInfo:
         """
         Create a WarningRecordInfo from a LogRecord.
 
@@ -545,7 +547,7 @@ class LogWarningLevelFilter(logging.Filter):
     def install(
         level: typing.Union[str, int] = logging.DEBUG,
         logger: logging.Logger = warnings_logger,
-    ) -> "LogWarningLevelFilter":
+    ) -> LogWarningLevelFilter:
         """
         Apply the LogWarningLevelFilter to the warnings logger.
 
