@@ -549,7 +549,7 @@ class LogWarningLevelFilter(logging.Filter):
         level : str or int, optional
             The log level or name of the log level to reduce dupliacte
             log messages to. Defaults to logging.DEBUG.
-        logger : LogRecord, optional
+        logger : logging.Logger, optional
             The logger to apply the filter to. Defaults to the warnings_logger.
 
         Returns
