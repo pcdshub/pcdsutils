@@ -438,6 +438,16 @@ def install_log_warning_handler(
     )
 
 
+def uninstall_log_warning_handler() -> None:
+    """
+    Restores the default behavior of the warnings module.
+
+    Intended to undo the effects of "install_log_warning_handler"
+    from this module.
+    """
+    warnings.showwarning = warnings._showwarning_orig
+
+
 @dataclasses.dataclass(eq=True, frozen=True)
 class WarningRecordInfo:
     """
@@ -487,14 +497,26 @@ class LogWarningLevelFilter(logging.Filter):
     each command. This is a annoying. The filter here allows us to
     adjust the level of the repeat messages to avoid cluttering the user's
     view, or to remove them entirely.
+
+    Parameters
+    ----------
+    level : str or int, optional
+        The log level or name of the log level to reduce dupliacte
+        log messages to. Defaults to logging.DEBUG.
     """
+    levelno: int
+    levelname: str
+    cache: set[WarningRecordInfo]
+    _logger: typing.Optional[logging.Logger]
+
     def __init__(
         self,
-        level: typing.Union[str, int] = logging.DEBUG
+        level: typing.Union[str, int] = logging.DEBUG,
     ):
         self.levelno = validate_log_level(level)
         self.levelname = logging.getLevelName(self.levelno)
         self.cache = set()
+        self._logger = None
 
     def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
         """
@@ -538,7 +560,20 @@ class LogWarningLevelFilter(logging.Filter):
         """
         filt = LogWarningLevelFilter(level=level)
         logger.addFilter(filt)
+        filt._logger = logger
         return filt
+
+    def uninstall(self) -> None:
+        """
+        Convenience method for removing this filter.
+
+        Requires the filter to have been originally created and applied using
+        the "install" static method.
+
+        Intended to help with the unit testing.
+        """
+        if self._logger is not None:
+            self._logger.removeFilter(self)
 
 
 def standard_warnings_config() -> LogWarningLevelFilter:
