@@ -604,3 +604,110 @@ def standard_warnings_config() -> LogWarningLevelFilter:
     """
     install_log_warning_handler()
     return LogWarningLevelFilter.install()
+
+
+@dataclasses.dataclass(eq=True, frozen=True)
+class OphydObjectRecordInfo:
+    """
+    Hashable collection of the unique information from an ophyd.objects log
+    """
+    message: str
+    pathname: str
+    exc_info: typing.Optional[tuple]
+    object_name: str
+
+    @staticmethod
+    def from_record(record: logging.LogRecord) -> "OphydObjectRecordInfo":
+        """
+        Create a OphydObjectRecordInfo from a LogRecord.
+
+        This can be used as a utility to inspect or compare warnings log
+        messages inside a log filter.
+        """
+        try:
+            return OphydObjectRecordInfo(
+                message=record.getMessage(),
+                pathname=record.pathname,
+                exc_info=record.exc_info,
+                object_name=record.ophyd_object_name,
+            )
+        except AttributeError as exc:
+            raise ValueError(
+                'Recieved invalid record, must be from '
+                'the ophyd.objects logging adapters'
+            ) from exc
+
+
+class OphydCallbackExceptionDemoter(logging.Filter):
+    """
+    Filter that demotes the logging level of callback exceptions.
+
+    Ophyd object callback exceptions are logged at ERROR level.
+    This causes some usage problems when the user is trying to use the
+    terminal and a callback exception is being thrown on every update
+    of a fast-updating PV.
+
+    This filter will apply itself to the ophyd.objects logger, and
+    will switch the log level of either all exceptions or repeat exceptions
+    only depending on the initialization arguments.
+
+    This filter incorporates a resettable counter that will count the number
+    of demoted log messages.
+
+    Parameters
+    ----------
+    level : str or int, optional
+        The log level or name of the log level to reduce dupliacte
+        log messages to. Defaults to logging.DEBUG.
+    logger: logging.Logger, optional
+        The logger to apply the filter to. Defaults to the ophyd.objects
+        logger.
+    only_duplicates: bool, optional
+        If True, the default, only apply this to duplicated log messages.
+        If False, apply it to all log messages.
+    """
+    levelno: int
+    levelname: str
+    logger: logging.Logger
+    only_duplicates: bool
+    counter: int
+    info: set[OphydObjectRecordInfo]
+
+    def __init__(
+        self,
+        level: typing.Union[str, int] = logging.DEBUG,
+        logger: logging.Logger = logging.getLogger('ophyd.objects'),
+        only_duplicates: bool = True,
+    ):
+        self.levelno = validate_log_level(level)
+        self.levelname = logging.getLevelName(self.levelno)
+        self.logger = logger
+        self.only_duplicates = only_duplicates
+        self.counter = 0
+        self.info = set()
+
+    def install(self):
+        self.logger.addFilter(self)
+
+    def uninstall(self):
+        self.logger.removeFilter(self)
+
+    def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
+        """
+        Demote the log message if appropriate, return True to let it pass.
+        """
+        if 'Subscription %s callback exception' in record.msg:
+            try:
+                info = OphydObjectRecordInfo.from_record(record)
+            except ValueError:
+                return True
+            if not self.only_duplicates or info in self.cache:
+                record.levelno = self.levelno
+                record.levelname = self.levelname
+                self.counter += 1
+            else:
+                self.cache.add(info)
+        return True
+
+    def reset_counter(self):
+        self.counter = 0
