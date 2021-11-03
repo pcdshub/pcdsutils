@@ -248,21 +248,24 @@ def configure_pcds_logging(
 
 
 def validate_log_level(level: typing.Union[str, int]) -> int:
-    '''
+    """
     Return a logging level integer for level comparison.
+
     Parameters
     ----------
     level : str or int
         The logging level string or integer value.
+
     Returns
     -------
     log_level : int
         The integral log level.
+
     Raises
     ------
     ValueError
         If the logging level is invalid.
-    '''
+    """
     if isinstance(level, int):
         return level
     if isinstance(level, str):
