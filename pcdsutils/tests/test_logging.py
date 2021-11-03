@@ -97,10 +97,11 @@ def test_warning_redirects(
 ):
     caplog.set_level(logging.DEBUG)
     normal_warning_count = 0
+    original_impl = warnings._showwarnmsg_impl
 
     def showwarnmsg_and_count(msg):
         nonlocal normal_warning_count
-        warnings._showwarnmsg_impl(msg)
+        original_impl(msg)
 
     monkeypatch.setattr(warnings, "_showwarnmsg_impl", showwarnmsg_and_count)
 
