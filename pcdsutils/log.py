@@ -482,7 +482,7 @@ class WarningRecordInfo:
             )
         except AttributeError as exc:
             raise ValueError(
-                'Recieved invalid record, must be from '
+                'Received invalid record, must be from '
                 'the log_warning_handler'
             ) from exc
 
