@@ -363,7 +363,7 @@ def log_warning_handler(
     This can be used as a drop-in replacement for warnings.showwarning to
     redirect unfiltered warnings into the logging stream.
 
-    Rather than duplicate the warning display text, I've opted to simplify it
+    Rather than duplicate the warning display text, this handler opts to simplify it
     and put the extra details into the "extra" dictionary argument in the
     logging library.
 
