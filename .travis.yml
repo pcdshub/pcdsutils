@@ -1,6 +1,6 @@
 version: ~> 1.0
 
-env: 
+env:
   global:
     - secure: "yoUZPpg5aDgICUE3IShn4LWxKVvIjBQZjzfOlRms5HU7fKFQLYKaZFtoiiDRJNPg17TJMZMVZLqK9OacM0SiYg7R0XeOBr6A/V15lqaUqDbP2IMv/G3WoInYyjo/RrYaev6MN0oFQGbmdMfpNiyhSki8b3dLSqWhNakkmwZN1WNCW3WlXRb+bjw46wfMpmEU9GwY45ggatus4dhaAmp003agIzGLXSrgxXCd36eOxmzIIU0GZkeca57yt0xJjHIBcqVKjU730Dz5bLrv8H6oNL0i5GOXH9Wf8aE0kIsAAYqPGOqt0EP7ln0CRRa1sOexNqcby9fY29Za5gBne8uu51pAU1ouJziT/mYomuiZt6LrrJtOdHZNwlOErERBuyOwqeVoL3aP6pMKsLpNqNuw/jxsNpTWeaP3tDs68Y27s9TPGHYhowcV6Wx0cmbPJUDlsluMRg06BP0pf2ZVOm486qu4NpXQQiGgF3cOwUFTkvQ8ZPZ9Pb3/24FHMg6+8u2U7v1sV93Q11NTlGXlo9rU4hiL0FumLoTQMD5mn9l8QwEzC6/2Eq3HwRNuTdCyySWiLcH5GdT5oz0c0Q04v5Jh9wpnu7nF6KBFca1FE/ZE9YqJbsVOg/toVQPXBGQPKpZPlfbILlKXKbNpQpG2z/IcjsvI43DifbGGNrvmRxRWsB4="
 
@@ -27,10 +27,6 @@ env:
     # CONDA_EXTRAS) but for pip
     - PIP_EXTRAS=""
 
-jobs:
-  allow_failures:
-    - name: "Python 3.6 - PIP"
-
 import:
   # This import enables a set of standard python jobs including:
   # - Build
@@ -45,4 +41,4 @@ import:
   #   - Documentation using doctr
   #   - Conda Package - uploaded to pcds-dev and pcds-tag
   #   - PyPI
-  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml
