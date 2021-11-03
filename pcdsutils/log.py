@@ -272,7 +272,9 @@ def validate_log_level(level: typing.Union[str, int]) -> int:
         levelno = logging.getLevelName(level)
 
     if not isinstance(levelno, int):
-        raise ValueError("Invalid logging level (use e.g., DEBUG or 6)")
+        raise ValueError(
+            f"Invalid logging level {levelno!r} (use e.g., DEBUG or 6)"
+        )
 
     return levelno
 
