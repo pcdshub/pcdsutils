@@ -27,10 +27,6 @@ env:
     # CONDA_EXTRAS) but for pip
     - PIP_EXTRAS=""
 
-jobs:
-  allow_failures:
-    - name: "Python 3.6 - PIP"
-
 import:
   # This import enables a set of standard python jobs including:
   # - Build
@@ -45,4 +41,5 @@ import:
   #   - Documentation using doctr
   #   - Conda Package - uploaded to pcds-dev and pcds-tag
   #   - PyPI
-  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml
+#  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml
+  - zllentz/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml@flake8-3.9
