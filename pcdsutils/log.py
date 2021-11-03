@@ -683,9 +683,9 @@ class OphydCallbackExceptionDemoter(logging.Filter):
     levelno: int
     levelname: str
     only_duplicates: bool
-    _logger: typing.Optional[logging.Logger]
+    cache: set[OphydObjectRecordInfo]
     counter: int
-    info: set[OphydObjectRecordInfo]
+    _logger: typing.Optional[logging.Logger]
 
     def __init__(
         self,
@@ -695,9 +695,9 @@ class OphydCallbackExceptionDemoter(logging.Filter):
         self.levelno = validate_log_level(level)
         self.levelname = logging.getLevelName(self.levelno)
         self.only_duplicates = only_duplicates
-        self._logger = None
+        self.cache = set()
         self.counter = 0
-        self.info = set()
+        self._logger = None
 
     @classmethod
     def install(
