@@ -627,7 +627,7 @@ class OphydObjectRecordInfo:
     """
     message: str
     pathname: str
-    exc_info: typing.Optional[tuple]
+    exception: Exception
     object_name: str
 
     @classmethod
@@ -640,9 +640,9 @@ class OphydObjectRecordInfo:
         """
         try:
             return cls(
-                message=record.getMessage(),
+                message=record.msg,
                 pathname=record.pathname,
-                exc_info=record.exc_info,
+                exception=record.exc_info[0],
                 object_name=record.ophyd_object_name,
             )
         except AttributeError as exc:
