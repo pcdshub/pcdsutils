@@ -179,14 +179,17 @@ def test_exception_filter(
         for cnt in range(total_cnt):
             caplog.clear()
             sig.put(cnt)
-            assert caplog.records, f"Did not find log records! {cnt=}"
-            assert len(caplog.records) == 1, f"Too many records! {cnt=}"
-            record = caplog.records[0]
+            target_records = [
+                rec for rec in caplog.records if rec.name == 'ophyd.objects'
+            ]
+            assert target_records, f"Did not find object log records! {cnt=}"
+            assert len(target_records) == 1, f"Too many records! {cnt=}"
+            record = target_records[0]
             if not filtered or cnt == 0:
-                assert record.levelno == logging.ERROR
+                assert record.levelno == logging.ERROR, f"{filtered=}, {cnt=}"
             else:
-                assert record.levelno == logging.DEBUG
-            assert "ZeroDivisionError" in record.message
+                assert record.levelno == logging.DEBUG, f"{filtered=}, {cnt=}"
+            assert "ZeroDivisionError" in record.exc_text
         if filtered:
             assert callback_demoter.counter == total_cnt - 1
         else:
@@ -216,14 +219,17 @@ def test_exception_non_duplicates(
         for cnt in range(total_cnt):
             caplog.clear()
             sig.put(cnt)
-            assert caplog.records, f"Did not find log records! {cnt=}"
-            assert len(caplog.records) == 1, f"Too many records! {cnt=}"
-            record = caplog.records[0]
+            target_records = [
+                rec for rec in caplog.records if rec.name == 'ophyd.objects'
+            ]
+            assert target_records, f"Did not find object log records! {cnt=}"
+            assert len(target_records) == 1, f"Too many records! {cnt=}"
+            record = target_records[0]
             if not filtered:
-                assert record.levelno == logging.ERROR
+                assert record.levelno == logging.ERROR, f"{filtered=}, {cnt=}"
             else:
-                assert record.levelno == logging.DEBUG
-            assert "Varied exception" in record.message
+                assert record.levelno == logging.DEBUG, f"{filtered=}, {cnt=}"
+            assert "Varied exception" in record.exc_text
         if filtered:
             assert callback_demoter.counter == total_cnt
         else:
