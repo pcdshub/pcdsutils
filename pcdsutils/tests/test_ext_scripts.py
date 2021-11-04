@@ -1,14 +1,16 @@
 import logging
-
-import pytest
 import socket
 import subprocess
+import sys
+
+import pytest
 
 import pcdsutils.ext_scripts as ext
 
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(sys.platform == 'win32', reason='Fails on Windows.')
 def test_call_script():
     logger.debug('test_call_script')
     assert isinstance(ext.call_script('uname'), str)
