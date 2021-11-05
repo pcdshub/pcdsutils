@@ -499,6 +499,7 @@ class DemotionFilter(logging.Filter):
     Child classes should override the following attributes:
     - record_dataclass (inherit and customize from RecordInfo)
     - default_logger (logging.Logger instance)
+    - cache (just the type annotation)
 
     Parameters
     ----------
