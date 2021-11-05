@@ -565,7 +565,7 @@ class DemotionFilter(logging.Filter):
             level=level,
             only_duplicates=only_duplicates,
         )
-        filt.install_self(logger=logger or cls.default_logger)
+        filt.install_self(logger=logger)
         return filt
 
     def install_self(
