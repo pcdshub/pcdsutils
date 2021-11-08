@@ -690,7 +690,7 @@ class LogWarningLevelFilter(DemotionFilter):
     Parameters
     ----------
     level : str or int, optional
-        The log level or name of the log level to reduce dupliacte
+        The log level or name of the log level to reduce duplicate
         log messages to. Defaults to logging.DEBUG.
     only_duplicates: bool, optional
         If True, the default, only demote duplicated log messages.
@@ -783,7 +783,7 @@ class OphydCallbackExceptionDemoter(DemotionFilter):
     Parameters
     ----------
     level : str or int, optional
-        The log level or name of the log level to reduce dupliacte
+        The log level or name of the log level to reduce duplicate
         log messages to. Defaults to logging.DEBUG.
     only_duplicates: bool, optional
         If True, the default, only apply this to duplicated log messages.
