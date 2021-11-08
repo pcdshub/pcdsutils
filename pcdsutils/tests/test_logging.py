@@ -6,6 +6,7 @@ import socket
 import threading
 import warnings
 
+import ophyd
 import pytest
 
 import pcdsutils
@@ -82,11 +83,11 @@ def test_log_exception_udp(udp_listening_port: int,
 
 @pytest.fixture(scope='function')
 def warnings_filter():
-    filter = pcdsutils.log.standard_warnings_config()
+    filt = pcdsutils.log.standard_warnings_config()
     warnings.simplefilter('always')
-    yield filter
+    yield filt
     warnings.resetwarnings()
-    filter.uninstall()
+    filt.uninstall()
     pcdsutils.log.uninstall_log_warning_handler()
 
 
@@ -110,18 +111,30 @@ def test_warning_redirects(
     for cnt in range(10):
         caplog.clear()
         warnings.warn(message)
-        assert normal_warning_count == 0, f"Saw a normal warning! {cnt=}"
-        assert caplog.records, f"Did not find log records! {cnt=}"
-        assert len(caplog.records) == 1, f"Expected only 1 record! {cnt=}"
-        assert message in caplog.records[0].message, f"Wrong record! {cnt=}"
+        assert normal_warning_count == 0, (
+            f"Saw a normal warning! cnt={cnt}"
+        )
+        assert caplog.records, (
+            f"Did not find log records! cnt={cnt}"
+        )
+        assert len(caplog.records) == 1, (
+            f"Expected only 1 record! cnt={cnt}"
+        )
+        assert message in caplog.records[0].message, (
+            f"Wrong record! cnt={cnt}"
+        )
 
     pcdsutils.log.uninstall_log_warning_handler()
 
     for cnt in range(10):
         caplog.clear()
         warnings.warn(message)
-        assert not caplog.records, f"Has log records after uninstall! {cnt=}"
-        assert normal_warning_count == cnt + 1, f"No normal warning! {cnt=}"
+        assert not caplog.records, (
+            f"Has log records after uninstall! cnt={cnt}"
+        )
+        assert normal_warning_count == cnt + 1, (
+            f"No normal warning! cnt={cnt}"
+        )
 
 
 def test_warning_filter(
@@ -139,8 +152,12 @@ def test_warning_filter(
             for cnt in range(10):
                 caplog.clear()
                 warnings.warn(message)
-                assert caplog.records, f"Did not find log records! {cnt=}"
-                assert len(caplog.records) == 1, f"Too many records! {cnt=}"
+                assert caplog.records, (
+                    f"Did not find log records! cnt={cnt}"
+                )
+                assert len(caplog.records) == 1, (
+                    f"Too many records! cnt={cnt}"
+                )
                 record = caplog.records[0]
                 if not filtered or cnt == 0:
                     assert record.levelno == logging.WARNING
@@ -150,4 +167,106 @@ def test_warning_filter(
 
     inner_test(filtered=True)
     warnings_filter.uninstall()
+    inner_test(filtered=False)
+
+
+@pytest.fixture(scope='function')
+def callback_demoter():
+    filt = pcdsutils.log.OphydCallbackExceptionDemoter.install()
+    yield filt
+    filt.uninstall()
+
+
+def test_exception_filter(
+    callback_demoter: pcdsutils.log.OphydCallbackExceptionDemoter,
+    caplog: pytest.LogCaptureFixture,
+):
+    caplog.set_level(logging.DEBUG)
+
+    def zerodiv(*args, **kwargs):
+        1/0
+
+    sig = ophyd.Signal(name='sig')
+    sig.subscribe(zerodiv, run=False)
+
+    def inner_test(filtered: bool):
+        callback_demoter.reset_counter()
+        total_cnt = 10
+        for cnt in range(total_cnt):
+            caplog.clear()
+            sig.put(cnt)
+            target_records = [
+                rec for rec in caplog.records if rec.name == 'ophyd.objects'
+            ]
+            assert target_records, (
+                f"Did not find object log records! cnt={cnt}"
+            )
+            assert len(target_records) == 1, (
+                f"Too many records! cnt={cnt}"
+            )
+            record = target_records[0]
+            if not filtered or cnt == 0:
+                assert record.levelno == logging.ERROR, (
+                    f"filtered={filtered}, cnt={cnt}"
+                )
+            else:
+                assert record.levelno == logging.DEBUG, (
+                    f"filtered={filtered}, cnt={cnt}"
+                )
+            assert "ZeroDivisionError" in record.exc_text
+        if filtered:
+            assert callback_demoter.counter == total_cnt - 1
+        else:
+            assert callback_demoter.counter == 0
+
+    inner_test(filtered=True)
+    callback_demoter.uninstall()
+    inner_test(filtered=False)
+
+
+def test_exception_non_duplicates(
+    callback_demoter: pcdsutils.log.OphydCallbackExceptionDemoter,
+    caplog: pytest.LogCaptureFixture,
+):
+    caplog.set_level(logging.DEBUG)
+    callback_demoter.only_duplicates = False
+
+    def varied_exception(*args, value, **kwargs):
+        raise RuntimeError(f'Varied exception value={value}')
+
+    sig = ophyd.Signal(name='sig')
+    sig.subscribe(varied_exception, run=False)
+
+    def inner_test(filtered: bool):
+        callback_demoter.reset_counter()
+        total_cnt = 10
+        for cnt in range(total_cnt):
+            caplog.clear()
+            sig.put(cnt)
+            target_records = [
+                rec for rec in caplog.records if rec.name == 'ophyd.objects'
+            ]
+            assert target_records, (
+                f"Did not find object log records! cnt={cnt}"
+            )
+            assert len(target_records) == 1, (
+                f"Too many records! cnt={cnt}"
+            )
+            record = target_records[0]
+            if not filtered:
+                assert record.levelno == logging.ERROR, (
+                    f"filtered={filtered}, cnt={cnt}"
+                )
+            else:
+                assert record.levelno == logging.DEBUG, (
+                    f"filtered={filtered}, cnt={cnt}"
+                )
+            assert "Varied exception" in record.exc_text
+        if filtered:
+            assert callback_demoter.counter == total_cnt
+        else:
+            assert callback_demoter.counter == 0
+
+    inner_test(filtered=True)
+    callback_demoter.uninstall()
     inner_test(filtered=False)

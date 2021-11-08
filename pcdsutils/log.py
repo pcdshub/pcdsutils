@@ -461,11 +461,185 @@ def uninstall_log_warning_handler() -> None:
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
-class WarningRecordInfo:
+class RecordInfo:
+    """
+    Parent dataclass to define the interface for DemotionFilter
+    """
+    message: str
+
+    @classmethod
+    def from_record(cls, record: logging.LogRecord) -> RecordInfo:
+        """
+        Create a OphydObjectRecordInfo from a LogRecord.
+        """
+        try:
+            return cls(
+                message=record.msg,
+            )
+        except AttributeError as exc:
+            raise ValueError(
+                'Received invalid record'
+            ) from exc
+
+
+class DemotionFilter(logging.Filter):
+    """
+    Filter parent class for demoting log records.
+
+    Supports:
+    - Demoting duplicate records when paired with a hashable dataclass
+    - Optionally demoting all records that match a specification
+    - A counter that tracks how many records have been demoted
+
+    Child classes can/should override the following methods:
+    - should_demote (without super)
+    - __init__ (optional, and with super)
+
+
+    Child classes should override the following attributes:
+    - record_dataclass (inherit and customize from RecordInfo)
+    - default_logger (logging.Logger instance)
+    - cache (just the type annotation)
+
+    Parameters
+    ----------
+    level: str or int, optional
+        The level to demote matching messages to. Defaults to logging.DEBUG,
+        but this behavior can be overridden in the child class.
+    only_duplicates: bool, optional
+        If True, the default, only demote duplicated log messages.
+        If False, demote all log messages that pass through should_demote.
+        This must be False if no record_dataclass is provided.
+    """
+    record_dataclass: type = RecordInfo
+    default_logger: typing.Optional[logging.Logger] = None
+
+    levelno: int
+    levelname: str
+    only_duplicates: bool
+    cache: set[RecordInfo]
+    counter: int
+    _logger: typing.Optional[logging.Logger]
+
+    def __init__(
+        self,
+        level: typing.Union[str, int] = logging.DEBUG,
+        only_duplicates: bool = True,
+    ):
+        self.levelno = validate_log_level(level)
+        self.levelname = logging.getLevelName(self.levelno)
+        self.only_duplicates = only_duplicates
+        self.cache = set()
+        self.counter = 0
+        self._logger = None
+
+    @classmethod
+    def install(
+        cls,
+        level: typing.Union[str, int] = logging.DEBUG,
+        only_duplicates: bool = True,
+        logger: typing.Optional[logging.Logger] = None,
+    ) -> DemotionFilter:
+        """
+        Create and apply the DemotionFilter to a specific logger,
+        or the default logger.
+
+        Parameters
+        ----------
+        level : str or int, optional
+            The log level or name of the log level to reduce
+            log messages to. Defaults to logging.DEBUG.
+        only_duplicates: bool, optional
+            If True, the default, only apply this to duplicated log messages.
+            If False, apply it to all log messages.
+        logger : logging.Logger, optional
+            The logger to apply the filter to, or the default logger.
+
+        Returns
+        -------
+        filt : DemotionFilter
+            The filter object that we've applied to the logger. Useful for
+            debugging.
+        """
+        filt = cls(
+            level=level,
+            only_duplicates=only_duplicates,
+        )
+        filt.install_self(logger=logger)
+        return filt
+
+    def install_self(
+        self,
+        logger: typing.Optional[logging.Logger] = None,
+    ) -> None:
+        """
+        Convenience method for adding this filter to a logger.
+
+        Parameters
+        ----------
+        logger : logging.Logger, optional
+            The logger to apply the filter to. Defaults to the class-defined
+            default_logger.
+        """
+        logger = logger or self.default_logger
+        logger.addFilter(self)
+        self._logger = logger
+
+    def uninstall(self):
+        """
+        Convenience method for removing this filter.
+
+        Requires the filter to have been originally created and applied using
+        the "install" class method or the "install_self" method.
+
+        Intended to help with the unit testing.
+        """
+        self._logger.removeFilter(self)
+
+    def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
+        """
+        Demote the log message if appropriate, return True to let it pass.
+        """
+        try:
+            info = self.record_dataclass.from_record(record)
+        except ValueError:
+            return True
+        if self.should_demote(record, info) and record.levelno > self.levelno:
+            if info in self.cache or not self.only_duplicates:
+                record.levelno = self.levelno
+                record.levelname = self.levelname
+                self.counter += 1
+            else:
+                self.cache.add(info)
+        return True
+
+    def reset_counter(self):
+        self.counter = 0
+
+    def should_demote(
+        self,
+        record: logging.LogRecord,
+        info: RecordInfo
+    ) -> bool:
+        """
+        Return True if we should demote the record, False otherwise.
+
+        Parameters
+        ----------
+        record: logging.LogRecord
+            The record instance passed into the filter.
+        info: RecordInfo
+            The record info dataclass, which may be more convenient
+            for implementing this method.
+        """
+        raise NotImplementedError("Implement me in child class")
+
+
+@dataclasses.dataclass(eq=True, frozen=True)
+class WarningRecordInfo(RecordInfo):
     """
     Hashable collection of the unique information from a warnings.warn call.
     """
-    message: str
     category: type[Warning]
     filename: str
     lineno: int
@@ -492,7 +666,7 @@ class WarningRecordInfo:
             ) from exc
 
 
-class LogWarningLevelFilter(logging.Filter):
+class LogWarningLevelFilter(DemotionFilter):
     """
     Filter to decrease the log level of repeat warnings.
 
@@ -510,83 +684,29 @@ class LogWarningLevelFilter(logging.Filter):
     adjust the level of the repeat messages to avoid cluttering the user's
     view, or to remove them entirely.
 
+    This filter incorporates a resettable counter that will count the number
+    of demoted log messages.
+
     Parameters
     ----------
     level : str or int, optional
-        The log level or name of the log level to reduce dupliacte
+        The log level or name of the log level to reduce duplicate
         log messages to. Defaults to logging.DEBUG.
+    only_duplicates: bool, optional
+        If True, the default, only demote duplicated log messages.
+        If False, demote all log messages that pass through should_demote.
+        This must be False if no record_dataclass is provided.
     """
-    levelno: int
-    levelname: str
+    record_dataclass: type = WarningRecordInfo
+    default_logger: typing.Optional[logging.Logger] = warnings_logger
+
     cache: set[WarningRecordInfo]
-    _logger: typing.Optional[logging.Logger]
 
-    def __init__(
-        self,
-        level: typing.Union[str, int] = logging.DEBUG,
-    ):
-        self.levelno = validate_log_level(level)
-        self.levelname = logging.getLevelName(self.levelno)
-        self.cache = set()
-        self._logger = None
-
-    def filter(self, record: logging.LogRecord) -> typing.Literal[True]:
+    def should_demote(self, *args, **kwargs) -> typing.Literal[True]:
         """
-        Adjust the level of the warnings log message if we've seen it before.
-
-        Always returns "True" to let the log pass through.
+        All warnings should be demoted (only_duplicates=True)
         """
-        try:
-            info = WarningRecordInfo.from_record(record)
-        except ValueError:
-            # Must not be a warnings log record, skip
-            return True
-        if info in self.cache:
-            record.levelno = self.levelno
-            record.levelname = self.levelname
-        else:
-            self.cache.add(info)
         return True
-
-    @classmethod
-    def install(
-        cls,
-        level: typing.Union[str, int] = logging.DEBUG,
-        logger: logging.Logger = warnings_logger,
-    ) -> LogWarningLevelFilter:
-        """
-        Apply the LogWarningLevelFilter to the warnings logger.
-
-        Parameters
-        ----------
-        level : str or int, optional
-            The log level or name of the log level to reduce dupliacte
-            log messages to. Defaults to logging.DEBUG.
-        logger : logging.Logger, optional
-            The logger to apply the filter to. Defaults to the warnings_logger.
-
-        Returns
-        -------
-        filt : LogWarningLevelFilter
-            The filter object that we've applied to the logger. Useful for
-            debugging.
-        """
-        filt = cls(level=level)
-        logger.addFilter(filt)
-        filt._logger = logger
-        return filt
-
-    def uninstall(self) -> None:
-        """
-        Convenience method for removing this filter.
-
-        Requires the filter to have been originally created and applied using
-        the "install" class method.
-
-        Intended to help with the unit testing.
-        """
-        if self._logger is not None:
-            self._logger.removeFilter(self)
 
 
 def standard_warnings_config() -> LogWarningLevelFilter:
@@ -604,3 +724,93 @@ def standard_warnings_config() -> LogWarningLevelFilter:
     """
     install_log_warning_handler()
     return LogWarningLevelFilter.install()
+
+
+objects_logger = logging.getLogger('ophyd.objects')
+
+
+@dataclasses.dataclass(eq=True, frozen=True)
+class OphydObjectRecordInfo(RecordInfo):
+    """
+    Hashable collection of the unique information from an ophyd.objects log
+    """
+    pathname: str
+    exception: typing.Optional[Exception]
+    object_name: str
+
+    @classmethod
+    def from_record(cls, record: logging.LogRecord) -> OphydObjectRecordInfo:
+        """
+        Create a OphydObjectRecordInfo from a LogRecord.
+
+        This can be used as a utility to inspect or compare warnings log
+        messages inside a log filter.
+        """
+        try:
+            if record.exc_info is None:
+                exception = None
+            else:
+                exception = record.exc_info[0]
+            return cls(
+                message=record.msg,
+                pathname=record.pathname,
+                exception=exception,
+                object_name=record.ophyd_object_name,
+            )
+        except AttributeError as exc:
+            raise ValueError(
+                'Recieved invalid record, must be from '
+                'the ophyd.objects logging adapters'
+            ) from exc
+
+
+class OphydCallbackExceptionDemoter(DemotionFilter):
+    """
+    Filter that demotes the logging level of callback exceptions.
+
+    Ophyd object callback exceptions are logged at ERROR level.
+    This causes some usage problems when the user is trying to use the
+    terminal and a callback exception is being thrown on every update
+    of a fast-updating PV.
+
+    This filter will apply itself to the ophyd.objects logger, and
+    will switch the log level of either all exceptions or repeat exceptions
+    only depending on the initialization arguments.
+
+    This filter incorporates a resettable counter that will count the number
+    of demoted log messages.
+
+    Parameters
+    ----------
+    level : str or int, optional
+        The log level or name of the log level to reduce duplicate
+        log messages to. Defaults to logging.DEBUG.
+    only_duplicates: bool, optional
+        If True, the default, only apply this to duplicated log messages.
+        If False, apply it to all log messages.
+    """
+    record_dataclass: type = OphydObjectRecordInfo
+    default_logger: typing.Optional[logging.Logger] = objects_logger
+
+    cache: set[OphydObjectRecordInfo]
+
+    def should_demote(
+        self,
+        record: logging.LogRecord,
+        info: RecordInfo
+    ) -> bool:
+        """
+        Return True if we should demote the record, False otherwise.
+
+        We'll match the log message template against the one
+        used for the callback exception messages.
+
+        Parameters
+        ----------
+        record: logging.LogRecord
+            The record instance passed into the filter.
+        info: RecordInfo
+            The record info dataclass, which may be more convenient
+            for implementing this method.
+        """
+        return 'Subscription %s callback exception' in info.message
