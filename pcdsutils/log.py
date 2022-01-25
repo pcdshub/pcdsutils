@@ -530,6 +530,7 @@ class DemotionFilter(logging.Filter):
         self.levelname = logging.getLevelName(self.levelno)
         self.only_duplicates = only_duplicates
         self.cache = set()
+        self._level_cache = {}
         self.counter = 0
         self._logger = None
 
@@ -613,16 +614,23 @@ class DemotionFilter(logging.Filter):
                 # Find the logger or handler instance and check the level
                 # If our demoted level is too low, return False here to veto
                 # Required since level is checked before filter
+                # If we've seen the logger before, use the cache
+                try:
+                    return self.levelno >= self._level_cache[record.name].level
+                except KeyError:
+                    ...
                 # Check all parent loggers and handlers until we find it
                 check_logger = logging.getLogger(record.name)
                 depth = 10
                 while depth > 0 and check_logger is not None:
                     if self in check_logger.filters:
                         # We found it!
+                        self._level_cache[record.name] = check_logger
                         return self.levelno >= check_logger.level
                     for check_handler in check_logger.handlers:
                         if self in check_handler.filters:
                             # We found it!
+                            self._level_cache[record.name] = check_handler
                             return self.levelno >= check_handler.level
                     check_logger = check_logger.parent
                     # Escape hatch for potential infinite loops
