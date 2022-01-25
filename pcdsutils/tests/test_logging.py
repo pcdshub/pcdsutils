@@ -4,6 +4,7 @@ import pprint
 import queue
 import socket
 import threading
+import uuid
 import warnings
 
 import ophyd
@@ -270,3 +271,77 @@ def test_exception_non_duplicates(
     inner_test(filtered=True)
     callback_demoter.uninstall()
     inner_test(filtered=False)
+
+
+class SimpleDemoter(pcdsutils.log.DemotionFilter):
+    def should_demote(self, *args, **kwargs) -> bool:
+        """Return True to demote all records."""
+        return True
+
+
+@pytest.fixture(scope='function')
+def unique_log():
+    return logging.getLogger(f'{__name__}.{uuid.uuid4()}')
+
+
+@pytest.fixture(scope='function')
+def callback_demoter_on_unique_log(unique_log):
+    demoter = SimpleDemoter.install(
+        logger=unique_log,
+    )
+    yield demoter
+    demoter.uninstall()
+
+
+def test_demotion_on_leveled_logger(
+    callback_demoter_on_unique_log: SimpleDemoter,
+    unique_log: logging.Logger,
+    caplog: pytest.LogCaptureFixture,
+):
+    # Apply to all makes it easier to test
+    callback_demoter_on_unique_log.only_duplicates = False
+    # Log messages that get demoted to DEBUG should not go through!
+    unique_log.setLevel(logging.INFO)
+    # If they do go through, caplog would see them!
+    caplog.set_level(logging.DEBUG)
+
+    # Trigger a bunch of filtered callback exceptions
+    # caplog must see NOTHING
+    caplog.clear()
+
+    for _ in range(10):
+        unique_log.info('should be filtered')
+
+    assert not caplog.records
+
+
+@pytest.fixture(scope='function')
+def callback_demoter_on_caplog_handler(caplog: pytest.LogCaptureFixture):
+    # Caplog works via a handler on the root logger
+    # We can test root logger handlers by applying
+    # the filter to the caplog handler
+    demoter = SimpleDemoter()
+    caplog.handler.addFilter(demoter)
+    yield demoter
+    caplog.handler.filters.remove(demoter)
+
+
+def test_demotion_on_leveled_root_handler(
+    callback_demoter_on_caplog_handler: SimpleDemoter,
+    unique_log: logging.Logger,
+    caplog: pytest.LogCaptureFixture,
+):
+    # Apply to all makes it easier to test
+    callback_demoter_on_caplog_handler.only_duplicates = False
+
+    # We need to set caplog's logger and handler levels
+    caplog.set_level(logging.DEBUG)
+    caplog.handler.setLevel(logging.INFO)
+
+    # Now we expect these to pass through to the handler, then get filtered
+    caplog.clear()
+
+    for _ in range(10):
+        unique_log.info('should be filtered')
+
+    assert not caplog.records
