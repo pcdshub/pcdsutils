@@ -609,8 +609,27 @@ class DemotionFilter(logging.Filter):
                 record.levelno = self.levelno
                 record.levelname = self.levelname
                 self.counter += 1
+                # Assume we're applied either to a logger or to a handler
+                # Find the logger or handler instance and check the level
+                # If our demoted level is too low, return False here to veto
+                # Required since level is checked before filter
+                # Check all parent loggers and handlers until we find it
+                check_logger = logging.getLogger(record.name)
+                depth = 10
+                while depth > 0 and check_logger is not None:
+                    if self in check_logger.filters:
+                        # We found it!
+                        return self.levelno >= check_logger.level
+                    for check_handler in check_logger.handlers:
+                        if self in check_handler.filters:
+                            # We found it!
+                            return self.levelno >= check_handler.level
+                    check_logger = check_logger.parent
+                    # Escape hatch for potential infinite loops
+                    depth -= 1
             else:
                 self.cache.add(info)
+        # If we got this far, just let the record pass
         return True
 
     def reset_counter(self):
