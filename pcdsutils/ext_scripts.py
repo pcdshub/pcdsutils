@@ -3,6 +3,8 @@ import re
 import socket
 import subprocess
 
+from typing import Optional
+
 
 logger = logging.getLogger(__name__)
 CNF = '/reg/g/pcds/dist/pds/{0}/scripts/{0}.cnf'
@@ -126,6 +128,42 @@ def get_run_number(hutch=None, live=False, timeout=1):
         args += ['-l']
     run_number = call_script(args, timeout=timeout)
     return int(run_number)
+
+
+def get_current_experiment(
+    hutch: Optional[str] = None,
+    live: bool = False,
+    timeout: float = 1.,
+):
+    """
+    Call get_curr_exp to return the current experiment name.
+
+    Parameters
+    ----------
+    hutch : str, optional
+        The name of the hutch to get the experiment for. If omitted, the hutch
+        name will be determined automatically via cli argument.
+
+    live : bool, optional
+        Defaults to False. If True, we'll return the experiment of the current
+        run.
+
+    timeout : int or float, optional
+        Time to wait for get_curr_exp to finish.
+        Defaults to a 1 second timeout.
+
+    Returns
+    -------
+    experiment_name : str
+    """
+    args = [
+        SCRIPTS.format(hutch or "latest", "get_curr_exp")
+    ]
+    if hutch is not None:
+        args += ["-i", hutch]
+    if live:
+        args += ["-l"]
+    return (call_script(args, timeout=timeout) or "unknown").strip()
 
 
 def get_ami_proxy(hutch, timeout=10):
