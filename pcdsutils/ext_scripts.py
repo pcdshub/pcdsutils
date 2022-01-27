@@ -2,9 +2,7 @@ import logging
 import re
 import socket
 import subprocess
-
 from typing import Optional
-
 
 logger = logging.getLogger(__name__)
 CNF = '/reg/g/pcds/dist/pds/{0}/scripts/{0}.cnf'
@@ -98,7 +96,11 @@ def get_hutch_name(timeout=10):
 hutch_name = get_hutch_name
 
 
-def get_run_number(hutch=None, live=False, timeout=1):
+def get_run_number(
+    hutch: Optional[str] = None,
+    live: bool = False,
+    timeout: float = 1.,
+):
     """
     Call get_lastRun to return the run number of the last daq run.
 
@@ -166,7 +168,7 @@ def get_current_experiment(
     return (call_script(args, timeout=timeout) or "unknown").strip()
 
 
-def get_ami_proxy(hutch, timeout=10):
+def get_ami_proxy(hutch: str, timeout: float = 10.):
     """
     Call procmgr to determine the lcls-I ami proxy hostname.
 
