@@ -32,6 +32,16 @@ def test_hutch_name(monkeypatch):
     assert ext.get_hutch_name() == 'tst'
 
 
+def test_experiment_name(monkeypatch):
+    logger.debug('test_experiment_name')
+
+    def fake_experiment_name(*args, **kwargs):
+        return 'tst\n'
+
+    monkeypatch.setattr(ext, 'call_script', fake_experiment_name)
+    assert ext.get_current_experiment() == 'tst'
+
+
 def test_run_number(monkeypatch):
     logger.debug('test_run_number')
 
