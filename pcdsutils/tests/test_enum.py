@@ -1,3 +1,5 @@
+import pytest
+
 from ..enum import HelpfulIntEnum
 
 
@@ -6,6 +8,13 @@ def test_subclass():
         A = 4
         B = 5
         C = 6
+
+    assert MyEnum(4) == MyEnum.A
+    assert MyEnum(5) == MyEnum.B
+    assert MyEnum(6) == MyEnum.C
+
+    with pytest.raises(ValueError):
+        MyEnum(7)
 
     assert MyEnum["A"] == MyEnum.A == 4
     assert MyEnum["a"] == MyEnum.A == 4
