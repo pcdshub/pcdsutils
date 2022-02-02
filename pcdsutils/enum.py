@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import enum
-from typing import Iterator, Union
+from typing import Iterator, Set, Union
 
 EnumId = Union[enum.Enum, int, str]
 
@@ -60,7 +60,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
     def include(
         cls,
         identifiers: Iterator[EnumId],
-    ) -> set[HelpfulIntEnum]:
+    ) -> Set[HelpfulIntEnum]:
         """
         Returns all enum values matching the identifiers given.
         This is a shortcut for calling cls.from_any many times and
@@ -74,7 +74,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
 
         Returns
         -------
-        enums : set[HelpfulIntEnum]
+        enums : Set[HelpfulIntEnum]
             A set whose elements are the enum objects associated with the
             input identifiers.
         """
@@ -84,7 +84,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
     def exclude(
         cls,
         identifiers: Iterator[EnumId],
-    ) -> set[HelpfulIntEnum]:
+    ) -> Set[HelpfulIntEnum]:
         """
         Return all enum values other than the ones given.
 
@@ -96,7 +96,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
 
         Returns
         -------
-        enums : set[HelpfulIntEnum]
+        enums : Set[HelpfulIntEnum]
             A set whose elements are the valid enum objects not associated
             with the input identifiers.
         """
