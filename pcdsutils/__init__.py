@@ -1,8 +1,8 @@
+from . import log, utils
 from ._version import get_versions
-from . import utils
-from . import log
+from .enum import HelpfulIntEnum
 
 __version__ = get_versions()['version']
 del get_versions
 
-__all__ = ['utils', 'log']
+__all__ = ['utils', 'log', "HelpfulIntEnum"]
