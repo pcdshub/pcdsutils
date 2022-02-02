@@ -31,6 +31,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
     def from_any(cls, identifier: EnumId) -> HelpfulIntEnum:
         """
         Try all the ways to interpret identifier as the enum.
+
         This is intended to consolidate the try/except tree typically used
         to interpret external input as an enum.
 
@@ -44,6 +45,11 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
         -------
         enum : HelpfulIntEnum
             The corresponding enum object associated with the identifier.
+
+        Raises
+        ------
+        ValueError
+            If the value is not a valid enum identifier.
         """
         try:
             return cls[identifier]
