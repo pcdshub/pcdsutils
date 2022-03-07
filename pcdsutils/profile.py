@@ -4,7 +4,7 @@ Utilities for setting up line_profiler to debug a specific module
 import logging
 from contextlib import contextmanager
 
-from .utils import get_native_functions, get_submodules
+from .search import get_native_functions, get_submodules
 
 logger = logging.getLogger(__name__)
 
