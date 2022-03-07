@@ -4,19 +4,52 @@ Utilities for finding objects in submodules
 import importlib
 import pkgutil
 from inspect import isclass, isfunction
+from types import ModuleType
+from typing import Any
 
 
-def is_native(obj, module):
+def is_native(obj: Any, module: ModuleType) -> bool:
     """
     Determines if obj was defined in module.
+
     Returns True if obj was defined in this module.
     Returns False if obj was not defined in this module.
-    Returns None if we can't figure it out, e.g. if this is a primitive type.
+
+    Parameters
+    ----------
+    obj : Any
+        Any object. Note that if obj is a primitive type, or
+        any other type without explicit references to its module,
+        this check will fail.
+    module : module
+        Any Python module
+
+    Returns
+    -------
+    native : bool
+        True if obj was defined in the module
+        False otherwise
+
+    Raises
+    ------
+    TypeError
+        If the object type cannot be traced back to any particular
+        module, e.g. a primitive type like int, or if the module
+        argument cannot be interpreted as a module.
     """
     try:
-        return module.__name__ in obj.__module__
-    except (AttributeError, TypeError):
-        return None
+        module_name = module.__name__
+    except AttributeError:
+        raise TypeError(
+            f'{module} of type {type(module)} is not a module.'
+        )
+    try:
+        object_module = obj.__module__
+    except AttributeError:
+        raise TypeError(
+            f'Object {obj} of type {type(obj)} can have no native module.'
+        )
+    return module_name == object_module
 
 
 def get_native_functions(module):
