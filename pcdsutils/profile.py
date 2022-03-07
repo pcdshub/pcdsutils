@@ -1,13 +1,15 @@
 """
 Utilities for setting up line_profiler to debug a specific module
 """
+from __future__ import annotations
+
 import importlib
 import logging
 import pkgutil
 from contextlib import contextmanager
 from inspect import isclass, isfunction
 from types import ModuleType
-from typing import Any
+from typing import Any, Callable, Iterable, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ except ImportError:
 profiler = None
 
 
-def get_profiler():
+def get_profiler() -> LineProfiler:
     """Returns the global profiler instance, creating it if necessary."""
     global profiler
     if not has_line_profiler:
@@ -36,8 +38,21 @@ def get_profiler():
 
 
 @contextmanager
-def profiler_context(module_names=None, filename=None):
-    """Context manager for profiling the cli typhos application."""
+def profiler_context(
+    module_names: Iterable[str],
+    filename: Optional[str] = None,
+) -> None:
+    """
+    Context manager for profiling a fixed span of an application.
+
+    Parameters
+    ----------
+    module_names : iterable of str
+        The modules whose functions we'd like to include in the profile.
+    filename : str, optional
+        If provided, the results will be saved to this filename.
+        If omitted, we'll print the results to stdout.
+    """
     setup_profiler(module_names=module_names)
 
     toggle_profiler(True)
@@ -50,17 +65,20 @@ def profiler_context(module_names=None, filename=None):
         save_results(filename)
 
 
-def setup_profiler(module_names=None):
+def setup_profiler(module_names: Iterable[str]) -> None:
     """
     Sets up the global profiler.
-    Includes all functions and classes from all submodules of the given
-    modules. This defaults to everything in the typhos module, but you can
-    limit the scope by passing a particular submodule,
-    e.g. module_names=['typhos.display'].
-    """
-    if module_names is None:
-        module_names = ['typhos']
 
+    Includes all functions and classes from all submodules of the given
+    module names.
+
+    Parameters
+    ----------
+    module_names : iterable of str
+        The modules to profile. You can make this an entire module like
+        "typhos", specific submodules like "typhos.display", or
+        several modules if you want to profile many different things.
+    """
     profiler = get_profiler()
 
     functions = set()
@@ -74,7 +92,7 @@ def setup_profiler(module_names=None):
         profiler.add_function(function)
 
 
-def toggle_profiler(turn_on):
+def toggle_profiler(turn_on: bool) -> None:
     """Turns the profiler off or on."""
     profiler = get_profiler()
     if turn_on:
@@ -83,14 +101,14 @@ def toggle_profiler(turn_on):
         profiler.disable_by_count()
 
 
-def save_results(filename):
+def save_results(filename: str) -> None:
     """Saves the formatted profiling results to filename."""
     profiler = get_profiler()
     with open(filename, 'w') as fd:
         profiler.print_stats(fd, stripzeros=True, output_unit=1e-3)
 
 
-def print_results():
+def print_results() -> None:
     """Prints the formatted results directly to screen."""
     profiler = get_profiler()
     profiler.print_stats(stripzeros=True, output_unit=1e-3)
@@ -140,18 +158,55 @@ def is_native(obj: Any, module: ModuleType) -> bool:
     return module_name == object_module
 
 
-def get_native_functions(module):
-    """Returns a set of all functions and methods defined in module."""
+def get_native_functions(module: ModuleType) -> set[Callable]:
+    """
+    Returns a set of all functions and methods defined in module.
+
+    This does not include any functions defined in submodules.
+
+    Parameters
+    ----------
+    module : ModuleType
+        The module object that you import
+
+    Returns
+    native_functions : set of callables
+        The functions defined in that module.
+    """
     return get_native_methods(module, module)
 
 
-def get_native_methods(cls, module, *, native_methods=None, seen=None):
-    """Returns a set of all methods defined in cls that belong to module."""
-    if native_methods is None:
-        native_methods = set()
+def get_native_methods(
+    module_or_cls: Any,
+    module: ModuleType,
+    *,
+    native_methods: Optional[set[Callable]] = None,
+    seen: Optional[set[Any]] = None,
+) -> set[Callable]:
+    """
+    Recursive step of get_native_functions.
+
+    Paremeters
+    ----------
+    module_or_cls : any
+        Either the original module or a class defined in it.
+    module : ModuleType
+        The source module to compare with to avoid including
+        imported functions, etc. in the profile
+    seen : set of any, optional
+        All objects we've processed already, to avoid
+        infinite loops.
+
+    Returns
+    -------
+    native_methods : set of Callables
+        The functions defined on that class or module that
+        are native.
+    """
+    native_methods = set()
     if seen is None:
         seen = set()
-    for obj in cls.__dict__.values():
+    for obj in module_or_cls.__dict__.values():
         try:
             if obj in seen:
                 continue
@@ -159,23 +214,26 @@ def get_native_methods(cls, module, *, native_methods=None, seen=None):
         except TypeError:
             # Unhashable type, definitely not a class or function
             continue
-        if not is_native(obj, module):
+        try:
+            if not is_native(obj, module):
+                continue
+        except TypeError:
             continue
-        elif isclass(obj):
-            get_native_methods(obj, module, native_methods=native_methods,
-                               seen=seen)
+        if isclass(obj):
+            inner_methods = get_native_methods(obj, module, seen=seen)
+            native_methods.update(inner_methods)
         elif isfunction(obj):
             native_methods.add(obj)
     return native_methods
 
 
-def get_submodules(module_name):
+def get_submodules(module_name: str) -> list[ModuleType]:
     """Returns a list of the imported module plus all submodules."""
     submodule_names = get_submodule_names(module_name)
     return import_modules(submodule_names)
 
 
-def get_submodule_names(module_name):
+def get_submodule_names(module_name: str) -> list[str]:
     """
     Returns a list of the module name plus all importable submodule names.
     """
@@ -198,13 +256,14 @@ def get_submodule_names(module_name):
     return submodule_names
 
 
-def import_modules(modules):
+def import_modules(module_names: Iterable[str]) -> Iterable[ModuleType]:
     """
     Utility function to import an iterator of module names as a list.
+
     Skips over modules that are not importable.
     """
     module_objects = []
-    for module_name in modules:
+    for module_name in module_names:
         try:
             module_objects.append(importlib.import_module(module_name))
         except ImportError:
