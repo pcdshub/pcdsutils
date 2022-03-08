@@ -251,7 +251,13 @@ def get_submodule_names(module_name: str) -> list[str]:
             full_submodule_name = module_name + '.' + submodule_name
             submodule_names.append(full_submodule_name)
             if is_pkg:
-                subsubmodule_names = get_submodule_names(full_submodule_name)
+                try:
+                    subsubmodule_names = get_submodule_names(
+                        full_submodule_name
+                    )
+                except Exception:
+                    # The recursive check failed, some import failed here
+                    continue
                 submodule_names.extend(subsubmodule_names)
     return submodule_names
 
