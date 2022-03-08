@@ -266,6 +266,6 @@ def import_modules(module_names: Iterable[str]) -> Iterable[ModuleType]:
     for module_name in module_names:
         try:
             module_objects.append(importlib.import_module(module_name))
-        except ImportError:
+        except Exception:
             pass
     return module_objects
