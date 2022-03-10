@@ -29,6 +29,20 @@ class SubscribeCallback(Protocol):
 
 
 @contextlib.contextmanager
+def no_device_lazy_load():
+    """
+    Context manager which disables the ophyd.device.Device
+    `lazy_wait_for_connection` behavior and later restore its value.
+    """
+    old_val = ophyd.Device.lazy_wait_for_connection
+    try:
+        ophyd.Device.lazy_wait_for_connection = False
+        yield
+    finally:
+        ophyd.Device.lazy_wait_for_connection = old_val
+
+
+@contextlib.contextmanager
 def subscription_context(
     *objects: OphydObject,
     callback: Callable,
@@ -72,20 +86,6 @@ def subscription_context(
                 ...
 
 
-@contextlib.contextmanager
-def no_device_lazy_load():
-    '''
-    Context manager which disables the ophyd.device.Device
-    `lazy_wait_for_connection` behavior and later restore its value.
-    '''
-    old_val = ophyd.Device.lazy_wait_for_connection
-    try:
-        ophyd.Device.lazy_wait_for_connection = False
-        yield
-    finally:
-        ophyd.Device.lazy_wait_for_connection = old_val
-
-
 def get_all_signals_from_device(
     device: ophyd.Device,
     include_lazy: bool = False,
@@ -106,13 +106,13 @@ def get_all_signals_from_device(
     def default_filter_by(*_) -> bool:
         return True
 
-    filter_by = filter_by or default_filter_by
+    filter_func = filter_by or default_filter_by
 
     def _get_signals():
         return [
             walk.item
             for walk in device.walk_signals(include_lazy=include_lazy)
-            if filter_by(walk)
+            if filter_func(walk)
         ]
 
     if not include_lazy:
