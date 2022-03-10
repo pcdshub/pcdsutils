@@ -1,9 +1,17 @@
+"""
+ophyd Device/Signal-related helpers.
+"""
+
+import asyncio
 import contextlib
 import logging
-from typing import Callable, Optional
+import time
+from typing import Callable, List, Optional
 
 import ophyd
 from ophyd.ophydobj import OphydObject
+
+from .type_hints import Number, PrimitiveType
 
 try:
     from typing import Protocol
@@ -12,6 +20,12 @@ except ImportError:
 
 
 logger = logging.getLogger(__name__)
+FilterBy = Callable[[ophyd.device.ComponentWalk], bool]
+
+
+class SubscribeCallback(Protocol):
+    def __call__(self, **kwargs) -> None:
+        ...
 
 
 @contextlib.contextmanager
@@ -72,9 +86,6 @@ def no_device_lazy_load():
         ophyd.Device.lazy_wait_for_connection = old_val
 
 
-FilterBy = Callable[[ophyd.device.ComponentWalk], bool]
-
-
 def get_all_signals_from_device(
     device: ophyd.Device,
     include_lazy: bool = False,
@@ -111,11 +122,6 @@ def get_all_signals_from_device(
         return _get_signals()
 
 
-class SubscribeCallback(Protocol):
-    def __call__(self, **kwargs) -> None:
-        ...
-
-
 @contextlib.contextmanager
 def subscription_context_device(
     device: ophyd.Device,
@@ -147,8 +153,90 @@ def subscription_context_device(
     filter_by : callable, optional
         Filter signals, with signature ``callable(ophyd.Device.ComponentWalk)``
     """
-    signals = get_all_signals_from_device(device, include_lazy=include_lazy)
+    signals = get_all_signals_from_device(
+        device, include_lazy=include_lazy, filter_by=filter_by
+    )
     with subscription_context(
         *signals, callback=callback, event_type=event_type, run=run
     ) as obj_to_cid:
         yield obj_to_cid
+
+
+@contextlib.contextmanager
+def _acquire(signal: ophyd.Signal):
+    """
+    [Context manager] Subscribe to signal, acquire data until the block exits.
+
+    Parameters
+    ----------
+    signal : ophyd.Signal
+        Ophyd object to monitor.
+
+    Returns
+    -------
+    data : List[PrimitiveType]
+        The data acquired.  Guaranteed to have at least one item.
+    """
+    signal.wait_for_connection()
+    data = []
+
+    start_value = signal.get()
+
+    def acquire(value, **_):
+        data.append(value)
+
+    with subscription_context(signal, callback=acquire):
+        yield data
+
+    if not data:
+        data.extend([start_value, signal.get()])
+
+
+def acquire_blocking(
+    signal: ophyd.Signal,
+    duration: Number
+) -> List[PrimitiveType]:
+    """
+    Subscribe to signal, acquire data for ``duration`` seconds.
+
+    Parameters
+    ----------
+    signal : ophyd.Signal
+        Ophyd object to monitor.
+
+    duration : number
+        Seconds to acquire for.
+
+    Returns
+    -------
+    data : List[PrimitiveType]
+        The data acquired.  Guaranteed to have at least one item.
+    """
+    with _acquire(signal) as data:
+        time.sleep(duration)
+    return data
+
+
+async def acquire_async(
+    signal: ophyd.Signal,
+    duration: Number
+) -> List[PrimitiveType]:
+    """
+    Subscribe to signal, acquire data for ``duration`` seconds.
+
+    Parameters
+    ----------
+    signal : ophyd.Signal
+        Ophyd object to monitor.
+
+    duration : number
+        Seconds to acquire for.
+
+    Returns
+    -------
+    data : List[PrimitiveType]
+        The data acquired.  Guaranteed to have at least one item.
+    """
+    with _acquire(signal) as data:
+        await asyncio.sleep(duration)
+    return data
