@@ -9,7 +9,7 @@ import dataclasses
 import enum
 import json
 import sys
-from typing import Any, BinaryIO, List, Optional
+from typing import Any, BinaryIO, List, Optional, cast
 
 import prettytable
 
@@ -137,7 +137,11 @@ def _create_argparser() -> argparse.ArgumentParser:
     return parser
 
 
-if __name__ == "__main__":
+def _entrypoint():
     parser = _create_argparser()
     args = parser.parse_args(args=sys.argv[1:])
-    main(args)
+    main(cast(ProgramArguments, args))
+
+
+if __name__ == "__main__":
+    _entrypoint()
