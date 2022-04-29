@@ -1,4 +1,5 @@
-from qtpy import QtWidgets, QtCore, QtGui
+from qtpy import QtCore, QtGui, QtWidgets
+
 from pcdsutils.qt import QPopBar
 
 

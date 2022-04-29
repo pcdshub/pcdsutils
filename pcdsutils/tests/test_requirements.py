@@ -1,7 +1,8 @@
 import pathlib
-import pytest
-import pcdsutils.requirements
 
+import pytest
+
+import pcdsutils.requirements
 
 PCDSUTILS_ROOT = pathlib.Path(__file__).parents[2]
 

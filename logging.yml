@@ -45,7 +45,7 @@ handlers:
         backupCount: 10
         mode: a
         delay: 0
-        
+
     warn_file_handler:
         class: pcdsutils.utils.RotatingFileHandlerRelativePath
         level: WARN
@@ -81,7 +81,7 @@ root:
     level: DEBUG
     handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
     propogate: no
-    
+
 loggers:
     <pcdsutils>:
         level: INFO

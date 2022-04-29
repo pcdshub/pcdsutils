@@ -1,7 +1,7 @@
 import pytest
-import pcdsutils
-
 from pytest import PytestDeprecationWarning
+
+import pcdsutils
 
 
 def test_import_helper():
