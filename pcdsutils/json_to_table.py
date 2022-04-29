@@ -50,7 +50,9 @@ def string_for_table(
         result = str(value)
 
     if len(result) > max_length:
-        return result[:max_length] + "..."
+        if max_length <= 3:
+            return "..."
+        return result[:max_length - 3] + "..."
     return result[:max_length]
 
 
