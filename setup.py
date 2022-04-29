@@ -1,7 +1,9 @@
-import versioneer
-from os import path
-from setuptools import setup, find_packages
 import sys
+from os import path
+
+from setuptools import find_packages, setup
+
+import versioneer
 
 min_version = (3, 6)
 
@@ -40,8 +42,9 @@ if git_requirements:
 
 
 console_scripts = [
-    'requirements-from-conda=pcdsutils.requirements:_requirements_from_conda',
-    'requirements-compare=pcdsutils.requirements:_compare_requirements',
+    "requirements-from-conda=pcdsutils.requirements:_requirements_from_conda",
+    "requirements-compare=pcdsutils.requirements:_compare_requirements",
+    "json-to-table=pcdsutils.json_to_table:_entrypoint",
 ]
 
 setup(
