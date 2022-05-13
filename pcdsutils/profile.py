@@ -9,14 +9,14 @@ import pkgutil
 from contextlib import contextmanager
 from inspect import isclass, isfunction
 from types import ModuleType
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Iterable, Optional, Tuple, List
 
 logger = logging.getLogger(__name__)
 
 _optional_err = ('Optional dependency line_profiler missing from python '
                  'environment. Cannot run profiler.')
 try:
-    from line_profiler import LineProfiler
+    from line_profiler import LineProfiler, show_func
     has_line_profiler = True
 except ImportError:
     has_line_profiler = False
@@ -103,15 +103,50 @@ def toggle_profiler(turn_on: bool) -> None:
 
 def save_results(filename: str) -> None:
     """Saves the formatted profiling results to filename."""
-    profiler = get_profiler()
+    stats = get_profiler().get_stats()
     with open(filename, 'w') as fd:
-        profiler.print_stats(fd, stripzeros=True, output_unit=1e-3)
+        for (fn, lineno, name), timings in sort_timings().items():
+            show_func(
+                fn,
+                lineno,
+                name,
+                timings,
+                stats.unit,
+                output_unit=1e-3,
+                stream=fd,
+                stripzeros=True,
+            )
 
 
 def print_results() -> None:
     """Prints the formatted results directly to screen."""
+    stats = get_profiler().get_stats()
+    for (fn, lineno, name), timings in sort_timings().items():
+        show_func(
+            fn,
+            lineno,
+            name,
+            timings,
+            stats.unit,
+            output_unit=1e-3,
+            stream=None,
+            stripzeros=True,
+        )
+
+
+def sort_timings() -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
     profiler = get_profiler()
-    profiler.print_stats(stripzeros=True, output_unit=1e-3)
+    stats = profiler.get_stats()
+    new_timings = {}
+    ranks = []
+    for key, inner_timings in stats.timings.items():
+        tot_time = 0
+        for lineo, nhits, time in inner_timings:
+            tot_time += time
+        ranks.append((tot_time, key))
+    for _, key in sorted(ranks, reverse=True):
+        new_timings[key] = stats.timings[key]
+    return new_timings
 
 
 def is_native(obj: Any, module: ModuleType) -> bool:
