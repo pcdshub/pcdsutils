@@ -9,7 +9,7 @@ import pkgutil
 from contextlib import contextmanager
 from inspect import isclass, isfunction
 from types import ModuleType
-from typing import Any, Callable, Iterable, Optional, Tuple, List
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
