@@ -53,7 +53,7 @@ def profiler_context(
     filename: Optional[str] = None,
     use_global_profiler: bool = False,
     output_now: bool = True,
-    min_threshold: Optional[float] = None,
+    min_threshold: float = 0,
 ) -> LineProfiler:
     """
     Context manager for profiling a fixed span of an application.
@@ -167,10 +167,26 @@ def toggle_profiler(turn_on: bool) -> None:
         profiler.disable_by_count()
 
 
+def get_preamble(
+    timings_dict: Dict,
+    min_threshold: float
+) -> str:
+    """
+    Returns the text that goes before the line profile chunks in the output.
+    """
+    txt = 'Profile output: time is in units of milliseconds.\n'
+    if not timings_dict:
+        txt += (
+            'No functions above minimum threshold of '
+            f'{min_threshold} seconds.\n'
+        )
+    return txt + '\n'
+
+
 def save_results(
     filename: str,
     prof: Optional[LineProfiler] = None,
-    min_threshold: Optional[float] = None,
+    min_threshold: float = 0,
 ) -> None:
     """
     Saves the formatted profiling results.
@@ -191,6 +207,12 @@ def save_results(
     stats = prof.get_stats()
     timings_dict = sort_timings(prof, min_threshold)
     with open(filename, 'w') as fd:
+        fd.write(
+            get_preamble(
+                timings_dict,
+                min_threshold,
+            )
+        )
         for (fn, lineno, name), timings in timings_dict.items():
             show_func(
                 fn,
@@ -206,7 +228,7 @@ def save_results(
 
 def print_results(
     prof: Optional[LineProfiler] = None,
-    min_threshold: Optional[float] = None,
+    min_threshold: float = 0,
 ) -> None:
     """
     Prints the formatted results directly to terminal.
@@ -224,6 +246,13 @@ def print_results(
         prof = get_profiler()
     stats = prof.get_stats()
     timings_dict = sort_timings(prof, min_threshold)
+    print(
+        '\n' + get_preamble(
+            timings_dict,
+            min_threshold,
+        ),
+        end='',
+    )
     for (fn, lineno, name), timings in timings_dict.items():
         show_func(
             fn,
@@ -239,7 +268,7 @@ def print_results(
 
 def sort_timings(
     prof: Optional[LineProfiler] = None,
-    min_threshold: Optional[float] = None,
+    min_threshold: float = 0,
 ) -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
     """
     Sort a profiler's stats in order of decreasing total time.
@@ -259,20 +288,17 @@ def sort_timings(
     stats = prof.get_stats()
     new_timings = {}
     ranks = []
-    if min_threshold is None:
-        scaled_threshold = None
-    else:
-        try:
-            # stats.unit is e.g. 1e-6, the unit of the integer counts we see
-            # so if min_threshold is, say, 1s, that needs to be 1e6 counts
-            scaled_threshold = min_threshold / stats.unit
-        except ZeroDivisionError:
-            scaled_threshold = None
+    try:
+        # stats.unit is e.g. 1e-6, the unit of the integer counts we see
+        # so if min_threshold is, say, 1s, that needs to be 1e6 counts
+        scaled_threshold = min_threshold / stats.unit
+    except ZeroDivisionError:
+        scaled_threshold = 0
     for key, inner_timings in stats.timings.items():
         tot_time = 0
         for lineo, nhits, time in inner_timings:
             tot_time += time
-        if scaled_threshold is None or tot_time > scaled_threshold:
+        if tot_time > scaled_threshold:
             ranks.append((tot_time, key))
     for _, key in sorted(ranks, reverse=True):
         new_timings[key] = stats.timings[key]
