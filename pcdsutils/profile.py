@@ -378,6 +378,14 @@ def import_modules(module_names: Iterable[str]) -> Iterable[ModuleType]:
     for module_name in module_names:
         try:
             module_objects.append(importlib.import_module(module_name))
-        except Exception:
+        # Several modules are naughty and raise BaseException on import.
+        # Sometimes this is even a SystemExit. That's so annoying.
+        # I can't believe I'm catching SystemExit and preventing it.
+        # But this is just an import. It should be OK.
+        # Instead of a basic except Exception, we need to do this
+        # But make sure to allow a KeyBoardInterrupt
+        except KeyboardInterrupt:
+            raise
+        except BaseException:
             pass
     return module_objects
