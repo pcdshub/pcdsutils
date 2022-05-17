@@ -53,6 +53,7 @@ def profiler_context(
     filename: Optional[str] = None,
     use_global_profiler: bool = False,
     output_now: bool = True,
+    min_threshold: Optional[float] = None,
 ) -> LineProfiler:
     """
     Context manager for profiling a fixed span of an application.
@@ -78,6 +79,9 @@ def profiler_context(
         appropriate to change to False if you'd like to accumulate
         statistics across multiple context manager blocks, or perhaps the
         same context manager block multiple times.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
 
     Yields
     ------
@@ -95,9 +99,16 @@ def profiler_context(
 
     if output_now:
         if filename is None:
-            print_results(context_profiler)
+            print_results(
+                context_profiler,
+                min_threshold=min_threshold,
+            )
         else:
-            save_results(filename, context_profiler)
+            save_results(
+                filename,
+                context_profiler,
+                min_threshold=min_threshold,
+            )
 
 
 def setup_profiler(
@@ -159,6 +170,7 @@ def toggle_profiler(turn_on: bool) -> None:
 def save_results(
     filename: str,
     prof: Optional[LineProfiler] = None,
+    min_threshold: Optional[float] = None,
 ) -> None:
     """
     Saves the formatted profiling results.
@@ -170,12 +182,16 @@ def save_results(
     prof : LineProfiler, optional
         The profiler whose statistics we'd like to save.
         If omitted, we'll use the global profiler.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
     """
     if prof is None:
         prof = get_profiler()
     stats = prof.get_stats()
+    timings_dict = sort_timings(prof, min_threshold)
     with open(filename, 'w') as fd:
-        for (fn, lineno, name), timings in sort_timings(prof).items():
+        for (fn, lineno, name), timings in timings_dict.items():
             show_func(
                 fn,
                 lineno,
@@ -188,12 +204,27 @@ def save_results(
             )
 
 
-def print_results(prof: Optional[LineProfiler] = None) -> None:
-    """Prints the formatted results directly to screen."""
+def print_results(
+    prof: Optional[LineProfiler] = None,
+    min_threshold: Optional[float] = None,
+) -> None:
+    """
+    Prints the formatted results directly to terminal.
+
+    Parameters
+    ----------
+    prof : LineProfiler, optional
+        The profiler whose statistics we'd like to save.
+        If omitted, we'll use the global profiler.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
+    """
     if prof is None:
         prof = get_profiler()
     stats = prof.get_stats()
-    for (fn, lineno, name), timings in sort_timings(prof).items():
+    timings_dict = sort_timings(prof, min_threshold)
+    for (fn, lineno, name), timings in timings_dict.items():
         show_func(
             fn,
             lineno,
@@ -208,18 +239,41 @@ def print_results(prof: Optional[LineProfiler] = None) -> None:
 
 def sort_timings(
     prof: Optional[LineProfiler] = None,
+    min_threshold: Optional[float] = None,
 ) -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
-    """Sort a profiler's stats in order of decreasing total time."""
+    """
+    Sort a profiler's stats in order of decreasing total time.
+
+    Parameters
+    ----------
+    prof : LineProfiler, optional
+        The line profiler whose statistics we'd like to sort. If omitted,
+        we'll use the global profiler.
+    min_threshold : float, optional
+        A minimum total execution threshold for pre-filtering the output
+        statistics. Any total execution time in seconds that is below
+        this threshold will be excluded.
+    """
     if prof is None:
         prof = get_profiler()
     stats = prof.get_stats()
     new_timings = {}
     ranks = []
+    if min_threshold is None:
+        scaled_threshold = None
+    else:
+        try:
+            # stats.unit is e.g. 1e-6, the unit of the integer counts we see
+            # so if min_threshold is, say, 1s, that needs to be 1e6 counts
+            scaled_threshold = min_threshold / stats.unit
+        except ZeroDivisionError:
+            scaled_threshold = None
     for key, inner_timings in stats.timings.items():
         tot_time = 0
         for lineo, nhits, time in inner_timings:
             tot_time += time
-        ranks.append((tot_time, key))
+        if scaled_threshold is None or tot_time > scaled_threshold:
+            ranks.append((tot_time, key))
     for _, key in sorted(ranks, reverse=True):
         new_timings[key] = stats.timings[key]
     return new_timings
