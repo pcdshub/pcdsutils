@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib
 import logging
 import pkgutil
+import warnings
 from contextlib import contextmanager
 from inspect import isclass, isfunction
 from types import ModuleType
@@ -131,7 +132,11 @@ def setup_profiler(
 
     functions = set()
     for module_name in module_names:
-        modules = get_submodules(module_name)
+        # We don't care about import warnings
+        # Most of these are "we moved the module"
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            modules = get_submodules(module_name)
         for module in modules:
             native_functions = get_native_functions(module)
             functions.update(native_functions)
