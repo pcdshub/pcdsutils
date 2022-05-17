@@ -153,7 +153,7 @@ def toggle_profiler(turn_on: bool) -> None:
 
 def save_results(
     filename: str,
-    save_profiler: Optional[LineProfiler] = None,
+    prof: Optional[LineProfiler] = None,
 ) -> None:
     """
     Saves the formatted profiling results.
@@ -162,15 +162,15 @@ def save_results(
     ----------
     filename : str
         The path to the file where we'd like to save the results.
-    save_profiler : LineProfiler, optional
+    prof : LineProfiler, optional
         The profiler whose statistics we'd like to save.
         If omitted, we'll use the global profiler.
     """
-    if save_profiler is None:
-        save_profiler = get_profiler()
-    stats = save_profiler.get_stats()
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
     with open(filename, 'w') as fd:
-        for (fn, lineno, name), timings in sort_timings().items():
+        for (fn, lineno, name), timings in sort_timings(prof).items():
             show_func(
                 fn,
                 lineno,
@@ -183,12 +183,12 @@ def save_results(
             )
 
 
-def print_results(print_profiler: Optional[LineProfiler] = None) -> None:
+def print_results(prof: Optional[LineProfiler] = None) -> None:
     """Prints the formatted results directly to screen."""
-    if print_profiler is None:
-        print_profiler = get_profiler()
-    stats = print_profiler.get_stats()
-    for (fn, lineno, name), timings in sort_timings().items():
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
+    for (fn, lineno, name), timings in sort_timings(prof).items():
         show_func(
             fn,
             lineno,
@@ -201,9 +201,13 @@ def print_results(print_profiler: Optional[LineProfiler] = None) -> None:
         )
 
 
-def sort_timings() -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
-    profiler = get_profiler()
-    stats = profiler.get_stats()
+def sort_timings(
+    prof: Optional[LineProfiler] = None,
+) -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
+    """Sort a profiler's stats in order of decreasing total time."""
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
     new_timings = {}
     ranks = []
     for key, inner_timings in stats.timings.items():
