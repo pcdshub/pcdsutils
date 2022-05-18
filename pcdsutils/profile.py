@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib
 import logging
 import pkgutil
+import warnings
 from contextlib import contextmanager
 from inspect import isclass, isfunction
 from types import ModuleType
@@ -32,8 +33,17 @@ def get_profiler() -> LineProfiler:
     global profiler
     if not has_line_profiler:
         raise ImportError(_optional_err)
-    elif profiler is None:
-        profiler = LineProfiler()
+    if profiler is None:
+        reset_profiler()
+    return profiler
+
+
+def reset_profiler() -> LineProfiler:
+    """Clears the old global profiler by replacing it with a new one."""
+    global profiler
+    if not has_line_profiler:
+        raise ImportError(_optional_err)
+    profiler = LineProfiler()
     return profiler
 
 
@@ -41,7 +51,10 @@ def get_profiler() -> LineProfiler:
 def profiler_context(
     module_names: Iterable[str],
     filename: Optional[str] = None,
-) -> None:
+    use_global_profiler: bool = False,
+    output_now: bool = True,
+    min_threshold: float = 0,
+) -> LineProfiler:
     """
     Context manager for profiling a fixed span of an application.
 
@@ -49,25 +62,61 @@ def profiler_context(
     ----------
     module_names : iterable of str
         The modules whose functions we'd like to include in the profile.
+        If using the global profiler, these will persist between calls, only
+        accumulating new modules and never clearing old ones.
     filename : str, optional
         If provided, the results will be saved to this filename.
         If omitted, we'll print the results to stdout.
+    use_global_profiler : bool, optional
+        If False, the default, this will create a new profiler instance for
+        this context manager block. If True, this will use the global
+        profiler. Using the global profiler is appropriate if you want to
+        accumulate statistics across multiple context manager blocks, or
+        the same block multiple times.
+    output_now : bool, optional
+        If True, the default, we'll print to screen or write to file the
+        results upon exiting this block. If False, we will not. This is
+        appropriate to change to False if you'd like to accumulate
+        statistics across multiple context manager blocks, or perhaps the
+        same context manager block multiple times.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
+
+    Yields
+    ------
+    profiler : LineProfiler
+        The profile instance that is active in this code block, in case you'd
+        like to do something with it.
     """
-    setup_profiler(module_names=module_names)
+    context_profiler = setup_profiler(
+        module_names=module_names,
+        use_global_profiler=use_global_profiler,
+    )
+    context_profiler.enable_by_count()
+    yield context_profiler
+    context_profiler.disable_by_count()
 
-    toggle_profiler(True)
-    yield
-    toggle_profiler(False)
+    if output_now:
+        if filename is None:
+            print_results(
+                context_profiler,
+                min_threshold=min_threshold,
+            )
+        else:
+            save_results(
+                filename,
+                context_profiler,
+                min_threshold=min_threshold,
+            )
 
-    if filename is None:
-        print_results()
-    else:
-        save_results(filename)
 
-
-def setup_profiler(module_names: Iterable[str]) -> None:
+def setup_profiler(
+    module_names: Iterable[str],
+    use_global_profiler: bool = True,
+) -> LineProfiler:
     """
-    Sets up the global profiler.
+    Sets up a profiler.
 
     Includes all functions and classes from all submodules of the given
     module names.
@@ -78,22 +127,39 @@ def setup_profiler(module_names: Iterable[str]) -> None:
         The modules to profile. You can make this an entire module like
         "typhos", specific submodules like "typhos.display", or
         several modules if you want to profile many different things.
+    use_global_profiler : bool, optional
+        Set to True, the default, to set up a global profiler.
+        Set to False to set up an independent profiler.
+
+    Returns
+    -------
+    profiler : LineProfiler
+        The profiler that was just set up, global or otherwise.
     """
-    profiler = get_profiler()
+    if use_global_profiler:
+        profiler_to_setup = get_profiler()
+    else:
+        profiler_to_setup = LineProfiler()
 
     functions = set()
     for module_name in module_names:
-        modules = get_submodules(module_name)
+        # We don't care about import warnings
+        # Most of these are "we moved the module"
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            modules = get_submodules(module_name)
         for module in modules:
             native_functions = get_native_functions(module)
             functions.update(native_functions)
 
     for function in functions:
-        profiler.add_function(function)
+        profiler_to_setup.add_function(function)
+
+    return profiler_to_setup
 
 
 def toggle_profiler(turn_on: bool) -> None:
-    """Turns the profiler off or on."""
+    """Turns the global profiler off or on."""
     profiler = get_profiler()
     if turn_on:
         profiler.enable_by_count()
@@ -101,11 +167,53 @@ def toggle_profiler(turn_on: bool) -> None:
         profiler.disable_by_count()
 
 
-def save_results(filename: str) -> None:
-    """Saves the formatted profiling results to filename."""
-    stats = get_profiler().get_stats()
+def get_preamble(
+    timings_dict: Dict,
+    min_threshold: float
+) -> str:
+    """
+    Returns the text that goes before the line profile chunks in the output.
+    """
+    txt = 'Profile output: time is in units of milliseconds.\n'
+    if not timings_dict:
+        txt += (
+            'No functions above minimum threshold of '
+            f'{min_threshold} seconds.\n'
+        )
+    return txt + '\n'
+
+
+def save_results(
+    filename: str,
+    prof: Optional[LineProfiler] = None,
+    min_threshold: float = 0,
+) -> None:
+    """
+    Saves the formatted profiling results.
+
+    Parameters
+    ----------
+    filename : str
+        The path to the file where we'd like to save the results.
+    prof : LineProfiler, optional
+        The profiler whose statistics we'd like to save.
+        If omitted, we'll use the global profiler.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
+    """
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
+    timings_dict = sort_timings(prof, min_threshold)
     with open(filename, 'w') as fd:
-        for (fn, lineno, name), timings in sort_timings().items():
+        fd.write(
+            get_preamble(
+                timings_dict,
+                min_threshold,
+            )
+        )
+        for (fn, lineno, name), timings in timings_dict.items():
             show_func(
                 fn,
                 lineno,
@@ -118,10 +226,34 @@ def save_results(filename: str) -> None:
             )
 
 
-def print_results() -> None:
-    """Prints the formatted results directly to screen."""
-    stats = get_profiler().get_stats()
-    for (fn, lineno, name), timings in sort_timings().items():
+def print_results(
+    prof: Optional[LineProfiler] = None,
+    min_threshold: float = 0,
+) -> None:
+    """
+    Prints the formatted results directly to terminal.
+
+    Parameters
+    ----------
+    prof : LineProfiler, optional
+        The profiler whose statistics we'd like to save.
+        If omitted, we'll use the global profiler.
+    min_threshold : float, optional
+        If provided, we will omit results from functions with total time
+        less than this duration in seconds from the output.
+    """
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
+    timings_dict = sort_timings(prof, min_threshold)
+    print(
+        '\n' + get_preamble(
+            timings_dict,
+            min_threshold,
+        ),
+        end='',
+    )
+    for (fn, lineno, name), timings in timings_dict.items():
         show_func(
             fn,
             lineno,
@@ -134,16 +266,40 @@ def print_results() -> None:
         )
 
 
-def sort_timings() -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
-    profiler = get_profiler()
-    stats = profiler.get_stats()
+def sort_timings(
+    prof: Optional[LineProfiler] = None,
+    min_threshold: float = 0,
+) -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
+    """
+    Sort a profiler's stats in order of decreasing total time.
+
+    Parameters
+    ----------
+    prof : LineProfiler, optional
+        The line profiler whose statistics we'd like to sort. If omitted,
+        we'll use the global profiler.
+    min_threshold : float, optional
+        A minimum total execution threshold for pre-filtering the output
+        statistics. Any total execution time in seconds that is below
+        this threshold will be excluded.
+    """
+    if prof is None:
+        prof = get_profiler()
+    stats = prof.get_stats()
     new_timings = {}
     ranks = []
+    try:
+        # stats.unit is e.g. 1e-6, the unit of the integer counts we see
+        # so if min_threshold is, say, 1s, that needs to be 1e6 counts
+        scaled_threshold = min_threshold / stats.unit
+    except ZeroDivisionError:
+        scaled_threshold = 0
     for key, inner_timings in stats.timings.items():
         tot_time = 0
         for lineo, nhits, time in inner_timings:
             tot_time += time
-        ranks.append((tot_time, key))
+        if tot_time > scaled_threshold:
+            ranks.append((tot_time, key))
     for _, key in sorted(ranks, reverse=True):
         new_timings[key] = stats.timings[key]
     return new_timings
@@ -307,6 +463,14 @@ def import_modules(module_names: Iterable[str]) -> Iterable[ModuleType]:
     for module_name in module_names:
         try:
             module_objects.append(importlib.import_module(module_name))
-        except Exception:
+        # Several modules are naughty and raise BaseException on import.
+        # Sometimes this is even a SystemExit. That's so annoying.
+        # I can't believe I'm catching SystemExit and preventing it.
+        # But this is just an import. It should be OK.
+        # Instead of a basic except Exception, we need to do this
+        # But make sure to allow a KeyBoardInterrupt
+        except KeyboardInterrupt:
+            raise
+        except BaseException:
             pass
     return module_objects
