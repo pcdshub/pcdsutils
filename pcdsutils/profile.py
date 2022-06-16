@@ -8,7 +8,7 @@ import logging
 import pkgutil
 import warnings
 from contextlib import contextmanager
-from inspect import isclass, isfunction
+from inspect import getmembers, isclass, isfunction, ismethod
 from types import ModuleType
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
@@ -397,7 +397,7 @@ def get_native_methods(
     native_methods = set()
     if seen is None:
         seen = set()
-    for obj in module_or_cls.__dict__.values():
+    for _, obj in getmembers(module_or_cls):
         try:
             if obj in seen:
                 continue
@@ -413,7 +413,7 @@ def get_native_methods(
         if isclass(obj):
             inner_methods = get_native_methods(obj, module, seen=seen)
             native_methods.update(inner_methods)
-        elif isfunction(obj):
+        elif isfunction(obj) or ismethod(obj):
             native_methods.add(obj)
     return native_methods
 
