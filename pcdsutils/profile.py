@@ -10,7 +10,8 @@ import warnings
 from contextlib import contextmanager
 from inspect import getmembers, isclass, isfunction, ismethod
 from types import ModuleType
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
+                    Tuple)
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ def profiler_context(
     use_global_profiler: bool = False,
     output_now: bool = True,
     min_threshold: float = 0,
-) -> LineProfiler:
+) -> Iterator[LineProfiler]:
     """
     Context manager for profiling a fixed span of an application.
 
