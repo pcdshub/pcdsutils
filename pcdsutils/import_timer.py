@@ -123,8 +123,10 @@ class ModuleStatsSummary:
         cumulative_time_raw = 0
         for stat in stats:
             self_time_raw += stat.self_time_raw
-            if stat.module == stat.root_module:
-                cumulative_time_raw = stat.cumulative_time_raw
+            cumulative_time_raw = max(
+                cumulative_time_raw,
+                stat.cumulative_time_raw,
+            )
         return cls(
             root_module=stats[0].root_module,
             self_time_raw=self_time_raw,
