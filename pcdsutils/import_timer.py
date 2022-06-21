@@ -145,12 +145,12 @@ class ModuleStatsSummary:
         table = PrettyTable(
             field_names=field_names,
         )
-        table.add_row(
-            tuple(
-                getattr(self, attr, 'N/A')
-                for attr in field_names
-            )
+        summary_row = list(
+            getattr(self, attr, 'N/A')
+            for attr in field_names
         )
+        summary_row[0] = 'Total'
+        table.add_row(summary_row)
         for stats in sorted(
             self.submodule_stats,
             key=lambda s: getattr(s, sort_key),
