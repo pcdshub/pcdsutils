@@ -3,8 +3,8 @@ Helpers for timing how long it takes to do various imports.
 """
 from __future__ import annotations
 
+import argparse
 import subprocess
-import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -258,4 +258,26 @@ def main(
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:])
+    parser = argparse.ArgumentParser(
+        description='Utility to identify modules that are slow to import.',
+    )
+    parser.add_argument(
+        'module',
+        help='The module name to import.',
+    )
+    parser.add_argument(
+        '--sort-key',
+        default='self_time',
+        help='The table header to sort on.',
+    )
+    parser.add_argument(
+        '--show-module',
+        default=None,
+        help='A specific module to show a breakdown for in the output.',
+    )
+    args = parser.parse_args()
+    main(
+        module=args.module,
+        sort_key=args.sort_key,
+        focus_on=args.show_module,
+    )
