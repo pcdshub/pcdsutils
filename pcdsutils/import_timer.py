@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -173,8 +174,10 @@ def get_import_time_text(module: str) -> List[str]:
 
     Returns the line-by-line std output from this call.
     """
+    if not sys.executable:
+        raise RuntimeError('Could not locate correct python executable.')
     return subprocess.check_output(
-        ['python', '-X', 'importtime', '-c', f'import {module}'],
+        [sys.executable, '-X', 'importtime', '-c', f'import {module}'],
         universal_newlines=True,
         stderr=subprocess.STDOUT,
     ).splitlines()
