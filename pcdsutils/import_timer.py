@@ -317,7 +317,16 @@ def main(
     module: str,
     sort_key: str = 'self_time',
     focus_on: Optional[str] = None,
+    chain: Optional[str] = None,
 ) -> None:
+    if chain is not None:
+        print(f'Import chain for importing dependency {chain}:')
+        for submodule in get_import_chain(
+            module_to_import=module,
+            submodule_to_chain=chain,
+        ):
+            print(submodule)
+        return
     stats_summary = summarize_import_stats(module)
     display_summarized_import_stats(
         stats_summary=stats_summary,
@@ -344,9 +353,18 @@ if __name__ == '__main__':
         default=None,
         help='A specific module to show a breakdown for in the output.',
     )
+    parser.add_argument(
+        '--show-chain',
+        default=None,
+        help=(
+            'Instead, show the chain of imports that leads to a specific '
+            'dependency being imported.'
+        ),
+    )
     args = parser.parse_args()
     main(
         module=args.module,
         sort_key=args.sort_key,
         focus_on=args.show_module,
+        chain=args.show_chain,
     )
