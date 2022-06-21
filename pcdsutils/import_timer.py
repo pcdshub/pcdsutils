@@ -338,7 +338,7 @@ def main(
     )
 
 
-if __name__ == '__main__':
+def _entrypoint():
     parser = argparse.ArgumentParser(
         description='Utility to identify modules that are slow to import.',
     )
@@ -371,3 +371,7 @@ if __name__ == '__main__':
         focus_on=args.show_module,
         chain=args.show_chain,
     )
+
+
+if __name__ == '__main__':
+    _entrypoint()

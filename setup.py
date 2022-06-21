@@ -45,6 +45,7 @@ console_scripts = [
     "requirements-from-conda=pcdsutils.requirements:_requirements_from_conda",
     "requirements-compare=pcdsutils.requirements:_compare_requirements",
     "json-to-table=pcdsutils.json_to_table:_entrypoint",
+    "import-timer=pcdsutils.import_timer:_entrypoint",
 ]
 
 setup(
