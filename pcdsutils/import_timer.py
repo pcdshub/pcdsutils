@@ -204,9 +204,9 @@ def interpret_import_time(
     return summaries
 
 
-def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
+def get_import_stats(module: str) -> List[ImportTimeStats]:
     """
-    Summarize the import time statistics for a given module.
+    Get the import time statistics for a given module.
 
     Parameters
     ----------
@@ -217,7 +217,19 @@ def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
     stats = []
     for line in output[1:]:
         stats.append(ImportTimeStats.from_line(line))
-    return interpret_import_time(stats)
+    return stats
+
+
+def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
+    """
+    Summarize the import time statistics for a given module.
+
+    Parameters
+    ----------
+    module : str
+        The module to import.
+    """
+    return interpret_import_time(get_import_stats(module))
 
 
 def display_summarized_import_stats(
@@ -291,7 +303,14 @@ def get_import_chain(
         you imported and ending with the submodule you're trying to track
         down.
     """
-    ...
+    chain = []
+    for stats in get_import_stats(module_to_import):
+        if stats.module == submodule_to_chain:
+            chain = [stats]
+        elif chain:
+            if stats.indent_level < chain[0].indent_level:
+                chain.insert(0, stats)
+    return [stats.module for stats in chain]
 
 
 def main(
