@@ -113,7 +113,7 @@ class ModuleStatsSummary:
     self_time: float
     cumulative_time_raw: int
     cumulative_time: float
-    submodule_stats: Tuple[ImportTimeStats]
+    submodule_stats: Tuple[ImportTimeStats, ...]
 
     @classmethod
     def from_stats(cls, stats: List[ImportTimeStats]) -> ModuleStatsSummary:
