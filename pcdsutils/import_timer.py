@@ -207,6 +207,11 @@ def interpret_import_time(
 def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
     """
     Summarize the import time statistics for a given module.
+
+    Parameters
+    ----------
+    module : str
+        The module to import.
     """
     output = get_import_time_text(module)
     stats = []
@@ -220,6 +225,21 @@ def display_summarized_import_stats(
     sort_key: str = 'self_time',
     focus_on: Optional[str] = None,
 ) -> None:
+    """
+    Show a prettytable summary of all the import statistics.
+
+    Parameters
+    ----------
+    stats_summary : dict[str, ModuleStatsSummary]
+        The output from summarize_import_stats. This is a mapping from
+        root module name to the module stats summary objects.
+    sort_key : str, optional
+        The key to sort the output table on.
+    focus_on : str, optional
+        A module to focus on for the output. If provided, we'll show
+        a detailed breakdown of that module instead of the big table
+        of all the imported modules.
+    """
     # When the user only cares about dissecting a specific module.
     if focus_on is not None:
         return stats_summary[focus_on].show_detailed_summary(sort_key)
@@ -244,6 +264,34 @@ def display_summarized_import_stats(
             )
         )
     print(table)
+
+
+def get_import_chain(
+    module_to_import: str,
+    submodule_to_chain: str,
+) -> List[str]:
+    """
+    For a given import, figure out why a specific submodule is being imported.
+
+    The return value is a list of modules that import each other in order,
+    starting with the module you imported and ending with the submodule you're
+    trying to track down.
+
+    Parameters
+    ----------
+    module_to_import : str
+        The module you are trying to import.
+    submodule_to_chain : str
+        The submodule that gets imported that you need to track down.
+
+    Returns
+    -------
+    module_chain : list of str
+        The modules that import each other in order, starting with the module
+        you imported and ending with the submodule you're trying to track
+        down.
+    """
+    ...
 
 
 def main(
