@@ -70,7 +70,7 @@ class ImportTimeStats:
         self_time_raw, cumulative_time_raw, module = line.split('|')
         self_time_raw = int(self_time_raw.strip())
         cumulative_time_raw = int(cumulative_time_raw.strip())
-        indent_level = (module.count(' ') - 1) / 2
+        indent_level = (module.count(' ') - 1) // 2
         module = module.strip()
 
         return cls(
