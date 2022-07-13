@@ -26,7 +26,8 @@ logger.propagate = False
 # Exceptions that should just be ignored entirely:
 NO_LOG_EXCEPTIONS = (
     KeyboardInterrupt,
-    SyntaxError,
+    NameError,
+    SyntaxError,  # This doesn't get propagated, but ignore it anyway
     SystemExit,
 )
 
