@@ -24,7 +24,12 @@ logger = logging.getLogger('pcds-logging')
 logger.propagate = False
 
 # Exceptions that should just be ignored entirely:
-NO_LOG_EXCEPTIONS = (KeyboardInterrupt, SystemExit)
+NO_LOG_EXCEPTIONS = (
+    KeyboardInterrupt,
+    NameError,
+    SyntaxError,  # This doesn't get propagated, but ignore it anyway
+    SystemExit,
+)
 
 DEFAULT_LOG_HOST = os.environ.get('PCDS_LOG_HOST', 'ctl-logsrv01.pcdsn')
 DEFAULT_LOG_PORT = int(os.environ.get('PCDS_LOG_PORT', 54320))
