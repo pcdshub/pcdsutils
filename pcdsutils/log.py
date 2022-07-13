@@ -12,8 +12,11 @@ import platform
 import queue as queue_module
 import socket
 import sys
+import traceback
+import types
 import typing
 import warnings
+from typing import Optional, Tuple, Union
 
 from .utils import get_fully_qualified_domain_name
 
@@ -65,6 +68,8 @@ _LOGGER_ALLOWED_KEYS = {
     'hostname',
     'username',
     'host_info',
+    'exc_filename',
+    'exc_line',
 }
 
 _LOGGER_KEY_RENAMES = {
@@ -119,6 +124,33 @@ def _get_module_version_dict():
     return dict(_get_module_versions())
 
 
+def get_file_and_line_from_traceback(
+    tb: types.TracebackType,
+    *,
+    on_error: str = "unknown"
+) -> Tuple[str, int]:
+    """
+    Get the last source filename and line number from the traceback.
+
+    Parameters
+    ----------
+    tb : traceback
+    on_error : str, optional
+        The default filename if unable to determine the source code location
+        from the traceback.
+
+    Returns
+    -------
+    filename : str
+    lineno : int
+    """
+    try:
+        last_frame, exc_line = tuple(traceback.walk_tb(tb))[-1]
+        return (last_frame.f_code.co_filename, exc_line)
+    except Exception:
+        return (on_error, 0)
+
+
 def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     '''
     Create a PCDS logging-compliant dictionary from a given logging.LogRecord
@@ -156,6 +188,15 @@ def create_log_dictionary_from_record(record: logging.LogRecord) -> dict:
     ret['host_info'] = _SYSTEM_UNAME_DICT
     ret['username'] = getpass.getuser()
 
+    if record.exc_info is not None:
+        _, _, exc_traceback = record.exc_info
+        if exc_traceback is not None:
+            (exc_file, exc_line) = get_file_and_line_from_traceback(
+                exc_traceback
+            )
+            ret["exc_filename"] = exc_file
+            ret["exc_line"] = exc_line
+
     for from_, to in _LOGGER_KEY_RENAMES.items():
         ret[to] = ret.pop(from_)
 
@@ -189,10 +230,13 @@ class _JsonLogQueueHandler(logging.handlers.QueueHandler):
 
 
 def configure_pcds_logging(
-        file=sys.stdout, *,
-        log_host=DEFAULT_LOG_HOST, log_port=DEFAULT_LOG_PORT,
-        protocol=DEFAULT_LOG_PROTO,
-        level='DEBUG'):
+    file=sys.stdout,
+    *,
+    log_host: str = DEFAULT_LOG_HOST,
+    log_port: int = DEFAULT_LOG_PORT,
+    protocol: str = DEFAULT_LOG_PROTO,
+    level: str = "DEBUG"
+):
     """
     Set a new handler on the ``logging.getLogger('pcds-logging')`` logger.
 
@@ -249,7 +293,7 @@ def configure_pcds_logging(
     return handler
 
 
-def validate_log_level(level: typing.Union[str, int]) -> int:
+def validate_log_level(level: Union[str, int]) -> int:
     """
     Return a logging level integer for level comparison.
 
@@ -360,8 +404,8 @@ def log_warning_handler(
     category: type[Warning],
     filename: str,
     lineno: int,
-    file: typing.Optional[typing.TextIO] = None,
-    line: typing.Optional[str] = None,
+    file: Optional[typing.TextIO] = None,
+    line: Optional[str] = None,
     logger: logging.Logger = warnings_logger,
 ) -> None:
     """
