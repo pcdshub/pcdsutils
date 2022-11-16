@@ -64,5 +64,4 @@ class DesignerDisplay:
                 if obj is not None:
                     cls = f"{obj.__class__.__module__}.{obj.__class__.__name__} "
                     cls = cls.removeprefix("PyQt5.")
-                    cls = cls.removeprefix("las_dispersion_scan.widgets.")
                     print(f"{attr}: {cls}")
