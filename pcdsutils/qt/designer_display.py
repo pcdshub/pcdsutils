@@ -32,7 +32,7 @@ class DesignerDisplay:
         """Load the UI file on first load."""
         if not hasattr(cls, "ui_form"):
             try:
-                path = str(cls.ui_dir / cls.filename)
+                path = str(Path(cls.ui_dir) / cls.filename)
             except AttributeError:
                 path = str(cls.filename)
             cls.ui_form, _ = loadUiType(path)
