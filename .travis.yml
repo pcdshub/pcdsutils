@@ -19,13 +19,13 @@ env:
     - CONDA_RECIPE_FOLDER="conda-recipe"
     # Extra dependencies needed to run the tests which are not included
     # at the recipe and dev-requirements.txt. E.g. PyQt
-    - CONDA_EXTRAS="pip pyqt=5"
+    - CONDA_EXTRAS="pip pyqt=5 line_profiler<4"
     # Requirements file with contents for tests dependencies
     - CONDA_REQUIREMENTS="dev-requirements.txt"
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    - PIP_EXTRAS="PyQt5"
+    - PIP_EXTRAS="PyQt5 line-profiler<4"
 
 import:
   # This import enables a set of standard python jobs including:
