@@ -9,7 +9,7 @@ on:
 
 jobs:
   standard:
-    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml@master
     with:
       package-name: "pcdsutils"
       # Testing extras for both conda/pip jobs:
