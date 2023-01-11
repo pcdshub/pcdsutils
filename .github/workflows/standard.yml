@@ -1,0 +1,20 @@
+name: PCDS Standard Testing
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  standard:
+    uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml@master
+    with:
+      package-name: "pcdsutils"
+      # Testing extras for both conda/pip jobs:
+      testing-extras: "line_profiler<4"
+      # Testing extras for just conda:
+      conda-testing-extras: "pyqt=5"
+      # Testing extras for just pip:
+      pip-testing-extras: "pyqt5"
