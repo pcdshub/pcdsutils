@@ -55,7 +55,7 @@ class QPopBar(QtWidgets.QFrame):
     """
     def __init__(self, parent=None, title="Pop Bar", widget=None, pin=False,
                  *args, **kwargs):
-        super(QPopBar, self).__init__(parent=parent, *args, **kwargs)
+        super().__init__(parent=parent, *args, **kwargs)
         self._title = title
         self._label_font = None
         self._pin_at_startup = pin
@@ -233,7 +233,7 @@ class QPopBarOverlay(QtWidgets.QFrame):
     _DEFAULT_WIDTH = 300
 
     def __init__(self, parent, bar, *args, **kwargs):
-        super(QPopBarOverlay, self).__init__(parent=parent, *args,
+        super().__init__(parent=parent, *args,
                                              **kwargs)
         self.bar = bar
         self._pinned = False

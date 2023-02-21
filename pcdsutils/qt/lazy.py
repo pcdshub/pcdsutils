@@ -13,14 +13,14 @@ class LazyWidget(QtWidgets.QWidget):
         The widget class to instantiate.
     """
 
-    widget_cls: Type[QtWidgets.QWidget]
+    widget_cls: type[QtWidgets.QWidget]
     widget: Optional[QtWidgets.QWidget]
 
     widget_created: ClassVar[QtCore.Signal] = QtCore.Signal(QtWidgets.QWidget)
     widget_shown: ClassVar[QtCore.Signal] = QtCore.Signal()
     widget_hidden: ClassVar[QtCore.Signal] = QtCore.Signal()
 
-    def __init__(self, widget_cls: Type[QtWidgets.QWidget]):
+    def __init__(self, widget_cls: type[QtWidgets.QWidget]):
         super().__init__()
         self.widget_cls = widget_cls
         self.widget = None

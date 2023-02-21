@@ -25,7 +25,7 @@ class DesignerDisplay:
     # You can set this for your whole app, override in a subclass, or ignore it
     ui_dir: ClassVar[Union[str, Path]]
     # Created automatically
-    ui_form: ClassVar[Type[_UiForm]]
+    ui_form: ClassVar[type[_UiForm]]
 
     @classmethod
     def _load_ui_if_needed(cls):

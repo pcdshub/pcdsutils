@@ -133,7 +133,7 @@ def get_file_and_line_from_traceback(
     tb: types.TracebackType,
     *,
     on_error: str = "unknown"
-) -> Tuple[str, int]:
+) -> tuple[str, int]:
     """
     Get the last source filename and line number from the traceback.
 
@@ -298,7 +298,7 @@ def configure_pcds_logging(
     return handler
 
 
-def validate_log_level(level: Union[str, int]) -> int:
+def validate_log_level(level: str | int) -> int:
     """
     Return a logging level integer for level comparison.
 
@@ -389,8 +389,7 @@ def log_exception(
 
     message = message or f'[{context}] {exc_value}'
     kwargs = dict()
-    if sys.version_info >= (3, 8):
-        kwargs = dict(stacklevel=stacklevel + 1)
+    kwargs = dict(stacklevel=stacklevel + 1)
 
     logger.log(level, message, exc_info=exc_info, **kwargs)
 
@@ -409,8 +408,8 @@ def log_warning_handler(
     category: type[Warning],
     filename: str,
     lineno: int,
-    file: Optional[typing.TextIO] = None,
-    line: Optional[str] = None,
+    file: typing.TextIO | None = None,
+    line: str | None = None,
     logger: logging.Logger = warnings_logger,
 ) -> None:
     """
@@ -561,18 +560,18 @@ class DemotionFilter(logging.Filter):
         This must be False if no record_dataclass is provided.
     """
     record_dataclass: type = RecordInfo
-    default_logger: typing.Optional[logging.Logger] = None
+    default_logger: logging.Logger | None = None
 
     levelno: int
     levelname: str
     only_duplicates: bool
     cache: set[RecordInfo]
     counter: int
-    _logger: typing.Optional[logging.Logger]
+    _logger: logging.Logger | None
 
     def __init__(
         self,
-        level: typing.Union[str, int] = logging.DEBUG,
+        level: str | int = logging.DEBUG,
         only_duplicates: bool = True,
     ):
         self.levelno = validate_log_level(level)
@@ -586,9 +585,9 @@ class DemotionFilter(logging.Filter):
     @classmethod
     def install(
         cls,
-        level: typing.Union[str, int] = logging.DEBUG,
+        level: str | int = logging.DEBUG,
         only_duplicates: bool = True,
-        logger: typing.Optional[logging.Logger] = None,
+        logger: logging.Logger | None = None,
     ) -> DemotionFilter:
         """
         Create and apply the DemotionFilter to a specific logger,
@@ -620,7 +619,7 @@ class DemotionFilter(logging.Filter):
 
     def install_self(
         self,
-        logger: typing.Optional[logging.Logger] = None,
+        logger: logging.Logger | None = None,
     ) -> None:
         """
         Convenience method for adding this filter to a logger.
@@ -774,7 +773,7 @@ class LogWarningLevelFilter(DemotionFilter):
         This must be False if no record_dataclass is provided.
     """
     record_dataclass: type = WarningRecordInfo
-    default_logger: typing.Optional[logging.Logger] = warnings_logger
+    default_logger: logging.Logger | None = warnings_logger
 
     cache: set[WarningRecordInfo]
 
@@ -811,7 +810,7 @@ class OphydObjectRecordInfo(RecordInfo):
     Hashable collection of the unique information from an ophyd.objects log
     """
     pathname: str
-    exception: typing.Optional[Exception]
+    exception: Exception | None
     object_name: str
 
     @classmethod
@@ -866,7 +865,7 @@ class OphydCallbackExceptionDemoter(DemotionFilter):
         If False, apply it to all log messages.
     """
     record_dataclass: type = OphydObjectRecordInfo
-    default_logger: typing.Optional[logging.Logger] = objects_logger
+    default_logger: logging.Logger | None = objects_logger
 
     cache: set[OphydObjectRecordInfo]
 

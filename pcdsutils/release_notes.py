@@ -18,7 +18,7 @@ DESCRIPTION = __doc__
 
 def generate_releases(organization: str,
                       repository: str,
-                      releases: List[dict],
+                      releases: list[dict],
                       *, file=sys.stdout):
     """
     Generate the release notes.
@@ -59,7 +59,7 @@ def generate_releases(organization: str,
         print(file=file)
 
 
-def get_releases(organization: str, repository: str) -> List[Dict]:
+def get_releases(organization: str, repository: str) -> list[dict]:
     """
     Generate the release notes.
 

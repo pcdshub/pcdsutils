@@ -60,7 +60,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
     def include(
         cls,
         identifiers: Iterator[EnumId],
-    ) -> Set[HelpfulIntEnum]:
+    ) -> set[HelpfulIntEnum]:
         """
         Returns all enum values matching the identifiers given.
         This is a shortcut for calling cls.from_any many times and
@@ -84,7 +84,7 @@ class HelpfulIntEnum(enum.IntEnum, metaclass=CaseInsensitiveEnumMeta):
     def exclude(
         cls,
         identifiers: Iterator[EnumId],
-    ) -> Set[HelpfulIntEnum]:
+    ) -> set[HelpfulIntEnum]:
         """
         Return all enum values other than the ones given.
 
