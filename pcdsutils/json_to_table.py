@@ -9,7 +9,7 @@ import dataclasses
 import enum
 import json
 import sys
-from typing import Any, BinaryIO, List, Optional, cast
+from typing import Any, BinaryIO, Optional, cast
 
 import prettytable
 

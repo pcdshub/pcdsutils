@@ -7,7 +7,6 @@ Create RST-compatible release notes from GitHub releases.
 import argparse
 import re
 import sys
-from typing import Dict, List
 
 import pypandoc
 import requests

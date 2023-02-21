@@ -10,8 +10,7 @@ import warnings
 from contextlib import contextmanager
 from inspect import getmembers, isclass, isfunction, ismethod
 from types import ModuleType
-from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
-                    Tuple)
+from typing import (Any, Callable, Iterable, Iterator)
 
 logger = logging.getLogger(__name__)
 

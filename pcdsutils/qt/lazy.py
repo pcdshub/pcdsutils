@@ -1,4 +1,4 @@
-from typing import ClassVar, Optional, Type
+from typing import ClassVar, Optional
 
 from qtpy import QtCore, QtGui, QtWidgets
 

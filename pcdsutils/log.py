@@ -16,7 +16,6 @@ import traceback
 import types
 import typing
 import warnings
-from typing import Optional, Tuple, Union
 
 from .utils import get_fully_qualified_domain_name
 

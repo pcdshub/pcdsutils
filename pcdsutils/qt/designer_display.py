@@ -2,7 +2,7 @@
 Helper for using designer to layout GUIs.
 """
 from pathlib import Path
-from typing import ClassVar, Protocol, Type, Union
+from typing import ClassVar, Protocol, Union
 
 from qtpy.uic import loadUiType
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import enum
-from typing import Iterator, Set, Union
+from typing import Iterator, Union
 
 EnumId = Union[enum.Enum, int, str]
 
