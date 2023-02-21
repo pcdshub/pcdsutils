@@ -13,6 +13,7 @@
 #
 import os
 import sys
+from datetime import datetime
 
 module_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../")
 sys.path.insert(0, module_path)
@@ -21,8 +22,6 @@ sys.path.insert(0, module_path)
 
 project = "pcdsutils"
 author = "SLAC National Accelerator Laboratory"
-
-from datetime import datetime
 
 year = datetime.now().year
 copyright = str(year) + ", SLAC National Accelerator Laboratory"

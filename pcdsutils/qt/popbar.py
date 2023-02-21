@@ -233,8 +233,7 @@ class QPopBarOverlay(QtWidgets.QFrame):
     _DEFAULT_WIDTH = 300
 
     def __init__(self, parent, bar, *args, **kwargs):
-        super().__init__(parent=parent, *args,
-                                             **kwargs)
+        super().__init__(parent=parent, *args, **kwargs)
         self.bar = bar
         self._pinned = False
         self._setup()
