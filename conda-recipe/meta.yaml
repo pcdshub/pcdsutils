@@ -14,8 +14,6 @@ build:
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv
 
-
-
 requirements:
   build:
   - python >=3.7
@@ -29,8 +27,6 @@ requirements:
   - qtpyinheritance
   - requests
 
-
-
 test:
   imports:
   - pcdsutils
@@ -38,9 +34,8 @@ test:
   requires:
   - pytest
   - qtpy
-  - pyqt
-
-
+  - pyqt=5
+  - line_profiler<4
 
 about:
   home: https://github.com/pcdshub/pcdsutils

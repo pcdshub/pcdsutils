@@ -3,3 +3,5 @@
 ophyd
 pytest>=6.2.0
 pytest-qt
+pyqt5
+line_profiler<4
