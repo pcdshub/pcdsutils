@@ -32,10 +32,12 @@ test:
   - pcdsutils
   - pcdsutils.qt
   requires:
-  - pytest
-  - qtpy
-  - pyqt=5
   - line_profiler<4
+  - ophyd
+  - pyqt=5
+  - pytest >=6.2.0
+  - pytest-qt
+  - qtpy
 
 about:
   home: https://github.com/pcdshub/pcdsutils
