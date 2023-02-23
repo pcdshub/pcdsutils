@@ -1,36 +1,43 @@
-{% set data = load_setup_py_data() %}
+{% set package_name = "pcdsutils" %}
+{% set import_name = "pcdsutils" %}
+{% set version = load_file_regex(load_file=os.path.join(import_name, "_version.py"), regex_pattern=".*version = '(\S+)'").group(1) %}
 
 package:
-    name    : pcdsutils
-    version : {{ data.get('version') }}
+  name: {{ package_name }}
+  version: {{ version }}
 
 source:
-    path: ..
+  path: ..
 
 build:
-    number: 1
-    noarch: python
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
-    build:
-      - python >=3.7
-      - setuptools
-    run:
-      - python >=3.7
-      - prettytable
-      - pypandoc
-      - pyyaml
-      - qtpyinheritance
-      - requests
+  build:
+  - python >=3.9
+  - setuptools_scm
+  - pip
+  run:
+  - python >=3.9
+  - prettytable
+  - pypandoc
+  - pyyaml
+  - qtpyinheritance
+  - requests
 
 test:
-    imports:
-      - pcdsutils
-      - pcdsutils.qt
-    requires:
-      - pytest
-      - qtpy
-      - pyqt
+  imports:
+  - pcdsutils
+  - pcdsutils.qt
+  requires:
+  - line_profiler<4
+  - ophyd
+  - pyqt=5
+  - pytest >=6.2.0
+  - pytest-qt
+  - qtpy
 
 about:
   home: https://github.com/pcdshub/pcdsutils

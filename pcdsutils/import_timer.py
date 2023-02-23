@@ -8,7 +8,6 @@ import subprocess
 import sys
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
 
 from prettytable import PrettyTable
 
@@ -113,10 +112,10 @@ class ModuleStatsSummary:
     self_time: float
     cumulative_time_raw: int
     cumulative_time: float
-    submodule_stats: Tuple[ImportTimeStats, ...]
+    submodule_stats: tuple[ImportTimeStats, ...]
 
     @classmethod
-    def from_stats(cls, stats: List[ImportTimeStats]) -> ModuleStatsSummary:
+    def from_stats(cls, stats: list[ImportTimeStats]) -> ModuleStatsSummary:
         """
         Create a ModuleStatsSummary from a list of ImportTimeStats.
         """
@@ -168,7 +167,7 @@ class ModuleStatsSummary:
         print(table)
 
 
-def get_import_time_text(module: str) -> List[str]:
+def get_import_time_text(module: str) -> list[str]:
     """
     Run python -X importtime modulename in a subprocess.
 
@@ -184,8 +183,8 @@ def get_import_time_text(module: str) -> List[str]:
 
 
 def interpret_import_time(
-    stats: List[ImportTimeStats],
-) -> Dict[str, ModuleStatsSummary]:
+    stats: list[ImportTimeStats],
+) -> dict[str, ModuleStatsSummary]:
     """
     Summarize the results of the import time checker in an understandable way.
 
@@ -207,7 +206,7 @@ def interpret_import_time(
     return summaries
 
 
-def get_import_stats(module: str) -> List[ImportTimeStats]:
+def get_import_stats(module: str) -> list[ImportTimeStats]:
     """
     Get the import time statistics for a given module.
 
@@ -223,7 +222,7 @@ def get_import_stats(module: str) -> List[ImportTimeStats]:
     return stats
 
 
-def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
+def summarize_import_stats(module: str) -> dict[str, ModuleStatsSummary]:
     """
     Summarize the import time statistics for a given module.
 
@@ -236,9 +235,9 @@ def summarize_import_stats(module: str) -> Dict[str, ModuleStatsSummary]:
 
 
 def display_summarized_import_stats(
-    stats_summary: Dict[str, ModuleStatsSummary],
+    stats_summary: dict[str, ModuleStatsSummary],
     sort_key: str = 'self_time',
-    focus_on: Optional[str] = None,
+    focus_on: str | None = None,
 ) -> None:
     """
     Show a prettytable summary of all the import statistics.
@@ -284,7 +283,7 @@ def display_summarized_import_stats(
 def get_import_chain(
     module_to_import: str,
     submodule_to_chain: str,
-) -> List[str]:
+) -> list[str]:
     """
     For a given import, figure out why a specific submodule is being imported.
 
@@ -319,8 +318,8 @@ def get_import_chain(
 def main(
     module: str,
     sort_key: str = 'self_time',
-    focus_on: Optional[str] = None,
-    chain: Optional[str] = None,
+    focus_on: str | None = None,
+    chain: str | None = None,
 ) -> None:
     if chain is not None:
         print(f'Import chain for importing dependency {chain}:')

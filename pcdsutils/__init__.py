@@ -1,6 +1,5 @@
-from . import _version, log, utils
+from . import log, utils
 from .enum import HelpfulIntEnum
-
-__version__ = _version.get_versions()['version']
+from .version import __version__  # noqa: F401
 
 __all__ = ["utils", "log", "HelpfulIntEnum"]
