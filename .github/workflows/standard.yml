@@ -10,11 +10,20 @@ on:
 jobs:
   standard:
     uses: pcdshub/pcds-ci-helpers/.github/workflows/python-standard.yml@master
+    secrets: inherit
     with:
       package-name: "pcdsutils"
       # Testing extras for both conda/pip jobs:
-      testing-extras: "line_profiler<4"
+      testing-extras: ""
       # Testing extras for just conda:
-      conda-testing-extras: "pyqt=5"
+      conda-testing-extras: ""
       # Testing extras for just pip:
-      pip-testing-extras: "pyqt5"
+      pip-testing-extras: ""
+      # System packages to be installed only for conda-based testing:
+      conda-system-packages: ""
+      # System packages to be installed only for pip-based testing:
+      pip-system-packages: ""
+      # System packages to be installed only for documentation:
+      docs-system-packages: ""
+      # Set if using setuptools-scm for the conda-build workflow
+      use-setuptools-scm: true

@@ -9,7 +9,7 @@ import dataclasses
 import enum
 import json
 import sys
-from typing import Any, BinaryIO, List, Optional, cast
+from typing import Any, BinaryIO, Optional, cast
 
 import prettytable
 
@@ -34,7 +34,7 @@ class ProgramArguments:
     """Argparse arguments for json_to_table."""
     input_file: BinaryIO
     sort_key: str
-    columns: List[str]
+    columns: list[str]
     format: str = "markdown"
     list_delimiter: str = ", "
     max_col_width: int = 80
@@ -57,9 +57,9 @@ def string_for_table(
 
 
 def table_from_json(
-    data: List[dict],
+    data: list[dict],
     sort_key: str,
-    columns: Optional[List[str]] = None,
+    columns: Optional[list[str]] = None,
     list_delimiter: str = ", ",
     max_col_width: int = 80,
 ) -> prettytable.PrettyTable:

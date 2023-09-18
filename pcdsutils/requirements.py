@@ -35,7 +35,7 @@ def find_meta_yaml(repo_root):
 def find_conda_deps(repo_root):
     'Get conda-recipe meta.yaml requirements as a dictionary from a repo'
     metayaml = find_meta_yaml(repo_root)
-    with open(metayaml, 'rt') as f:
+    with open(metayaml) as f:
         text = f.read()
 
     # Remove conda-forge specific yaml syntax:
@@ -61,7 +61,7 @@ def get_pip_requirements(repo_root):
     for filename, requirement_key in PIP_REQUIREMENT_FILES.items():
         req_file = repo_root / filename
         if req_file.exists():
-            with open(req_file, 'rt') as f:
+            with open(req_file) as f:
                 requirements[filename] = [
                     req.strip() for req in f.read().splitlines()
                     if req.strip()
@@ -154,7 +154,7 @@ def _requirements_from_conda(args=None):
 
 def compare_requirements(conda_deps, pip_deps):
     'Compare two lists of dependencies'
-    conda_deps = set(dep.replace(' ', '') for dep in conda_deps)
+    conda_deps = {dep.replace(' ', '') for dep in conda_deps}
     conda_deps_name = {get_dependency_name(dep): dep
                        for dep in conda_deps
                        }

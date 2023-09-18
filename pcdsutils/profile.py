@@ -10,8 +10,7 @@ import warnings
 from contextlib import contextmanager
 from inspect import getmembers, isclass, isfunction, ismethod
 from types import ModuleType
-from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
-                    Tuple)
+from typing import Any, Callable, Iterable, Iterator
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +50,7 @@ def reset_profiler() -> LineProfiler:
 @contextmanager
 def profiler_context(
     module_names: Iterable[str],
-    filename: Optional[str] = None,
+    filename: str | None = None,
     use_global_profiler: bool = False,
     output_now: bool = True,
     min_threshold: float = 0,
@@ -169,7 +168,7 @@ def toggle_profiler(turn_on: bool) -> None:
 
 
 def get_preamble(
-    timings_dict: Dict,
+    timings_dict: dict,
     min_threshold: float
 ) -> str:
     """
@@ -186,7 +185,7 @@ def get_preamble(
 
 def save_results(
     filename: str,
-    prof: Optional[LineProfiler] = None,
+    prof: LineProfiler | None = None,
     min_threshold: float = 0,
 ) -> None:
     """
@@ -228,7 +227,7 @@ def save_results(
 
 
 def print_results(
-    prof: Optional[LineProfiler] = None,
+    prof: LineProfiler | None = None,
     min_threshold: float = 0,
 ) -> None:
     """
@@ -268,9 +267,9 @@ def print_results(
 
 
 def sort_timings(
-    prof: Optional[LineProfiler] = None,
+    prof: LineProfiler | None = None,
     min_threshold: float = 0,
-) -> Dict[Tuple[str, int, str], List[Tuple[int, int, int]]]:
+) -> dict[tuple[str, int, str], list[tuple[int, int, int]]]:
     """
     Sort a profiler's stats in order of decreasing total time.
 
@@ -372,8 +371,8 @@ def get_native_methods(
     module_or_cls: Any,
     module: ModuleType,
     *,
-    native_methods: Optional[set[Callable]] = None,
-    seen: Optional[set[Any]] = None,
+    native_methods: set[Callable] | None = None,
+    seen: set[Any] | None = None,
 ) -> set[Callable]:
     """
     Recursive step of get_native_functions.

@@ -5,7 +5,7 @@ from pcdsutils.qt import QPopBar
 
 class InnerWidget(QtWidgets.QWidget):
     def __init__(self, parent, *args, **kwargs):
-        super(InnerWidget, self).__init__(parent=parent, *args, **kwargs)
+        super().__init__(parent=parent, *args, **kwargs)
         self.setupUi()
 
     def setupUi(self):
@@ -33,7 +33,7 @@ class InnerWidget(QtWidgets.QWidget):
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().setSpacing(1)
         self.layout().setContentsMargins(0, 0, 0, 0)
