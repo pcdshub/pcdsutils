@@ -1,6 +1,7 @@
-sphinx
+docs-versions-menu
 ipython
 numpydoc
+sphinx
 sphinx-copybutton
 sphinx_rtd_theme
 sphinxcontrib-jquery
