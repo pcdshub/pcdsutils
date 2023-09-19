@@ -10,10 +10,6 @@ Features
 - Add cleaned up and performant version of heavily-used ``get_info`` in
   :mod:`pcdsutils.info`.
 
-Device Updates
---------------
-- N/A
-
 New Devices
 -----------
 - N/A

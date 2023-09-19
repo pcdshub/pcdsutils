@@ -22,10 +22,6 @@ Device Updates
 --------------
 - List new features or specific changes for individual devices.
 
-New Devices
------------
-- List new device support that is being added.
-
 Bugfixes
 --------
 - List bug fixes that are not covered in the above sections.

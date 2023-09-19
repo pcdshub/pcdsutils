@@ -9,10 +9,6 @@ Features
 --------
 - N/A
 
-Device Updates
---------------
-- N/A
-
 New Devices
 -----------
 - N/A
