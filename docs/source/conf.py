@@ -43,6 +43,7 @@ release = ""
 # ones.
 extensions = [
     "sphinxcontrib.jquery",
+    "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",

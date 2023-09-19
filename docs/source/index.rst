@@ -7,8 +7,12 @@ Welcome to pcdsutils's documentation!
 ===========================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: Developer Notes
+
+   releases.rst
+   upcoming_changes.rst
+   api.rst
 
 .. toctree::
    :maxdepth: 1
