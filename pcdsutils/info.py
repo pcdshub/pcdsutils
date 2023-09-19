@@ -114,7 +114,9 @@ class Experiment(_LogbookInfo):
 
     @classmethod
     def from_logbook(
-        cls, instrument: Instrument, experiment_name: Optional[str] = None
+        cls,
+        instrument: Instrument,
+        experiment_name: Optional[str] = None,
     ) -> Experiment:
         """
         Get Experiment information given an instrument/experiment name.
@@ -364,7 +366,10 @@ def get_hutch_by_hostname(hostname: Optional[str] = None) -> str:
     if hostname is None:
         hostname = socket.gethostname()
 
-    ip = socket.gethostbyname(hostname)
+    try:
+        ip = socket.gethostbyname(hostname)
+    except Exception:
+        return UNKNOWN_HUTCH
 
     # A.B.**C**.D - the C octet
     subnet = ip.split(".")[2]
@@ -458,7 +463,7 @@ def get_info(args: ProgramArguments) -> Optional[Instrument]:
 def main():
     """Main entrypoint for get-info-json."""
     parser = _create_arg_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(namespace=ProgramArguments())
     info = get_info(args)
     if info is None:
         sys.exit(1)
