@@ -23,7 +23,7 @@ def find_submodules(
     package_root: pathlib.Path = PCDSUTILS_PATH,
     prefix: str = "pcdsutils.",
 ) -> dict[str, ModuleType]:
-    """Find all pcdsdevices submodules, as a dictionary of name to module."""
+    """Find all pcdsutils submodules, as a dictionary of name to module."""
     modules = {}
     for item in pkgutil.walk_packages(path=[str(package_root)], prefix=prefix):
         try:
@@ -54,7 +54,6 @@ def find_all_classes(
             inspect.isclass(obj)
             and issubclass(obj, classes)
             and not obj.__module__.startswith("ophyd")
-            and not obj.__module__.startswith("pcdsdevices.tests")
             and not any(obj.__name__.startswith(part) for part in skip)
             and not any(obj.__module__.startswith(part) for part in skip)
         )
@@ -62,7 +61,7 @@ def find_all_classes(
     def sort_key(cls):
         return (cls.__module__, cls.__name__)
 
-    devices = [
+    classes = [
         obj
         for module in find_submodules(
             package_root,
@@ -71,7 +70,7 @@ def find_all_classes(
         for _, obj in inspect.getmembers(module, predicate=should_include)
     ]
 
-    return list(sorted(set(devices), key=sort_key))
+    return list(sorted(set(classes), key=sort_key))
 
 
 def find_all_callables(
@@ -101,7 +100,7 @@ def find_all_callables(
     def sort_key(obj):
         return (obj.__module__, obj.__name__)
 
-    devices = [
+    callables = [
         obj
         for module in find_submodules(
             package_root,
@@ -110,7 +109,7 @@ def find_all_callables(
         for _, obj in inspect.getmembers(module, predicate=should_include)
     ]
 
-    return list(sorted(set(devices), key=sort_key))
+    return list(sorted(set(callables), key=sort_key))
 
 
 skip_prefixes = [

@@ -18,10 +18,6 @@ Features
 - List new updates that add utility to many classes,
   provide a new base classes, add options to helper methods, etc.
 
-Device Updates
---------------
-- List new features or specific changes for individual devices.
-
 Bugfixes
 --------
 - List bug fixes that are not covered in the above sections.
