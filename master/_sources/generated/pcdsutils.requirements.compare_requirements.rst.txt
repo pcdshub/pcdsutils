@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.compare\_requirements
+============================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: compare_requirements

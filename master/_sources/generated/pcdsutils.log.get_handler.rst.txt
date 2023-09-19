@@ -1,0 +1,6 @@
+﻿pcdsutils.log.get\_handler
+==========================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: get_handler

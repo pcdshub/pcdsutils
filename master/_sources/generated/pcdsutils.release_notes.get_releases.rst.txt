@@ -1,0 +1,6 @@
+﻿pcdsutils.release\_notes.get\_releases
+======================================
+
+.. currentmodule:: pcdsutils.release_notes
+
+.. autofunction:: get_releases

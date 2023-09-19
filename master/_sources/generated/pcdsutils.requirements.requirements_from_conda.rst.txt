@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.requirements\_from\_conda
+================================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: requirements_from_conda

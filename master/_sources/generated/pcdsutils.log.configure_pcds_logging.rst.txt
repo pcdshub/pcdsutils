@@ -1,0 +1,6 @@
+﻿pcdsutils.log.configure\_pcds\_logging
+======================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: configure_pcds_logging

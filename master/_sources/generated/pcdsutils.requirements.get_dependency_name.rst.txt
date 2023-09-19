@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.get\_dependency\_name
+============================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: get_dependency_name

@@ -1,0 +1,6 @@
+﻿pcdsutils.utils.get\_instance\_by\_name
+=======================================
+
+.. currentmodule:: pcdsutils.utils
+
+.. autofunction:: get_instance_by_name
