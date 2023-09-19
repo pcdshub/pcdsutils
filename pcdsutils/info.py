@@ -61,7 +61,9 @@ class ProgramArguments:
     hutch: Optional[str] = None
     #: The station number.
     station: Optional[int] = None
-    #: Has the run ended?
+    #: This is used when the user is asking for what the most recent run number
+    #: is and they don't want to include the current run if it is still
+    #: in-progress.
     ended: bool = False
     #: The user-provided experiment name.
     experiment: Optional[str] = None
@@ -181,10 +183,21 @@ class RunFiles(_LogbookInfo):
 
     @staticmethod
     def _get_num_files(files: List[str]) -> int:
-        """Get the number of files in this run.  Some are filtered."""
+        """
+        Get the number of files in this run.
+
+        Some are filtered, as per Silke:
+        > s0x are the nominal data streams (for LCLS1). They start counting at 0,
+        > so you already have s00, up to however many dss-nodes you used. s8x
+        > would be IOC recorders. c0x are chunks: we start writing the c00-files
+        > and when the file gets too big, it will be closed and a new file will
+        > be opened. This is done by the DAQ stopping triggers for a bit & then
+        > restarting them. This tripped up a scan at some point if I remember
+        > right. With the jungfrau4M, CXI is the hutch mostly likely to chunk and
+        > MEC rarely ever does.
+        """
         num_files = 0
         for fn in files:
-            # Note: I don't know why this is
             if "c00" in fn and "-s8" not in fn:
                 num_files += 1
         return num_files
@@ -375,6 +388,8 @@ def get_hutch_by_hostname(hostname: Optional[str] = None) -> str:
     subnet = ip.split(".")[2]
 
     # use the IP address to match the host to a hutch by subnet
+    # NOTE: this may look odd but it aims to replicate the existing
+    # functionality in get_info as-is.
     for ihutch in HUTCHES:
         if subnet in HUTCH_SUBNETS.get(ihutch, []):
             return ihutch.upper()
@@ -468,7 +483,7 @@ def main():
     if info is None:
         sys.exit(1)
 
-    info.update_from_logbook()
+    info.update_from_logbook(args.experiment)
     print(json.dumps(dataclasses.asdict(info), indent=4))
 
 
