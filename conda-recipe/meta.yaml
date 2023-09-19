@@ -32,7 +32,7 @@ test:
   - pcdsutils
   - pcdsutils.qt
   requires:
-  - line_profiler<4
+  - line_profiler
   - ophyd
   - pyqt=5
   - pytest >=6.2.0
