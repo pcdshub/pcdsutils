@@ -1,0 +1,31 @@
+﻿pcdsutils.info.RunFiles
+=======================
+
+.. currentmodule:: pcdsutils.info
+
+.. autoclass:: RunFiles
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RunFiles.__init__
+      ~RunFiles.from_logbook
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RunFiles.num_files
+      ~RunFiles.valid
+      ~RunFiles.files
+   
+   

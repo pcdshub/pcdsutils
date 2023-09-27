@@ -1,6 +1,15 @@
 API
 ###
 
+pcdsutils.enum
+--------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.enum.CaseInsensitiveEnumMeta
+    pcdsutils.enum.HelpfulIntEnum
+
 pcdsutils.ext_scripts
 ---------------------
 
@@ -21,6 +30,8 @@ pcdsutils.import_timer
 .. autosummary::
     :toctree: generated
 
+    pcdsutils.import_timer.ImportTimeStats
+    pcdsutils.import_timer.ModuleStatsSummary
     pcdsutils.import_timer.display_summarized_import_stats
     pcdsutils.import_timer.get_import_chain
     pcdsutils.import_timer.get_import_stats
@@ -35,6 +46,12 @@ pcdsutils.info
 .. autosummary::
     :toctree: generated
 
+    pcdsutils.info.Experiment
+    pcdsutils.info.Instrument
+    pcdsutils.info.ProgramArguments
+    pcdsutils.info.Run
+    pcdsutils.info.RunFiles
+    pcdsutils.info._LogbookInfo
     pcdsutils.info.fix_hutch_name
     pcdsutils.info.get_hutch_by_hostname
     pcdsutils.info.get_info
@@ -47,6 +64,8 @@ pcdsutils.json_to_table
 .. autosummary::
     :toctree: generated
 
+    pcdsutils.json_to_table.ProgramArguments
+    pcdsutils.json_to_table.TableStyle
     pcdsutils.json_to_table.main
     pcdsutils.json_to_table.string_for_table
     pcdsutils.json_to_table.table_from_json
@@ -57,6 +76,17 @@ pcdsutils.log
 .. autosummary::
     :toctree: generated
 
+    pcdsutils.log.DemotionFilter
+    pcdsutils.log.LogWarningLevelFilter
+    pcdsutils.log.OphydCallbackExceptionDemoter
+    pcdsutils.log.OphydObjectRecordInfo
+    pcdsutils.log.PydmDemotionFilter
+    pcdsutils.log.RecordInfo
+    pcdsutils.log.WarningRecordInfo
+    pcdsutils.log._JsonLogQueueHandler
+    pcdsutils.log._LogQueueListener
+    pcdsutils.log._PassthroughDatagramHandler
+    pcdsutils.log._PassthroughStreamHandler
     pcdsutils.log.centralized_logging_enabled
     pcdsutils.log.configure_pcds_logging
     pcdsutils.log.create_log_dictionary_from_record
@@ -75,6 +105,7 @@ pcdsutils.ophyd_helpers
 .. autosummary::
     :toctree: generated
 
+    pcdsutils.ophyd_helpers.SubscribeCallback
     pcdsutils.ophyd_helpers.acquire_async
     pcdsutils.ophyd_helpers.acquire_blocking
     pcdsutils.ophyd_helpers.get_all_signals_from_device
@@ -103,6 +134,41 @@ pcdsutils.profile
     pcdsutils.profile.setup_profiler
     pcdsutils.profile.sort_timings
     pcdsutils.profile.toggle_profiler
+
+pcdsutils.qt.callbacks
+----------------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.qt.callbacks.WeakPartialMethodSlot
+
+pcdsutils.qt.designer_display
+-----------------------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.qt.designer_display.DesignerDisplay
+    pcdsutils.qt.designer_display._UiForm
+
+pcdsutils.qt.lazy
+-----------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.qt.lazy.LazyWidget
+
+pcdsutils.qt.popbar
+-------------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.qt.popbar.QPopBar
+    pcdsutils.qt.popbar.QPopBarOverlay
+    pcdsutils.qt.popbar.QVerticalLabel
 
 pcdsutils.release_notes
 -----------------------
@@ -138,3 +204,11 @@ pcdsutils.utils
     pcdsutils.utils.get_fully_qualified_domain_name
     pcdsutils.utils.get_instance_by_name
     pcdsutils.utils.import_helper
+
+pcdsutils.version
+-----------------
+
+.. autosummary::
+    :toctree: generated
+
+    pcdsutils.version.VersionProxy

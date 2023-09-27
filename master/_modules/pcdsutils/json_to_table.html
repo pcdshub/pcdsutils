@@ -92,6 +92,8 @@
 <span class="kn">import</span> <span class="nn">prettytable</span>
 
 
+<div class="viewcode-block" id="TableStyle">
+<a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.TableStyle.html#pcdsutils.json_to_table.TableStyle">[docs]</a>
 <span class="k">class</span> <span class="nc">TableStyle</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Table style/format to print.&quot;&quot;&quot;</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
@@ -103,10 +105,13 @@
     <span class="n">plain_columns</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
     <span class="n">markdown</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
     <span class="n">orgmode</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
-    <span class="n">double_border</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">double_border</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span></div>
+
     <span class="c1"># random = enum.auto()</span>
 
 
+<div class="viewcode-block" id="ProgramArguments">
+<a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.ProgramArguments.html#pcdsutils.json_to_table.ProgramArguments">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">ProgramArguments</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Argparse arguments for json_to_table.&quot;&quot;&quot;</span>
@@ -115,7 +120,8 @@
     <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markdown&quot;</span>
     <span class="n">list_delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span>
-    <span class="n">max_col_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="n">max_col_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span></div>
+
 
 
 <div class="viewcode-block" id="string_for_table">

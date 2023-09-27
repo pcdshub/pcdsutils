@@ -48,11 +48,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../releases.html">Release History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../upcoming_changes.html">Upcoming Changes</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-enum">pcdsutils.enum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ext-scripts">pcdsutils.ext_scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-import-timer">pcdsutils.import_timer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-info">pcdsutils.info</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-json-to-table">pcdsutils.json_to_table</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#pcdsutils-log">pcdsutils.log</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.DemotionFilter.html">pcdsutils.log.DemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.LogWarningLevelFilter.html">pcdsutils.log.LogWarningLevelFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.OphydCallbackExceptionDemoter.html">pcdsutils.log.OphydCallbackExceptionDemoter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.OphydObjectRecordInfo.html">pcdsutils.log.OphydObjectRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.PydmDemotionFilter.html">pcdsutils.log.PydmDemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.RecordInfo.html">pcdsutils.log.RecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.WarningRecordInfo.html">pcdsutils.log.WarningRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._JsonLogQueueHandler.html">pcdsutils.log._JsonLogQueueHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._LogQueueListener.html">pcdsutils.log._LogQueueListener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._PassthroughDatagramHandler.html">pcdsutils.log._PassthroughDatagramHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._PassthroughStreamHandler.html">pcdsutils.log._PassthroughStreamHandler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.centralized_logging_enabled.html">pcdsutils.log.centralized_logging_enabled</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.configure_pcds_logging.html">pcdsutils.log.configure_pcds_logging</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.create_log_dictionary_from_record.html">pcdsutils.log.create_log_dictionary_from_record</a></li>
@@ -71,9 +83,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ophyd-helpers">pcdsutils.ophyd_helpers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-profile">pcdsutils.profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-callbacks">pcdsutils.qt.callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-designer-display">pcdsutils.qt.designer_display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-lazy">pcdsutils.qt.lazy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-popbar">pcdsutils.qt.popbar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-release-notes">pcdsutils.release_notes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-requirements">pcdsutils.requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-utils">pcdsutils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-version">pcdsutils.version</a></li>
 </ul>
 </li>
 </ul>
@@ -111,7 +128,7 @@
 <h1>pcdsutils.log.standard_warnings_config<a class="headerlink" href="#pcdsutils-log-standard-warnings-config" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pcdsutils.log.standard_warnings_config">
-<span class="sig-prename descclassname"><span class="pre">pcdsutils.log.</span></span><span class="sig-name descname"><span class="pre">standard_warnings_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">LogWarningLevelFilter</span></span></span><a class="reference internal" href="../_modules/pcdsutils/log.html#standard_warnings_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.log.standard_warnings_config" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pcdsutils.log.</span></span><span class="sig-name descname"><span class="pre">standard_warnings_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pcdsutils.log.LogWarningLevelFilter.html#pcdsutils.log.LogWarningLevelFilter" title="pcdsutils.log.LogWarningLevelFilter"><span class="pre">LogWarningLevelFilter</span></a></span></span><a class="reference internal" href="../_modules/pcdsutils/log.html#standard_warnings_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.log.standard_warnings_config" title="Link to this definition"></a></dt>
 <dd><p>Use the standard pcds warnings config.</p>
 <p>This installs the log warning handler pointed to the “warnings_logger”
 and also installs the LogWarningLevelFilter at logging.DEBUG level

@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pcdsutils.json_to_table.string_for_table" href="pcdsutils.json_to_table.string_for_table.html" />
-    <link rel="prev" title="pcdsutils.info.main" href="pcdsutils.info.main.html" /> 
+    <link rel="prev" title="pcdsutils.json_to_table.TableStyle" href="pcdsutils.json_to_table.TableStyle.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,10 +48,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../releases.html">Release History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../upcoming_changes.html">Upcoming Changes</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-enum">pcdsutils.enum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ext-scripts">pcdsutils.ext_scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-import-timer">pcdsutils.import_timer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-info">pcdsutils.info</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#pcdsutils-json-to-table">pcdsutils.json_to_table</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.json_to_table.ProgramArguments.html">pcdsutils.json_to_table.ProgramArguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.json_to_table.TableStyle.html">pcdsutils.json_to_table.TableStyle</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pcdsutils.json_to_table.main</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pcdsutils.json_to_table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
@@ -63,9 +66,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-log">pcdsutils.log</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ophyd-helpers">pcdsutils.ophyd_helpers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-profile">pcdsutils.profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-callbacks">pcdsutils.qt.callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-designer-display">pcdsutils.qt.designer_display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-lazy">pcdsutils.qt.lazy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-popbar">pcdsutils.qt.popbar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-release-notes">pcdsutils.release_notes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-requirements">pcdsutils.requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-utils">pcdsutils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-version">pcdsutils.version</a></li>
 </ul>
 </li>
 </ul>
@@ -103,7 +111,7 @@
 <h1>pcdsutils.json_to_table.main<a class="headerlink" href="#pcdsutils-json-to-table-main" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pcdsutils.json_to_table.main">
-<span class="sig-prename descclassname"><span class="pre">pcdsutils.json_to_table.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ProgramArguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pcdsutils/json_to_table.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.json_to_table.main" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pcdsutils.json_to_table.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pcdsutils.json_to_table.ProgramArguments.html#pcdsutils.json_to_table.ProgramArguments" title="pcdsutils.json_to_table.ProgramArguments"><span class="pre">ProgramArguments</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pcdsutils/json_to_table.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.json_to_table.main" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -112,7 +120,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pcdsutils.info.main.html" class="btn btn-neutral float-left" title="pcdsutils.info.main" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pcdsutils.json_to_table.TableStyle.html" class="btn btn-neutral float-left" title="pcdsutils.json_to_table.TableStyle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="pcdsutils.json_to_table.string_for_table.html" class="btn btn-neutral float-right" title="pcdsutils.json_to_table.string_for_table" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

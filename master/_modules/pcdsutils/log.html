@@ -165,20 +165,29 @@
 <span class="n">_CURRENT_HANDLER</span> <span class="o">=</span> <span class="kc">None</span>
 
 
+<div class="viewcode-block" id="_PassthroughStreamHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._PassthroughStreamHandler.html#pcdsutils.log._PassthroughStreamHandler">[docs]</a>
 <span class="k">class</span> <span class="nc">_PassthroughStreamHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">SocketHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">makePickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="s1">&#39;Overrides super().makePickle&#39;</span>
-        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
 
+
+<div class="viewcode-block" id="_PassthroughDatagramHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._PassthroughDatagramHandler.html#pcdsutils.log._PassthroughDatagramHandler">[docs]</a>
 <span class="k">class</span> <span class="nc">_PassthroughDatagramHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">DatagramHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">makePickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="s1">&#39;Overrides super().makePickle&#39;</span>
-        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="_LogQueueListener">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._LogQueueListener.html#pcdsutils.log._LogQueueListener">[docs]</a>
 <span class="k">class</span> <span class="nc">_LogQueueListener</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">QueueListener</span><span class="p">):</span>
-    <span class="s1">&#39;A log handler which listens in a separate thread for queued records&#39;</span>
+    <span class="s1">&#39;A log handler which listens in a separate thread for queued records&#39;</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_get_module_versions</span><span class="p">():</span>
@@ -295,14 +304,19 @@
 
 
 
+<div class="viewcode-block" id="_JsonLogQueueHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._JsonLogQueueHandler.html#pcdsutils.log._JsonLogQueueHandler">[docs]</a>
 <span class="k">class</span> <span class="nc">_JsonLogQueueHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">QueueHandler</span><span class="p">):</span>
     <span class="s1">&#39;Logging handler which pushes `logging.LogRecord`s to a separate thread&#39;</span>
+<div class="viewcode-block" id="_JsonLogQueueHandler.__init__">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._JsonLogQueueHandler.html#pcdsutils.log._JsonLogQueueHandler.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">handlers</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span> <span class="ow">or</span> <span class="n">queue_module</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listener</span> <span class="o">=</span> <span class="n">_LogQueueListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">handlers</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
 
     <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="s1">&#39;Overrides QueueHandle prepare&#39;</span>
@@ -314,7 +328,8 @@
 
         <span class="c1"># Send along the serialized JSON to any downstream handlers, at least</span>
         <span class="c1"># `self.listener`</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_log_dictionary_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_log_dictionary_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">))</span></div>
+
 
 
 <div class="viewcode-block" id="configure_pcds_logging">
@@ -615,6 +630,8 @@
 
 
 
+<div class="viewcode-block" id="RecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.RecordInfo.html#pcdsutils.log.RecordInfo">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RecordInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -634,24 +651,30 @@
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Received invalid record&#39;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
 
 
+
+<div class="viewcode-block" id="DemotionFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.DemotionFilter.html#pcdsutils.log.DemotionFilter">[docs]</a>
 <span class="k">class</span> <span class="nc">DemotionFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Filter parent class for demoting log records.</span>
 
 <span class="sd">    Supports:</span>
+
 <span class="sd">    - Demoting duplicate records when paired with a hashable dataclass</span>
 <span class="sd">    - Optionally demoting all records that match a specification</span>
 <span class="sd">    - A counter that tracks how many records have been demoted</span>
 
 <span class="sd">    Child classes can/should override the following methods:</span>
+
 <span class="sd">    - should_demote (without super)</span>
 <span class="sd">    - __init__ (optional, and with super)</span>
 
 
 <span class="sd">    Child classes should override the following attributes:</span>
+
 <span class="sd">    - record_dataclass (inherit and customize from RecordInfo)</span>
 <span class="sd">    - default_logger (logging.Logger instance)</span>
 <span class="sd">    - cache (just the type annotation)</span>
@@ -676,6 +699,8 @@
     <span class="n">counter</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span>
 
+<div class="viewcode-block" id="DemotionFilter.__init__">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.DemotionFilter.html#pcdsutils.log.DemotionFilter.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
@@ -687,7 +712,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_level_cache</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span></div>
+
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">install</span><span class="p">(</span>
@@ -814,9 +840,12 @@
 <span class="sd">            The record info dataclass, which may be more convenient</span>
 <span class="sd">            for implementing this method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Implement me in child class&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Implement me in child class&quot;</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="WarningRecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.WarningRecordInfo.html#pcdsutils.log.WarningRecordInfo">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">WarningRecordInfo</span><span class="p">(</span><span class="n">RecordInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -845,9 +874,12 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Received invalid record, must be from &#39;</span>
                 <span class="s1">&#39;the log_warning_handler&#39;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
 
 
+
+<div class="viewcode-block" id="LogWarningLevelFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.LogWarningLevelFilter.html#pcdsutils.log.LogWarningLevelFilter">[docs]</a>
 <span class="k">class</span> <span class="nc">LogWarningLevelFilter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Filter to decrease the log level of repeat warnings.</span>
@@ -888,7 +920,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        All warnings should be demoted (only_duplicates=True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 
 <div class="viewcode-block" id="standard_warnings_config">
@@ -914,6 +947,8 @@
 <span class="n">objects_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;ophyd.objects&#39;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="OphydObjectRecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.OphydObjectRecordInfo.html#pcdsutils.log.OphydObjectRecordInfo">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">OphydObjectRecordInfo</span><span class="p">(</span><span class="n">RecordInfo</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -946,9 +981,12 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Recieved invalid record, must be from &#39;</span>
                 <span class="s1">&#39;the ophyd.objects logging adapters&#39;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
 
 
+
+<div class="viewcode-block" id="OphydCallbackExceptionDemoter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.OphydCallbackExceptionDemoter.html#pcdsutils.log.OphydCallbackExceptionDemoter">[docs]</a>
 <span class="k">class</span> <span class="nc">OphydCallbackExceptionDemoter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Filter that demotes the logging level of callback exceptions.</span>
@@ -982,7 +1020,7 @@
     <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">,</span>
-        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return True if we should demote the record, False otherwise.</span>
@@ -998,7 +1036,44 @@
 <span class="sd">            The record info dataclass, which may be more convenient</span>
 <span class="sd">            for implementing this method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;Subscription </span><span class="si">%s</span><span class="s1"> callback exception&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">return</span> <span class="s1">&#39;Subscription </span><span class="si">%s</span><span class="s1"> callback exception&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span></div>
+
+
+
+<div class="viewcode-block" id="PydmDemotionFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.PydmDemotionFilter.html#pcdsutils.log.PydmDemotionFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">PydmDemotionFilter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Demote verbose logs from pydm, particulary those that come at exit.</span>
+
+<span class="sd">    Currently, this demotes the &quot;Unable to remove connection&quot; logger exit</span>
+<span class="sd">    spam from &quot;ERROR&quot; to &quot;DEBUG&quot;.</span>
+
+<span class="sd">    These can be caused by some poorly understood race conditions at program</span>
+<span class="sd">    close and are not useful for the end user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydm.widgets.channel&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if we should demote the record, False otherwise.</span>
+
+<span class="sd">        Demote if we see the &quot;Unable to remove connection&quot; error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        record: logging.LogRecord</span>
+<span class="sd">            The record instance passed into the filter.</span>
+<span class="sd">        info: RecordInfo</span>
+<span class="sd">            The record info dataclass, which may be more convenient</span>
+<span class="sd">            for implementing this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Unable to remove connection&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span></div>
+
 </pre></div>
 
            </div>
