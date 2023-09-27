@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.profiler\_context
+===================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: profiler_context

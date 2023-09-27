@@ -1,0 +1,6 @@
+﻿pcdsutils.ophyd\_helpers.acquire\_blocking
+==========================================
+
+.. currentmodule:: pcdsutils.ophyd_helpers
+
+.. autofunction:: acquire_blocking

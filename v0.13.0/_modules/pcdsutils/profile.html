@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.profile &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">v0.13.0 (2023-09-27)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-2-2023-04-20">v0.12.2 (2023-04-20)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-1-2023-02-23">v0.12.1 (2023-02-23)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-0-2022-11-16">v0.12.0 (2022-11-16)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-11-0-2022-07-14">v0.11.0 (2022-07-14)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-10-0-2022-06-02">v0.10.0 (2022-06-02)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-9-0-2022-04-29">v0.9.0 (2022-04-29)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-8-0-2022-03-11">v0.8.0 (2022-03-11)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-7-0-2022-02-02">v0.7.0 (2022-02-02)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-6-0-2021-11-08">v0.6.0 (2021-11-08)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-5-0-2021-07-22">v0.5.0 (2021-07-22)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-3-2021-07-09">v0.4.3 (2021-07-09)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-2-2021-03-23">v0.4.2 (2021-03-23)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-1-2021-01-19">v0.4.1 (2021-01-19)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-0-2020-10-19">v0.4.0 (2020-10-19)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#id11">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-3-1-2020-09-17">v0.3.1 (2020-09-17)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-3-0-2020-06-08">v0.3.0 (2020-06-08)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-2-0-2020-05-15">v0.2.0 (2020-05-15)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-1-1-2020-03-13">v0.1.1 (2020-03-13)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-1-0-2020-03-13">v0.1.0 (2020-03-13)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-0-0-2020-01-24">v0.0.0 (2020-01-24)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.profile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.profile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for setting up line_profiler to debug a specific module</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isclass</span><span class="p">,</span> <span class="n">isfunction</span><span class="p">,</span> <span class="n">ismethod</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ModuleType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">_optional_err</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Optional dependency line_profiler missing from python &#39;</span>
+                 <span class="s1">&#39;environment. Cannot run profiler.&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">line_profiler</span> <span class="kn">import</span> <span class="n">LineProfiler</span><span class="p">,</span> <span class="n">show_func</span>
+    <span class="n">has_line_profiler</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">has_line_profiler</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">_optional_err</span><span class="p">)</span>
+
+
+<span class="c1"># Global profiler instance</span>
+<span class="n">profiler</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="get_profiler">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_profiler.html#pcdsutils.profile.get_profiler">[docs]</a>
+<span class="k">def</span> <span class="nf">get_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the global profiler instance, creating it if necessary.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">profiler</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_line_profiler</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">_optional_err</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">profiler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">reset_profiler</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">profiler</span></div>
+
+
+
+<div class="viewcode-block" id="reset_profiler">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.reset_profiler.html#pcdsutils.profile.reset_profiler">[docs]</a>
+<span class="k">def</span> <span class="nf">reset_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clears the old global profiler by replacing it with a new one.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">profiler</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_line_profiler</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">_optional_err</span><span class="p">)</span>
+    <span class="n">profiler</span> <span class="o">=</span> <span class="n">LineProfiler</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">profiler</span></div>
+
+
+
+<div class="viewcode-block" id="profiler_context">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.profiler_context.html#pcdsutils.profile.profiler_context">[docs]</a>
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">profiler_context</span><span class="p">(</span>
+    <span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_global_profiler</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">output_now</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">LineProfiler</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Context manager for profiling a fixed span of an application.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_names : iterable of str</span>
+<span class="sd">        The modules whose functions we&#39;d like to include in the profile.</span>
+<span class="sd">        If using the global profiler, these will persist between calls, only</span>
+<span class="sd">        accumulating new modules and never clearing old ones.</span>
+<span class="sd">    filename : str, optional</span>
+<span class="sd">        If provided, the results will be saved to this filename.</span>
+<span class="sd">        If omitted, we&#39;ll print the results to stdout.</span>
+<span class="sd">    use_global_profiler : bool, optional</span>
+<span class="sd">        If False, the default, this will create a new profiler instance for</span>
+<span class="sd">        this context manager block. If True, this will use the global</span>
+<span class="sd">        profiler. Using the global profiler is appropriate if you want to</span>
+<span class="sd">        accumulate statistics across multiple context manager blocks, or</span>
+<span class="sd">        the same block multiple times.</span>
+<span class="sd">    output_now : bool, optional</span>
+<span class="sd">        If True, the default, we&#39;ll print to screen or write to file the</span>
+<span class="sd">        results upon exiting this block. If False, we will not. This is</span>
+<span class="sd">        appropriate to change to False if you&#39;d like to accumulate</span>
+<span class="sd">        statistics across multiple context manager blocks, or perhaps the</span>
+<span class="sd">        same context manager block multiple times.</span>
+<span class="sd">    min_threshold : float, optional</span>
+<span class="sd">        If provided, we will omit results from functions with total time</span>
+<span class="sd">        less than this duration in seconds from the output.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    profiler : LineProfiler</span>
+<span class="sd">        The profile instance that is active in this code block, in case you&#39;d</span>
+<span class="sd">        like to do something with it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context_profiler</span> <span class="o">=</span> <span class="n">setup_profiler</span><span class="p">(</span>
+        <span class="n">module_names</span><span class="o">=</span><span class="n">module_names</span><span class="p">,</span>
+        <span class="n">use_global_profiler</span><span class="o">=</span><span class="n">use_global_profiler</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">context_profiler</span><span class="o">.</span><span class="n">enable_by_count</span><span class="p">()</span>
+    <span class="k">yield</span> <span class="n">context_profiler</span>
+    <span class="n">context_profiler</span><span class="o">.</span><span class="n">disable_by_count</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">output_now</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">print_results</span><span class="p">(</span>
+                <span class="n">context_profiler</span><span class="p">,</span>
+                <span class="n">min_threshold</span><span class="o">=</span><span class="n">min_threshold</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">save_results</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">,</span>
+                <span class="n">context_profiler</span><span class="p">,</span>
+                <span class="n">min_threshold</span><span class="o">=</span><span class="n">min_threshold</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="setup_profiler">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.setup_profiler.html#pcdsutils.profile.setup_profiler">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_profiler</span><span class="p">(</span>
+    <span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">use_global_profiler</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets up a profiler.</span>
+
+<span class="sd">    Includes all functions and classes from all submodules of the given</span>
+<span class="sd">    module names.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_names : iterable of str</span>
+<span class="sd">        The modules to profile. You can make this an entire module like</span>
+<span class="sd">        &quot;typhos&quot;, specific submodules like &quot;typhos.display&quot;, or</span>
+<span class="sd">        several modules if you want to profile many different things.</span>
+<span class="sd">    use_global_profiler : bool, optional</span>
+<span class="sd">        Set to True, the default, to set up a global profiler.</span>
+<span class="sd">        Set to False to set up an independent profiler.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    profiler : LineProfiler</span>
+<span class="sd">        The profiler that was just set up, global or otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">use_global_profiler</span><span class="p">:</span>
+        <span class="n">profiler_to_setup</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profiler_to_setup</span> <span class="o">=</span> <span class="n">LineProfiler</span><span class="p">()</span>
+
+    <span class="n">functions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">module_names</span><span class="p">:</span>
+        <span class="c1"># We don&#39;t care about import warnings</span>
+        <span class="c1"># Most of these are &quot;we moved the module&quot;</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">modules</span> <span class="o">=</span> <span class="n">get_submodules</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="n">native_functions</span> <span class="o">=</span> <span class="n">get_native_functions</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+            <span class="n">functions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">native_functions</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+        <span class="n">profiler_to_setup</span><span class="o">.</span><span class="n">add_function</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">profiler_to_setup</span></div>
+
+
+
+<div class="viewcode-block" id="toggle_profiler">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.toggle_profiler.html#pcdsutils.profile.toggle_profiler">[docs]</a>
+<span class="k">def</span> <span class="nf">toggle_profiler</span><span class="p">(</span><span class="n">turn_on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Turns the global profiler off or on.&quot;&quot;&quot;</span>
+    <span class="n">profiler</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">turn_on</span><span class="p">:</span>
+        <span class="n">profiler</span><span class="o">.</span><span class="n">enable_by_count</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profiler</span><span class="o">.</span><span class="n">disable_by_count</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_preamble">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_preamble.html#pcdsutils.profile.get_preamble">[docs]</a>
+<span class="k">def</span> <span class="nf">get_preamble</span><span class="p">(</span>
+    <span class="n">timings_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the text that goes before the line profile chunks in the output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39;Profile output: time is in units of milliseconds.</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">timings_dict</span><span class="p">:</span>
+        <span class="n">txt</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="s1">&#39;No functions above minimum threshold of &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">min_threshold</span><span class="si">}</span><span class="s1"> seconds.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">txt</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="save_results">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.save_results.html#pcdsutils.profile.save_results">[docs]</a>
+<span class="k">def</span> <span class="nf">save_results</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves the formatted profiling results.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The path to the file where we&#39;d like to save the results.</span>
+<span class="sd">    prof : LineProfiler, optional</span>
+<span class="sd">        The profiler whose statistics we&#39;d like to save.</span>
+<span class="sd">        If omitted, we&#39;ll use the global profiler.</span>
+<span class="sd">    min_threshold : float, optional</span>
+<span class="sd">        If provided, we will omit results from functions with total time</span>
+<span class="sd">        less than this duration in seconds from the output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">prof</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prof</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+    <span class="n">timings_dict</span> <span class="o">=</span> <span class="n">sort_timings</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">min_threshold</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="n">get_preamble</span><span class="p">(</span>
+                <span class="n">timings_dict</span><span class="p">,</span>
+                <span class="n">min_threshold</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="n">timings</span> <span class="ow">in</span> <span class="n">timings_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">show_func</span><span class="p">(</span>
+                <span class="n">fn</span><span class="p">,</span>
+                <span class="n">lineno</span><span class="p">,</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">timings</span><span class="p">,</span>
+                <span class="n">stats</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+                <span class="n">output_unit</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+                <span class="n">stream</span><span class="o">=</span><span class="n">fd</span><span class="p">,</span>
+                <span class="n">stripzeros</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="print_results">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.print_results.html#pcdsutils.profile.print_results">[docs]</a>
+<span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span>
+    <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints the formatted results directly to terminal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    prof : LineProfiler, optional</span>
+<span class="sd">        The profiler whose statistics we&#39;d like to save.</span>
+<span class="sd">        If omitted, we&#39;ll use the global profiler.</span>
+<span class="sd">    min_threshold : float, optional</span>
+<span class="sd">        If provided, we will omit results from functions with total time</span>
+<span class="sd">        less than this duration in seconds from the output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">prof</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prof</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+    <span class="n">timings_dict</span> <span class="o">=</span> <span class="n">sort_timings</span><span class="p">(</span><span class="n">prof</span><span class="p">,</span> <span class="n">min_threshold</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">get_preamble</span><span class="p">(</span>
+            <span class="n">timings_dict</span><span class="p">,</span>
+            <span class="n">min_threshold</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="n">timings</span> <span class="ow">in</span> <span class="n">timings_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">show_func</span><span class="p">(</span>
+            <span class="n">fn</span><span class="p">,</span>
+            <span class="n">lineno</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">timings</span><span class="p">,</span>
+            <span class="n">stats</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+            <span class="n">output_unit</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+            <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">stripzeros</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="sort_timings">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.sort_timings.html#pcdsutils.profile.sort_timings">[docs]</a>
+<span class="k">def</span> <span class="nf">sort_timings</span><span class="p">(</span>
+    <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sort a profiler&#39;s stats in order of decreasing total time.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    prof : LineProfiler, optional</span>
+<span class="sd">        The line profiler whose statistics we&#39;d like to sort. If omitted,</span>
+<span class="sd">        we&#39;ll use the global profiler.</span>
+<span class="sd">    min_threshold : float, optional</span>
+<span class="sd">        A minimum total execution threshold for pre-filtering the output</span>
+<span class="sd">        statistics. Any total execution time in seconds that is below</span>
+<span class="sd">        this threshold will be excluded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">prof</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prof</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+    <span class="n">new_timings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">ranks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># stats.unit is e.g. 1e-6, the unit of the integer counts we see</span>
+        <span class="c1"># so if min_threshold is, say, 1s, that needs to be 1e6 counts</span>
+        <span class="n">scaled_threshold</span> <span class="o">=</span> <span class="n">min_threshold</span> <span class="o">/</span> <span class="n">stats</span><span class="o">.</span><span class="n">unit</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="n">scaled_threshold</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">inner_timings</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">timings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">tot_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">lineo</span><span class="p">,</span> <span class="n">nhits</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">inner_timings</span><span class="p">:</span>
+            <span class="n">tot_time</span> <span class="o">+=</span> <span class="n">time</span>
+        <span class="k">if</span> <span class="n">tot_time</span> <span class="o">&gt;</span> <span class="n">scaled_threshold</span><span class="p">:</span>
+            <span class="n">ranks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tot_time</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranks</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">new_timings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">timings</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">new_timings</span></div>
+
+
+
+<div class="viewcode-block" id="is_native">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.is_native.html#pcdsutils.profile.is_native">[docs]</a>
+<span class="k">def</span> <span class="nf">is_native</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if obj was defined in module.</span>
+
+<span class="sd">    Returns True if obj was defined in this module.</span>
+<span class="sd">    Returns False if obj was not defined in this module.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : Any</span>
+<span class="sd">        Any object. Note that if obj is a primitive type, or</span>
+<span class="sd">        any other type without explicit references to its module,</span>
+<span class="sd">        this check will fail.</span>
+<span class="sd">    module : module</span>
+<span class="sd">        Any Python module</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    native : bool</span>
+<span class="sd">        True if obj was defined in the module</span>
+<span class="sd">        False otherwise</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If the object type cannot be traced back to any particular</span>
+<span class="sd">        module, e.g. a primitive type like int, or if the module</span>
+<span class="sd">        argument cannot be interpreted as a module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module_name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="si">}</span><span class="s1"> is not a module.&#39;</span>
+        <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">object_module</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Object </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s1"> can have no native module.&#39;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">module_name</span> <span class="o">==</span> <span class="n">object_module</span></div>
+
+
+
+<div class="viewcode-block" id="get_native_functions">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_native_functions.html#pcdsutils.profile.get_native_functions">[docs]</a>
+<span class="k">def</span> <span class="nf">get_native_functions</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a set of all functions and methods defined in module.</span>
+
+<span class="sd">    This does not include any functions defined in submodules.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module : ModuleType</span>
+<span class="sd">        The module object that you import</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    native_functions : set of callables</span>
+<span class="sd">        The functions defined in that module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_native_methods</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_native_methods">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_native_methods.html#pcdsutils.profile.get_native_methods">[docs]</a>
+<span class="k">def</span> <span class="nf">get_native_methods</span><span class="p">(</span>
+    <span class="n">module_or_cls</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">native_methods</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursive step of get_native_functions.</span>
+
+<span class="sd">    Paremeters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module_or_cls : any</span>
+<span class="sd">        Either the original module or a class defined in it.</span>
+<span class="sd">    module : ModuleType</span>
+<span class="sd">        The source module to compare with to avoid including</span>
+<span class="sd">        imported functions, etc. in the profile</span>
+<span class="sd">    seen : set of any, optional</span>
+<span class="sd">        All objects we&#39;ve processed already, to avoid</span>
+<span class="sd">        infinite loops.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    native_methods : set of Callables</span>
+<span class="sd">        The functions defined on that class or module that</span>
+<span class="sd">        are native.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">native_methods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">seen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">getmembers</span><span class="p">(</span><span class="n">module_or_cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c1"># Unhashable type, definitely not a class or function</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_native</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+                <span class="k">continue</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="n">inner_methods</span> <span class="o">=</span> <span class="n">get_native_methods</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">seen</span><span class="o">=</span><span class="n">seen</span><span class="p">)</span>
+            <span class="n">native_methods</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">inner_methods</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">isfunction</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ismethod</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="n">native_methods</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">native_methods</span></div>
+
+
+
+<div class="viewcode-block" id="get_submodules">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_submodules.html#pcdsutils.profile.get_submodules">[docs]</a>
+<span class="k">def</span> <span class="nf">get_submodules</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of the imported module plus all submodules.&quot;&quot;&quot;</span>
+    <span class="n">submodule_names</span> <span class="o">=</span> <span class="n">get_submodule_names</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">import_modules</span><span class="p">(</span><span class="n">submodule_names</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_submodule_names">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.get_submodule_names.html#pcdsutils.profile.get_submodule_names">[docs]</a>
+<span class="k">def</span> <span class="nf">get_submodule_names</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of the module name plus all importable submodule names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+    <span class="n">submodule_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module_path</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">__path__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># This attr is missing if there are no submodules</span>
+        <span class="k">return</span> <span class="n">submodule_names</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">submodule_name</span><span class="p">,</span> <span class="n">is_pkg</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">walk_packages</span><span class="p">(</span><span class="n">module_path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">submodule_name</span> <span class="o">!=</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+            <span class="n">full_submodule_name</span> <span class="o">=</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">submodule_name</span>
+            <span class="n">submodule_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_submodule_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_pkg</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">subsubmodule_names</span> <span class="o">=</span> <span class="n">get_submodule_names</span><span class="p">(</span>
+                        <span class="n">full_submodule_name</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="c1"># The recursive check failed, some import failed here</span>
+                    <span class="k">continue</span>
+                <span class="n">submodule_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">subsubmodule_names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">submodule_names</span></div>
+
+
+
+<div class="viewcode-block" id="import_modules">
+<a class="viewcode-back" href="../../generated/pcdsutils.profile.import_modules.html#pcdsutils.profile.import_modules">[docs]</a>
+<span class="k">def</span> <span class="nf">import_modules</span><span class="p">(</span><span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Utility function to import an iterator of module names as a list.</span>
+
+<span class="sd">    Skips over modules that are not importable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">module_names</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module_objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
+        <span class="c1"># Several modules are naughty and raise BaseException on import.</span>
+        <span class="c1"># Sometimes this is even a SystemExit. That&#39;s so annoying.</span>
+        <span class="c1"># I can&#39;t believe I&#39;m catching SystemExit and preventing it.</span>
+        <span class="c1"># But this is just an import. It should be OK.</span>
+        <span class="c1"># Instead of a basic except Exception, we need to do this</span>
+        <span class="c1"># But make sure to allow a KeyBoardInterrupt</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">module_objects</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

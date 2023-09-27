@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.json_to_table &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">v0.13.0 (2023-09-27)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-2-2023-04-20">v0.12.2 (2023-04-20)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-1-2023-02-23">v0.12.1 (2023-02-23)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-12-0-2022-11-16">v0.12.0 (2022-11-16)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-11-0-2022-07-14">v0.11.0 (2022-07-14)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-10-0-2022-06-02">v0.10.0 (2022-06-02)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-9-0-2022-04-29">v0.9.0 (2022-04-29)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-8-0-2022-03-11">v0.8.0 (2022-03-11)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-7-0-2022-02-02">v0.7.0 (2022-02-02)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-6-0-2021-11-08">v0.6.0 (2021-11-08)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-5-0-2021-07-22">v0.5.0 (2021-07-22)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-3-2021-07-09">v0.4.3 (2021-07-09)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-2-2021-03-23">v0.4.2 (2021-03-23)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-1-2021-01-19">v0.4.1 (2021-01-19)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-4-0-2020-10-19">v0.4.0 (2020-10-19)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#id11">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-3-1-2020-09-17">v0.3.1 (2020-09-17)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-3-0-2020-06-08">v0.3.0 (2020-06-08)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-2-0-2020-05-15">v0.2.0 (2020-05-15)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-1-1-2020-03-13">v0.1.1 (2020-03-13)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-1-0-2020-03-13">v0.1.0 (2020-03-13)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html#v0-0-0-2020-01-24">v0.0.0 (2020-01-24)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.json_to_table</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.json_to_table</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Take in a JSON document with an array at the top-level and generate a</span>
+<span class="sd">PrettyTable from it.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">import</span> <span class="nn">prettytable</span>
+
+
+<span class="k">class</span> <span class="nc">TableStyle</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Table style/format to print.&quot;&quot;&quot;</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">latex</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+
+    <span class="n">default</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">msword_friendly</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">plain_columns</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">markdown</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">orgmode</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">double_border</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="c1"># random = enum.auto()</span>
+
+
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">ProgramArguments</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Argparse arguments for json_to_table.&quot;&quot;&quot;</span>
+    <span class="n">input_file</span><span class="p">:</span> <span class="n">BinaryIO</span>
+    <span class="n">sort_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markdown&quot;</span>
+    <span class="n">list_delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span>
+    <span class="n">max_col_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
+
+
+<div class="viewcode-block" id="string_for_table">
+<a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.string_for_table.html#pcdsutils.json_to_table.string_for_table">[docs]</a>
+<span class="k">def</span> <span class="nf">string_for_table</span><span class="p">(</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">list_delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix the value for display in the table.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">list_delimiter</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">string_for_table</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_length</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">max_length</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;...&quot;</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">[:</span><span class="n">max_length</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[:</span><span class="n">max_length</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="table_from_json">
+<a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.table_from_json.html#pcdsutils.json_to_table.table_from_json">[docs]</a>
+<span class="k">def</span> <span class="nf">table_from_json</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+    <span class="n">sort_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">list_delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span>
+    <span class="n">max_col_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">prettytable</span><span class="o">.</span><span class="n">PrettyTable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a PrettyTable from the input JSON data.&quot;&quot;&quot;</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">prettytable</span><span class="o">.</span><span class="n">PrettyTable</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">field_names</span> <span class="o">=</span> <span class="n">columns</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sort_key</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">string_for_table</span><span class="p">(</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="n">list_delimiter</span><span class="o">=</span><span class="n">list_delimiter</span><span class="p">,</span>
+                <span class="n">max_length</span><span class="o">=</span><span class="n">max_col_width</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">field_names</span>
+        <span class="p">]</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.main.html#pcdsutils.json_to_table.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">ProgramArguments</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table_from_json</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">sort_key</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">sort_key</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+        <span class="n">list_delimiter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">list_delimiter</span><span class="p">,</span>
+        <span class="n">max_col_width</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">max_col_width</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">format</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">TableStyle</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="n">TableStyle</span><span class="o">.</span><span class="n">csv</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_csv_string</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="n">TableStyle</span><span class="o">.</span><span class="n">html</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_html_string</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="n">TableStyle</span><span class="o">.</span><span class="n">latex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_latex_string</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">prettytable</span><span class="p">,</span> <span class="nb">format</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_create_argparser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Format a table given JSON with PrettyTable&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--sort-key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sort key&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--columns&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Columns to include in the table (by key name)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--list-delimiter&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Used when joining entries of a list&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--format&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">TableStyle</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;markdown&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Used when joining entries of a list&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--max-col-width&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Maximum characters per column&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">FileType</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filename to read from (&#39;-&#39; for stdin)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span> <span class="nf">_entrypoint</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">_create_argparser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">ProgramArguments</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">_entrypoint</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

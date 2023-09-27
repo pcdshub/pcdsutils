@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.is\_native
+============================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: is_native

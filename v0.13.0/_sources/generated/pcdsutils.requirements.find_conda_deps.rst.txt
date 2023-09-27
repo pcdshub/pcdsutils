@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.find\_conda\_deps
+========================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: find_conda_deps
