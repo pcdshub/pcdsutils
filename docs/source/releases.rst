@@ -1,5 +1,23 @@
 =================
  Release History
+
+
+v0.13.0 (2023-09-27)
+====================
+
+Features
+--------
+- Add cleaned up and performant version of heavily-used ``get_info`` in
+  :mod:`pcdsutils.info`.
+
+Maintenance
+-----------
+- Documentation building was fixed and pre-release note support was added.
+
+Contributors
+------------
+- klauer
+
 =================
 
 
