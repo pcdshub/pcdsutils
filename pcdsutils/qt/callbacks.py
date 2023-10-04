@@ -16,6 +16,26 @@ class WeakPartialMethodSlot:
     that would prevent the instance from being garbage collected prior to the
     program exiting.
 
+    To use, create an instance of this class, and store a hard reference to
+    that instance.  The class will connect the slot to the signal::
+
+        class MyWidget(QtWidgets.QWidget):
+            button: QtWidgets.QPushButton
+
+            def __init__(self, *args, **kwargs):
+                self._partial_slots: List[WeakPartialMethodSlot] = []
+                slot = WeakPartialMethodSlot(
+                    self.button, self.button.clicked,
+                    self.foo_method, 'partial_foo'
+                )
+                self._partial_slots.append(slot)  # hold hard reference
+
+                super().__init__(*args, **kwargs)
+
+            def foo_method(self, my_arg):
+                print(my_arg)
+
+
     Parameters
     ----------
     signal_owner : QtCore.QObject
@@ -23,7 +43,8 @@ class WeakPartialMethodSlot:
     signal : QtCore.Signal
         The signal instance itself.  Should be a signal on ``signal_owner``
     method : instance method
-        The method slot to call when the signal fires.
+        The method slot to call when the signal fires.  Should be a method on
+        the containing class.
     *args :
         Arguments to pass to the method.
     **kwargs :
@@ -77,12 +98,7 @@ class WeakPartialMethodSlot:
         """
         PyQt callback slot which handles the internal WeakMethod.
 
-        This method currently throws away arguments passed in from the signal.
-        This is for backward-compatibility to how the previous
-        `partial()`-using implementation worked.
-
-        If reused beyond the TyphosSuite, this class may need revisiting in the
-        future.
+        Adds the received arguments to the stored partial arguments.
         """
         method = self.method()
         if method is None:
