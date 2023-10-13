@@ -871,7 +871,7 @@ class OphydCallbackExceptionDemoter(DemotionFilter):
     def should_demote(
         self,
         record: logging.LogRecord,
-        info: RecordInfo
+        info: RecordInfo,
     ) -> bool:
         """
         Return True if we should demote the record, False otherwise.
@@ -888,3 +888,36 @@ class OphydCallbackExceptionDemoter(DemotionFilter):
             for implementing this method.
         """
         return 'Subscription %s callback exception' in info.message
+
+
+class PydmDemotionFilter(DemotionFilter):
+    """
+    Demote verbose logs from pydm, particulary those that come at exit.
+
+    Currently, this demotes the "Unable to remove connection" logger exit
+    spam from "ERROR" to "DEBUG".
+
+    These can be caused by some poorly understood race conditions at program
+    close and are not useful for the end user.
+    """
+    default_logger = logging.getLogger("pydm.widgets.channel")
+
+    def should_demote(
+        self,
+        record: logging.LogRecord,
+        info: RecordInfo,
+    ) -> bool:
+        """
+        Return True if we should demote the record, False otherwise.
+
+        Demote if we see the "Unable to remove connection" error.
+
+        Parameters
+        ----------
+        record: logging.LogRecord
+            The record instance passed into the filter.
+        info: RecordInfo
+            The record info dataclass, which may be more convenient
+            for implementing this method.
+        """
+        return "Unable to remove connection" in info.message
