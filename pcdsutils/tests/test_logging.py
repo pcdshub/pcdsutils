@@ -345,3 +345,46 @@ def test_demotion_on_leveled_root_handler(
         unique_log.info('should be filtered')
 
     assert not caplog.records
+
+
+msg1 = """
+Unable to remove connection for <PyDMChannel (ca://RTDSL0:MPA:03:POS_STATE_RBV)>
+Traceback (most recent call last):
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/widgets/channel.py", line 152, in disconnect
+    plugin.remove_connection(self, destroying=destroying)
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/data_plugins/plugin.py", line 319, in remove_connection
+    self.connections[connection_id].remove_listener(
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/data_plugins/plugin.py", line 119, in remove_listener
+    self.connection_state_signal.disconnect(channel.connection_slot)
+RuntimeError: wrapped C/C++ object of type Connection has been deleted
+"""
+msg2 = """
+Unable to make proper connection for <PyDMChannel (ca://RTDSL0:MPA:03:POS_STATE_RBV)>
+Traceback (most recent call last):
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/widgets/channel.py", line 152, in disconnect
+    plugin.remove_connection(self, destroying=destroying)
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/data_plugins/plugin.py", line 319, in remove_connection
+    self.connections[connection_id].remove_listener(
+  File "/cds/home/z/zlentz/miniconda3/envs/pcds-5.8.0/lib/python3.9/site-packages/pydm/data_plugins/plugin.py", line 119, in remove_listener
+    self.connection_state_signal.disconnect(channel.connection_slot)
+RuntimeError: wrapped C/C++ object of type Connection has been deleted
+"""
+
+
+@pytest.mark.parametrize(
+    ("message", "should_demote"),
+    (msg1, True),
+    (msg2, False),
+)
+def test_pydm_filter_conditions(
+    message: str,
+    should_demote: bool,
+):
+    filter = pcdsutils.log.PydmDemotionFilter()
+    log_record = logging.makeLogRecord({
+        "name": "pydm.widgets.channel",
+        "level": logging.ERROR,
+        "msg": message,
+    })
+    record_info = pcdsutils.log.RecordInfo.from_record(log_record)
+    assert filter.should_demote(record=log_record, info=record_info) == should_demote
