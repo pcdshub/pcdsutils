@@ -2,6 +2,23 @@
  Release History
 
 
+v0.14.0 (2023-10-16)
+====================
+
+Features
+--------
+- Adds `WeakPartialMethodSlot`, which handles cleanup for partial methods
+  used as qt slots (callbacks)
+- Add PydmDemotionFilter for making Pydm-based applications with logging
+  configurations less verbose at close when there are cleanup issues.
+
+Contributors
+------------
+- tangkong
+- zllentz
+
+
+
 v0.13.0 (2023-09-27)
 ====================
 
