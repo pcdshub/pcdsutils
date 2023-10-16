@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.get\_submodules
+=================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: get_submodules

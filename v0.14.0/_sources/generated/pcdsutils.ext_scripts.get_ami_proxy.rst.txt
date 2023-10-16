@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.get\_ami\_proxy
+======================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: get_ami_proxy

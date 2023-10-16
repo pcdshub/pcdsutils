@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.get\_hutch\_name
+=======================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: get_hutch_name

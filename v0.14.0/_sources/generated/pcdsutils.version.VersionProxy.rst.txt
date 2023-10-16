@@ -1,0 +1,75 @@
+﻿pcdsutils.version.VersionProxy
+==============================
+
+.. currentmodule:: pcdsutils.version
+
+.. autoclass:: VersionProxy
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~VersionProxy.__init__
+      ~VersionProxy.capitalize
+      ~VersionProxy.casefold
+      ~VersionProxy.center
+      ~VersionProxy.count
+      ~VersionProxy.encode
+      ~VersionProxy.endswith
+      ~VersionProxy.expandtabs
+      ~VersionProxy.find
+      ~VersionProxy.format
+      ~VersionProxy.format_map
+      ~VersionProxy.index
+      ~VersionProxy.isalnum
+      ~VersionProxy.isalpha
+      ~VersionProxy.isascii
+      ~VersionProxy.isdecimal
+      ~VersionProxy.isdigit
+      ~VersionProxy.isidentifier
+      ~VersionProxy.islower
+      ~VersionProxy.isnumeric
+      ~VersionProxy.isprintable
+      ~VersionProxy.isspace
+      ~VersionProxy.istitle
+      ~VersionProxy.isupper
+      ~VersionProxy.join
+      ~VersionProxy.ljust
+      ~VersionProxy.lower
+      ~VersionProxy.lstrip
+      ~VersionProxy.maketrans
+      ~VersionProxy.partition
+      ~VersionProxy.removeprefix
+      ~VersionProxy.removesuffix
+      ~VersionProxy.replace
+      ~VersionProxy.rfind
+      ~VersionProxy.rindex
+      ~VersionProxy.rjust
+      ~VersionProxy.rpartition
+      ~VersionProxy.rsplit
+      ~VersionProxy.rstrip
+      ~VersionProxy.split
+      ~VersionProxy.splitlines
+      ~VersionProxy.startswith
+      ~VersionProxy.strip
+      ~VersionProxy.swapcase
+      ~VersionProxy.title
+      ~VersionProxy.translate
+      ~VersionProxy.upper
+      ~VersionProxy.zfill
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~VersionProxy.data
+   
+   

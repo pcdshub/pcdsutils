@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.get\_native\_functions
+========================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: get_native_functions

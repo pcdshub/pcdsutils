@@ -1,0 +1,46 @@
+﻿pcdsutils.log.\_JsonLogQueueHandler
+===================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: _JsonLogQueueHandler
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~_JsonLogQueueHandler.__init__
+      ~_JsonLogQueueHandler.acquire
+      ~_JsonLogQueueHandler.addFilter
+      ~_JsonLogQueueHandler.close
+      ~_JsonLogQueueHandler.createLock
+      ~_JsonLogQueueHandler.emit
+      ~_JsonLogQueueHandler.enqueue
+      ~_JsonLogQueueHandler.filter
+      ~_JsonLogQueueHandler.flush
+      ~_JsonLogQueueHandler.format
+      ~_JsonLogQueueHandler.get_name
+      ~_JsonLogQueueHandler.handle
+      ~_JsonLogQueueHandler.handleError
+      ~_JsonLogQueueHandler.prepare
+      ~_JsonLogQueueHandler.release
+      ~_JsonLogQueueHandler.removeFilter
+      ~_JsonLogQueueHandler.setFormatter
+      ~_JsonLogQueueHandler.setLevel
+      ~_JsonLogQueueHandler.set_name
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~_JsonLogQueueHandler.name
+   
+   

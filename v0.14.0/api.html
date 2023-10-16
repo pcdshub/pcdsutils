@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pcdsutils.enum.CaseInsensitiveEnumMeta" href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html" />
+    <link rel="prev" title="Upcoming Changes" href="upcoming_changes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-enum">pcdsutils.enum</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html">pcdsutils.enum.CaseInsensitiveEnumMeta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.enum.HelpfulIntEnum.html">pcdsutils.enum.HelpfulIntEnum</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-ext-scripts">pcdsutils.ext_scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.cache_script.html">pcdsutils.ext_scripts.cache_script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.call_script.html">pcdsutils.ext_scripts.call_script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.clear_script_cache.html">pcdsutils.ext_scripts.clear_script_cache</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_ami_proxy.html">pcdsutils.ext_scripts.get_ami_proxy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_current_experiment.html">pcdsutils.ext_scripts.get_current_experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_hutch_name.html">pcdsutils.ext_scripts.get_hutch_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_run_number.html">pcdsutils.ext_scripts.get_run_number</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-import-timer">pcdsutils.import_timer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.ImportTimeStats.html">pcdsutils.import_timer.ImportTimeStats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.ModuleStatsSummary.html">pcdsutils.import_timer.ModuleStatsSummary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.display_summarized_import_stats.html">pcdsutils.import_timer.display_summarized_import_stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_chain.html">pcdsutils.import_timer.get_import_chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_stats.html">pcdsutils.import_timer.get_import_stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_time_text.html">pcdsutils.import_timer.get_import_time_text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.interpret_import_time.html">pcdsutils.import_timer.interpret_import_time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.main.html">pcdsutils.import_timer.main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.import_timer.summarize_import_stats.html">pcdsutils.import_timer.summarize_import_stats</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-info">pcdsutils.info</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.Experiment.html">pcdsutils.info.Experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.Instrument.html">pcdsutils.info.Instrument</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.ProgramArguments.html">pcdsutils.info.ProgramArguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.Run.html">pcdsutils.info.Run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.RunFiles.html">pcdsutils.info.RunFiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info._LogbookInfo.html">pcdsutils.info._LogbookInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.fix_hutch_name.html">pcdsutils.info.fix_hutch_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.get_hutch_by_hostname.html">pcdsutils.info.get_hutch_by_hostname</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.get_info.html">pcdsutils.info.get_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.is_monitor_host.html">pcdsutils.info.is_monitor_host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.info.main.html">pcdsutils.info.main</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-json-to-table">pcdsutils.json_to_table</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.json_to_table.ProgramArguments.html">pcdsutils.json_to_table.ProgramArguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.json_to_table.TableStyle.html">pcdsutils.json_to_table.TableStyle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.json_to_table.main.html">pcdsutils.json_to_table.main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.json_to_table.string_for_table.html">pcdsutils.json_to_table.string_for_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.json_to_table.table_from_json.html">pcdsutils.json_to_table.table_from_json</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-log">pcdsutils.log</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.DemotionFilter.html">pcdsutils.log.DemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.LogWarningLevelFilter.html">pcdsutils.log.LogWarningLevelFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.OphydCallbackExceptionDemoter.html">pcdsutils.log.OphydCallbackExceptionDemoter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.OphydObjectRecordInfo.html">pcdsutils.log.OphydObjectRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.PydmDemotionFilter.html">pcdsutils.log.PydmDemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.RecordInfo.html">pcdsutils.log.RecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.WarningRecordInfo.html">pcdsutils.log.WarningRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log._JsonLogQueueHandler.html">pcdsutils.log._JsonLogQueueHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log._LogQueueListener.html">pcdsutils.log._LogQueueListener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log._PassthroughDatagramHandler.html">pcdsutils.log._PassthroughDatagramHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log._PassthroughStreamHandler.html">pcdsutils.log._PassthroughStreamHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.centralized_logging_enabled.html">pcdsutils.log.centralized_logging_enabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.configure_pcds_logging.html">pcdsutils.log.configure_pcds_logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.create_log_dictionary_from_record.html">pcdsutils.log.create_log_dictionary_from_record</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.get_file_and_line_from_traceback.html">pcdsutils.log.get_file_and_line_from_traceback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.get_handler.html">pcdsutils.log.get_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.install_log_warning_handler.html">pcdsutils.log.install_log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.log_exception.html">pcdsutils.log.log_exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.log_warning_handler.html">pcdsutils.log.log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.standard_warnings_config.html">pcdsutils.log.standard_warnings_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.uninstall_log_warning_handler.html">pcdsutils.log.uninstall_log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.log.validate_log_level.html">pcdsutils.log.validate_log_level</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-ophyd-helpers">pcdsutils.ophyd_helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.SubscribeCallback.html">pcdsutils.ophyd_helpers.SubscribeCallback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.acquire_async.html">pcdsutils.ophyd_helpers.acquire_async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.acquire_blocking.html">pcdsutils.ophyd_helpers.acquire_blocking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.get_all_signals_from_device.html">pcdsutils.ophyd_helpers.get_all_signals_from_device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.no_device_lazy_load.html">pcdsutils.ophyd_helpers.no_device_lazy_load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.subscription_context.html">pcdsutils.ophyd_helpers.subscription_context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.subscription_context_device.html">pcdsutils.ophyd_helpers.subscription_context_device</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-profile">pcdsutils.profile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_native_functions.html">pcdsutils.profile.get_native_functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_native_methods.html">pcdsutils.profile.get_native_methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_preamble.html">pcdsutils.profile.get_preamble</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_profiler.html">pcdsutils.profile.get_profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_submodule_names.html">pcdsutils.profile.get_submodule_names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.get_submodules.html">pcdsutils.profile.get_submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.import_modules.html">pcdsutils.profile.import_modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.is_native.html">pcdsutils.profile.is_native</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.print_results.html">pcdsutils.profile.print_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.profiler_context.html">pcdsutils.profile.profiler_context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.reset_profiler.html">pcdsutils.profile.reset_profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.save_results.html">pcdsutils.profile.save_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.setup_profiler.html">pcdsutils.profile.setup_profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.sort_timings.html">pcdsutils.profile.sort_timings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.profile.toggle_profiler.html">pcdsutils.profile.toggle_profiler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-qt-callbacks">pcdsutils.qt.callbacks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.callbacks.WeakPartialMethodSlot.html">pcdsutils.qt.callbacks.WeakPartialMethodSlot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-qt-designer-display">pcdsutils.qt.designer_display</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.designer_display.DesignerDisplay.html">pcdsutils.qt.designer_display.DesignerDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.designer_display._UiForm.html">pcdsutils.qt.designer_display._UiForm</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-qt-lazy">pcdsutils.qt.lazy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.lazy.LazyWidget.html">pcdsutils.qt.lazy.LazyWidget</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-qt-popbar">pcdsutils.qt.popbar</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.popbar.QPopBar.html">pcdsutils.qt.popbar.QPopBar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.popbar.QPopBarOverlay.html">pcdsutils.qt.popbar.QPopBarOverlay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.qt.popbar.QVerticalLabel.html">pcdsutils.qt.popbar.QVerticalLabel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-release-notes">pcdsutils.release_notes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.release_notes.create_arg_parser.html">pcdsutils.release_notes.create_arg_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.release_notes.generate_releases.html">pcdsutils.release_notes.generate_releases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.release_notes.get_releases.html">pcdsutils.release_notes.get_releases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.release_notes.main.html">pcdsutils.release_notes.main</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-requirements">pcdsutils.requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.compare_requirements.html">pcdsutils.requirements.compare_requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.find_conda_deps.html">pcdsutils.requirements.find_conda_deps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.find_meta_yaml.html">pcdsutils.requirements.find_meta_yaml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.get_dependency_name.html">pcdsutils.requirements.get_dependency_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.get_pip_requirements.html">pcdsutils.requirements.get_pip_requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.requirements_from_conda.html">pcdsutils.requirements.requirements_from_conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.requirements.write_requirements.html">pcdsutils.requirements.write_requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-utils">pcdsutils.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.utils.get_fully_qualified_domain_name.html">pcdsutils.utils.get_fully_qualified_domain_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.utils.get_instance_by_name.html">pcdsutils.utils.get_instance_by_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.utils.import_helper.html">pcdsutils.utils.import_helper</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdsutils-version">pcdsutils.version</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pcdsutils.version.VersionProxy.html">pcdsutils.version.VersionProxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
+<section id="pcdsutils-enum">
+<h2>pcdsutils.enum<a class="headerlink" href="#pcdsutils-enum" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html#pcdsutils.enum.CaseInsensitiveEnumMeta" title="pcdsutils.enum.CaseInsensitiveEnumMeta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.enum.CaseInsensitiveEnumMeta</span></code></a>(cls, ...)</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.enum.HelpfulIntEnum.html#pcdsutils.enum.HelpfulIntEnum" title="pcdsutils.enum.HelpfulIntEnum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.enum.HelpfulIntEnum</span></code></a>(value)</p></td>
+<td><p>IntEnum subclass with some utility extensions and case insensitivity.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-ext-scripts">
+<h2>pcdsutils.ext_scripts<a class="headerlink" href="#pcdsutils-ext-scripts" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.cache_script.html#pcdsutils.ext_scripts.cache_script" title="pcdsutils.ext_scripts.cache_script"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.cache_script</span></code></a>(args[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.call_script.html#pcdsutils.ext_scripts.call_script" title="pcdsutils.ext_scripts.call_script"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.call_script</span></code></a>(args[, ...])</p></td>
+<td><p>Helper script for external script error handling and logging.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.clear_script_cache.html#pcdsutils.ext_scripts.clear_script_cache" title="pcdsutils.ext_scripts.clear_script_cache"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.clear_script_cache</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_ami_proxy.html#pcdsutils.ext_scripts.get_ami_proxy" title="pcdsutils.ext_scripts.get_ami_proxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.get_ami_proxy</span></code></a>(hutch[, ...])</p></td>
+<td><p>Call procmgr to determine the lcls-I ami proxy hostname.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_current_experiment.html#pcdsutils.ext_scripts.get_current_experiment" title="pcdsutils.ext_scripts.get_current_experiment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.get_current_experiment</span></code></a>([...])</p></td>
+<td><p>Call get_curr_exp to return the current experiment name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_hutch_name.html#pcdsutils.ext_scripts.get_hutch_name" title="pcdsutils.ext_scripts.get_hutch_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.get_hutch_name</span></code></a>([timeout])</p></td>
+<td><p>Call get_hutch_name to return the name of the current hutch.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ext_scripts.get_run_number.html#pcdsutils.ext_scripts.get_run_number" title="pcdsutils.ext_scripts.get_run_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ext_scripts.get_run_number</span></code></a>([...])</p></td>
+<td><p>Call get_lastRun to return the run number of the last daq run.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-import-timer">
+<h2>pcdsutils.import_timer<a class="headerlink" href="#pcdsutils-import-timer" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.ImportTimeStats.html#pcdsutils.import_timer.ImportTimeStats" title="pcdsutils.import_timer.ImportTimeStats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.ImportTimeStats</span></code></a>(...)</p></td>
+<td><p>Stats about importing this module or submodule.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.ModuleStatsSummary.html#pcdsutils.import_timer.ModuleStatsSummary" title="pcdsutils.import_timer.ModuleStatsSummary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.ModuleStatsSummary</span></code></a>(...)</p></td>
+<td><p>For a top-level module, the total time spent on all the submodules.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.display_summarized_import_stats.html#pcdsutils.import_timer.display_summarized_import_stats" title="pcdsutils.import_timer.display_summarized_import_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.display_summarized_import_stats</span></code></a>(...)</p></td>
+<td><p>Show a prettytable summary of all the import statistics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_chain.html#pcdsutils.import_timer.get_import_chain" title="pcdsutils.import_timer.get_import_chain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.get_import_chain</span></code></a>(...)</p></td>
+<td><p>For a given import, figure out why a specific submodule is being imported.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_stats.html#pcdsutils.import_timer.get_import_stats" title="pcdsutils.import_timer.get_import_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.get_import_stats</span></code></a>(module)</p></td>
+<td><p>Get the import time statistics for a given module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.get_import_time_text.html#pcdsutils.import_timer.get_import_time_text" title="pcdsutils.import_timer.get_import_time_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.get_import_time_text</span></code></a>(module)</p></td>
+<td><p>Run python -X importtime modulename in a subprocess.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.interpret_import_time.html#pcdsutils.import_timer.interpret_import_time" title="pcdsutils.import_timer.interpret_import_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.interpret_import_time</span></code></a>(stats)</p></td>
+<td><p>Summarize the results of the import time checker in an understandable way.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.main.html#pcdsutils.import_timer.main" title="pcdsutils.import_timer.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.main</span></code></a>(module[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.import_timer.summarize_import_stats.html#pcdsutils.import_timer.summarize_import_stats" title="pcdsutils.import_timer.summarize_import_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.import_timer.summarize_import_stats</span></code></a>(module)</p></td>
+<td><p>Summarize the import time statistics for a given module.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-info">
+<h2>pcdsutils.info<a class="headerlink" href="#pcdsutils-info" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.Experiment.html#pcdsutils.info.Experiment" title="pcdsutils.info.Experiment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.Experiment</span></code></a>(valid, name, ...)</p></td>
+<td><p>Experiment information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.info.Instrument.html#pcdsutils.info.Instrument" title="pcdsutils.info.Instrument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.Instrument</span></code></a>(hutch, daq_base, ...)</p></td>
+<td><p>Per-instrument information.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.ProgramArguments.html#pcdsutils.info.ProgramArguments" title="pcdsutils.info.ProgramArguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.ProgramArguments</span></code></a>([hutch, ...])</p></td>
+<td><p>Argparse arguments for get-info-json.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.info.Run.html#pcdsutils.info.Run" title="pcdsutils.info.Run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.Run</span></code></a>(valid, live, num, type, ...)</p></td>
+<td><p>Run information.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.RunFiles.html#pcdsutils.info.RunFiles" title="pcdsutils.info.RunFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.RunFiles</span></code></a>(valid, files, num_files)</p></td>
+<td><p>For a given run, information about the files generated.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.info._LogbookInfo.html#pcdsutils.info._LogbookInfo" title="pcdsutils.info._LogbookInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info._LogbookInfo</span></code></a>([valid])</p></td>
+<td><p>Base dataclass to help with retrieving logbook information and transforming it into a dataclass.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.fix_hutch_name.html#pcdsutils.info.fix_hutch_name" title="pcdsutils.info.fix_hutch_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.fix_hutch_name</span></code></a>(hutch)</p></td>
+<td><p>Fix a user-provided hutch name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.info.get_hutch_by_hostname.html#pcdsutils.info.get_hutch_by_hostname" title="pcdsutils.info.get_hutch_by_hostname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.get_hutch_by_hostname</span></code></a>([hostname])</p></td>
+<td><p>Given a hostname, get a hutch name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.get_info.html#pcdsutils.info.get_info" title="pcdsutils.info.get_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.get_info</span></code></a>(args)</p></td>
+<td><p>Get top-level Instrument information given <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.info.is_monitor_host.html#pcdsutils.info.is_monitor_host" title="pcdsutils.info.is_monitor_host"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.is_monitor_host</span></code></a>(hostname)</p></td>
+<td><p>Is <code class="docutils literal notranslate"><span class="pre">hostname</span></code> a monitor host?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.info.main.html#pcdsutils.info.main" title="pcdsutils.info.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.info.main</span></code></a>()</p></td>
+<td><p>Main entrypoint for get-info-json.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-json-to-table">
+<h2>pcdsutils.json_to_table<a class="headerlink" href="#pcdsutils-json-to-table" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.json_to_table.ProgramArguments.html#pcdsutils.json_to_table.ProgramArguments" title="pcdsutils.json_to_table.ProgramArguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.json_to_table.ProgramArguments</span></code></a>(...)</p></td>
+<td><p>Argparse arguments for json_to_table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.json_to_table.TableStyle.html#pcdsutils.json_to_table.TableStyle" title="pcdsutils.json_to_table.TableStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.json_to_table.TableStyle</span></code></a>(value)</p></td>
+<td><p>Table style/format to print.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.json_to_table.main.html#pcdsutils.json_to_table.main" title="pcdsutils.json_to_table.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.json_to_table.main</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.json_to_table.string_for_table.html#pcdsutils.json_to_table.string_for_table" title="pcdsutils.json_to_table.string_for_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.json_to_table.string_for_table</span></code></a>(value)</p></td>
+<td><p>Fix the value for display in the table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.json_to_table.table_from_json.html#pcdsutils.json_to_table.table_from_json" title="pcdsutils.json_to_table.table_from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.json_to_table.table_from_json</span></code></a>(...)</p></td>
+<td><p>Create a PrettyTable from the input JSON data.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-log">
+<h2>pcdsutils.log<a class="headerlink" href="#pcdsutils-log" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.DemotionFilter.html#pcdsutils.log.DemotionFilter" title="pcdsutils.log.DemotionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.DemotionFilter</span></code></a>([level, ...])</p></td>
+<td><p>Filter parent class for demoting log records.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.LogWarningLevelFilter.html#pcdsutils.log.LogWarningLevelFilter" title="pcdsutils.log.LogWarningLevelFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.LogWarningLevelFilter</span></code></a>([level, ...])</p></td>
+<td><p>Filter to decrease the log level of repeat warnings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.OphydCallbackExceptionDemoter.html#pcdsutils.log.OphydCallbackExceptionDemoter" title="pcdsutils.log.OphydCallbackExceptionDemoter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.OphydCallbackExceptionDemoter</span></code></a>([...])</p></td>
+<td><p>Filter that demotes the logging level of callback exceptions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.OphydObjectRecordInfo.html#pcdsutils.log.OphydObjectRecordInfo" title="pcdsutils.log.OphydObjectRecordInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.OphydObjectRecordInfo</span></code></a>(message, ...)</p></td>
+<td><p>Hashable collection of the unique information from an ophyd.objects log</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.PydmDemotionFilter.html#pcdsutils.log.PydmDemotionFilter" title="pcdsutils.log.PydmDemotionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.PydmDemotionFilter</span></code></a>([level, ...])</p></td>
+<td><p>Demote verbose logs from pydm, particulary those that come at exit.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.RecordInfo.html#pcdsutils.log.RecordInfo" title="pcdsutils.log.RecordInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.RecordInfo</span></code></a>(message)</p></td>
+<td><p>Parent dataclass to define the interface for DemotionFilter</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.WarningRecordInfo.html#pcdsutils.log.WarningRecordInfo" title="pcdsutils.log.WarningRecordInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.WarningRecordInfo</span></code></a>(message, ...)</p></td>
+<td><p>Hashable collection of the unique information from a warnings.warn call.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log._JsonLogQueueHandler.html#pcdsutils.log._JsonLogQueueHandler" title="pcdsutils.log._JsonLogQueueHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log._JsonLogQueueHandler</span></code></a>(*handlers)</p></td>
+<td><p>Logging handler which pushes <a href="#id1"><span class="problematic" id="id2">`</span></a>logging.LogRecord`s to a separate thread</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log._LogQueueListener.html#pcdsutils.log._LogQueueListener" title="pcdsutils.log._LogQueueListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log._LogQueueListener</span></code></a>(queue, *handlers)</p></td>
+<td><p>A log handler which listens in a separate thread for queued records</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log._PassthroughDatagramHandler.html#pcdsutils.log._PassthroughDatagramHandler" title="pcdsutils.log._PassthroughDatagramHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log._PassthroughDatagramHandler</span></code></a>(...)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log._PassthroughStreamHandler.html#pcdsutils.log._PassthroughStreamHandler" title="pcdsutils.log._PassthroughStreamHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log._PassthroughStreamHandler</span></code></a>(...)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.centralized_logging_enabled.html#pcdsutils.log.centralized_logging_enabled" title="pcdsutils.log.centralized_logging_enabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.centralized_logging_enabled</span></code></a>()</p></td>
+<td><p>Returns True if centralized logging should be enabled.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.configure_pcds_logging.html#pcdsutils.log.configure_pcds_logging" title="pcdsutils.log.configure_pcds_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.configure_pcds_logging</span></code></a>([file, ...])</p></td>
+<td><p>Set a new handler on the <code class="docutils literal notranslate"><span class="pre">logging.getLogger('pcds-logging')</span></code> logger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.create_log_dictionary_from_record.html#pcdsutils.log.create_log_dictionary_from_record" title="pcdsutils.log.create_log_dictionary_from_record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.create_log_dictionary_from_record</span></code></a>(record)</p></td>
+<td><p>Create a PCDS logging-compliant dictionary from a given logging.LogRecord</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.get_file_and_line_from_traceback.html#pcdsutils.log.get_file_and_line_from_traceback" title="pcdsutils.log.get_file_and_line_from_traceback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.get_file_and_line_from_traceback</span></code></a>(tb, *)</p></td>
+<td><p>Get the last source filename and line number from the traceback.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.get_handler.html#pcdsutils.log.get_handler" title="pcdsutils.log.get_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.get_handler</span></code></a>()</p></td>
+<td><p>Return the handler configured by the most recent call to <code class="xref py py-func docutils literal notranslate"><span class="pre">configure_pcds_logging()</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.install_log_warning_handler.html#pcdsutils.log.install_log_warning_handler" title="pcdsutils.log.install_log_warning_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.install_log_warning_handler</span></code></a>([...])</p></td>
+<td><p>Replaces warnings.showwarning with the log_warning_handler above.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.log_exception.html#pcdsutils.log.log_exception" title="pcdsutils.log.log_exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.log_exception</span></code></a>(exc_info, *[, ...])</p></td>
+<td><p>Log an exception to the central server (i.e., logstash/grafana).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.log_warning_handler.html#pcdsutils.log.log_warning_handler" title="pcdsutils.log.log_warning_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.log_warning_handler</span></code></a>(message, ...)</p></td>
+<td><p>Warning handler that redirects all of the warnings to a logger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.standard_warnings_config.html#pcdsutils.log.standard_warnings_config" title="pcdsutils.log.standard_warnings_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.standard_warnings_config</span></code></a>()</p></td>
+<td><p>Use the standard pcds warnings config.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.uninstall_log_warning_handler.html#pcdsutils.log.uninstall_log_warning_handler" title="pcdsutils.log.uninstall_log_warning_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.uninstall_log_warning_handler</span></code></a>()</p></td>
+<td><p>Restores the default behavior of the warnings module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.validate_log_level.html#pcdsutils.log.validate_log_level" title="pcdsutils.log.validate_log_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.validate_log_level</span></code></a>(level)</p></td>
+<td><p>Return a logging level integer for level comparison.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-ophyd-helpers">
+<h2>pcdsutils.ophyd_helpers<a class="headerlink" href="#pcdsutils-ophyd-helpers" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.SubscribeCallback.html#pcdsutils.ophyd_helpers.SubscribeCallback" title="pcdsutils.ophyd_helpers.SubscribeCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.SubscribeCallback</span></code></a>(...)</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.acquire_async.html#pcdsutils.ophyd_helpers.acquire_async" title="pcdsutils.ophyd_helpers.acquire_async"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.acquire_async</span></code></a>(...)</p></td>
+<td><p>Subscribe to signal, acquire data for <code class="docutils literal notranslate"><span class="pre">duration</span></code> seconds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.acquire_blocking.html#pcdsutils.ophyd_helpers.acquire_blocking" title="pcdsutils.ophyd_helpers.acquire_blocking"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.acquire_blocking</span></code></a>(...)</p></td>
+<td><p>Subscribe to signal, acquire data for <code class="docutils literal notranslate"><span class="pre">duration</span></code> seconds.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.get_all_signals_from_device.html#pcdsutils.ophyd_helpers.get_all_signals_from_device" title="pcdsutils.ophyd_helpers.get_all_signals_from_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.get_all_signals_from_device</span></code></a>(device)</p></td>
+<td><p>Get all signals in a given device.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.no_device_lazy_load.html#pcdsutils.ophyd_helpers.no_device_lazy_load" title="pcdsutils.ophyd_helpers.no_device_lazy_load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.no_device_lazy_load</span></code></a>()</p></td>
+<td><p>Context manager which disables the ophyd.device.Device <cite>lazy_wait_for_connection</cite> behavior and later restore its value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.subscription_context.html#pcdsutils.ophyd_helpers.subscription_context" title="pcdsutils.ophyd_helpers.subscription_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.subscription_context</span></code></a>(...)</p></td>
+<td><p>[Context manager] Subscribe to a specific event from all objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.ophyd_helpers.subscription_context_device.html#pcdsutils.ophyd_helpers.subscription_context_device" title="pcdsutils.ophyd_helpers.subscription_context_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.ophyd_helpers.subscription_context_device</span></code></a>(...)</p></td>
+<td><p>[Context manager] Subscribe to <code class="docutils literal notranslate"><span class="pre">event_type</span></code> from signals in <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-profile">
+<h2>pcdsutils.profile<a class="headerlink" href="#pcdsutils-profile" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_native_functions.html#pcdsutils.profile.get_native_functions" title="pcdsutils.profile.get_native_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_native_functions</span></code></a>(module)</p></td>
+<td><p>Returns a set of all functions and methods defined in module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_native_methods.html#pcdsutils.profile.get_native_methods" title="pcdsutils.profile.get_native_methods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_native_methods</span></code></a>(...[, ...])</p></td>
+<td><p>Recursive step of get_native_functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_preamble.html#pcdsutils.profile.get_preamble" title="pcdsutils.profile.get_preamble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_preamble</span></code></a>(timings_dict, ...)</p></td>
+<td><p>Returns the text that goes before the line profile chunks in the output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_profiler.html#pcdsutils.profile.get_profiler" title="pcdsutils.profile.get_profiler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_profiler</span></code></a>()</p></td>
+<td><p>Returns the global profiler instance, creating it if necessary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_submodule_names.html#pcdsutils.profile.get_submodule_names" title="pcdsutils.profile.get_submodule_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_submodule_names</span></code></a>(...)</p></td>
+<td><p>Returns a list of the module name plus all importable submodule names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.get_submodules.html#pcdsutils.profile.get_submodules" title="pcdsutils.profile.get_submodules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.get_submodules</span></code></a>(module_name)</p></td>
+<td><p>Returns a list of the imported module plus all submodules.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.import_modules.html#pcdsutils.profile.import_modules" title="pcdsutils.profile.import_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.import_modules</span></code></a>(module_names)</p></td>
+<td><p>Utility function to import an iterator of module names as a list.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.is_native.html#pcdsutils.profile.is_native" title="pcdsutils.profile.is_native"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.is_native</span></code></a>(obj, module)</p></td>
+<td><p>Determines if obj was defined in module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.print_results.html#pcdsutils.profile.print_results" title="pcdsutils.profile.print_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.print_results</span></code></a>([prof, ...])</p></td>
+<td><p>Prints the formatted results directly to terminal.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.profiler_context.html#pcdsutils.profile.profiler_context" title="pcdsutils.profile.profiler_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.profiler_context</span></code></a>(module_names)</p></td>
+<td><p>Context manager for profiling a fixed span of an application.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.reset_profiler.html#pcdsutils.profile.reset_profiler" title="pcdsutils.profile.reset_profiler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.reset_profiler</span></code></a>()</p></td>
+<td><p>Clears the old global profiler by replacing it with a new one.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.save_results.html#pcdsutils.profile.save_results" title="pcdsutils.profile.save_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.save_results</span></code></a>(filename[, ...])</p></td>
+<td><p>Saves the formatted profiling results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.setup_profiler.html#pcdsutils.profile.setup_profiler" title="pcdsutils.profile.setup_profiler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.setup_profiler</span></code></a>(module_names)</p></td>
+<td><p>Sets up a profiler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.profile.sort_timings.html#pcdsutils.profile.sort_timings" title="pcdsutils.profile.sort_timings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.sort_timings</span></code></a>([prof, ...])</p></td>
+<td><p>Sort a profiler's stats in order of decreasing total time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.profile.toggle_profiler.html#pcdsutils.profile.toggle_profiler" title="pcdsutils.profile.toggle_profiler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.profile.toggle_profiler</span></code></a>(turn_on)</p></td>
+<td><p>Turns the global profiler off or on.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-qt-callbacks">
+<h2>pcdsutils.qt.callbacks<a class="headerlink" href="#pcdsutils-qt-callbacks" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.qt.callbacks.WeakPartialMethodSlot.html#pcdsutils.qt.callbacks.WeakPartialMethodSlot" title="pcdsutils.qt.callbacks.WeakPartialMethodSlot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.callbacks.WeakPartialMethodSlot</span></code></a>(...)</p></td>
+<td><p>A PyQt-compatible slot for a partial method.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-qt-designer-display">
+<h2>pcdsutils.qt.designer_display<a class="headerlink" href="#pcdsutils-qt-designer-display" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.qt.designer_display.DesignerDisplay.html#pcdsutils.qt.designer_display.DesignerDisplay" title="pcdsutils.qt.designer_display.DesignerDisplay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.designer_display.DesignerDisplay</span></code></a>(...)</p></td>
+<td><p>Helper class for loading designer .ui files and adding logic.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.qt.designer_display._UiForm.html#pcdsutils.qt.designer_display._UiForm" title="pcdsutils.qt.designer_display._UiForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.designer_display._UiForm</span></code></a>(*args, ...)</p></td>
+<td><p><p class="rubric">Methods</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-qt-lazy">
+<h2>pcdsutils.qt.lazy<a class="headerlink" href="#pcdsutils-qt-lazy" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.qt.lazy.LazyWidget.html#pcdsutils.qt.lazy.LazyWidget" title="pcdsutils.qt.lazy.LazyWidget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.lazy.LazyWidget</span></code></a>(widget_cls)</p></td>
+<td><p>A lazy widget which only is created when first shown.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-qt-popbar">
+<h2>pcdsutils.qt.popbar<a class="headerlink" href="#pcdsutils-qt-popbar" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.qt.popbar.QPopBar.html#pcdsutils.qt.popbar.QPopBar" title="pcdsutils.qt.popbar.QPopBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.popbar.QPopBar</span></code></a>([parent, title, ...])</p></td>
+<td><p>A popup toolbar that shows/hide on hover a certain widget</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.qt.popbar.QPopBarOverlay.html#pcdsutils.qt.popbar.QPopBarOverlay" title="pcdsutils.qt.popbar.QPopBarOverlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.popbar.QPopBarOverlay</span></code></a>(parent, ...)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.qt.popbar.QVerticalLabel.html#pcdsutils.qt.popbar.QVerticalLabel" title="pcdsutils.qt.popbar.QVerticalLabel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.qt.popbar.QVerticalLabel</span></code></a>(*args, ...)</p></td>
+<td><p>A vertically aligned QLabel</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-release-notes">
+<h2>pcdsutils.release_notes<a class="headerlink" href="#pcdsutils-release-notes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.release_notes.create_arg_parser.html#pcdsutils.release_notes.create_arg_parser" title="pcdsutils.release_notes.create_arg_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.release_notes.create_arg_parser</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.release_notes.generate_releases.html#pcdsutils.release_notes.generate_releases" title="pcdsutils.release_notes.generate_releases"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.release_notes.generate_releases</span></code></a>(...)</p></td>
+<td><p>Generate the release notes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.release_notes.get_releases.html#pcdsutils.release_notes.get_releases" title="pcdsutils.release_notes.get_releases"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.release_notes.get_releases</span></code></a>(...)</p></td>
+<td><p>Generate the release notes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.release_notes.main.html#pcdsutils.release_notes.main" title="pcdsutils.release_notes.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.release_notes.main</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-requirements">
+<h2>pcdsutils.requirements<a class="headerlink" href="#pcdsutils-requirements" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.compare_requirements.html#pcdsutils.requirements.compare_requirements" title="pcdsutils.requirements.compare_requirements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.compare_requirements</span></code></a>(...)</p></td>
+<td><p>Compare two lists of dependencies</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.find_conda_deps.html#pcdsutils.requirements.find_conda_deps" title="pcdsutils.requirements.find_conda_deps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.find_conda_deps</span></code></a>(repo_root)</p></td>
+<td><p>Get conda-recipe meta.yaml requirements as a dictionary from a repo</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.find_meta_yaml.html#pcdsutils.requirements.find_meta_yaml" title="pcdsutils.requirements.find_meta_yaml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.find_meta_yaml</span></code></a>(repo_root)</p></td>
+<td><p>Find conda meta.yaml in a repository</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.get_dependency_name.html#pcdsutils.requirements.get_dependency_name" title="pcdsutils.requirements.get_dependency_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.get_dependency_name</span></code></a>(...)</p></td>
+<td><p>Dependency line to dependency name</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.get_pip_requirements.html#pcdsutils.requirements.get_pip_requirements" title="pcdsutils.requirements.get_pip_requirements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.get_pip_requirements</span></code></a>(...)</p></td>
+<td><p>Get pip requirements from a repo</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.requirements_from_conda.html#pcdsutils.requirements.requirements_from_conda" title="pcdsutils.requirements.requirements_from_conda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.requirements_from_conda</span></code></a>(...)</p></td>
+<td><p>Build pip-style requirements from conda-recipe meta.yaml</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.requirements.write_requirements.html#pcdsutils.requirements.write_requirements" title="pcdsutils.requirements.write_requirements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.requirements.write_requirements</span></code></a>(...)</p></td>
+<td><p>Write pip requirements to the repository root from conda requirements</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-utils">
+<h2>pcdsutils.utils<a class="headerlink" href="#pcdsutils-utils" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.utils.get_fully_qualified_domain_name.html#pcdsutils.utils.get_fully_qualified_domain_name" title="pcdsutils.utils.get_fully_qualified_domain_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.utils.get_fully_qualified_domain_name</span></code></a>()</p></td>
+<td><p>Get the fully qualified domain name of this host.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.utils.get_instance_by_name.html#pcdsutils.utils.get_instance_by_name" title="pcdsutils.utils.get_instance_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.utils.get_instance_by_name</span></code></a>(klass, ...)</p></td>
+<td><p>Instantiate a class with args and kwargs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.utils.import_helper.html#pcdsutils.utils.import_helper" title="pcdsutils.utils.import_helper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.utils.import_helper</span></code></a>(klass)</p></td>
+<td><p>Extract the class object from a full qualified class name.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pcdsutils-version">
+<h2>pcdsutils.version<a class="headerlink" href="#pcdsutils-version" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.version.VersionProxy.html#pcdsutils.version.VersionProxy" title="pcdsutils.version.VersionProxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.version.VersionProxy</span></code></a>()</p></td>
+<td><p>Version handling helper that pairs with setuptools-scm.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="upcoming_changes.html" class="btn btn-neutral float-left" title="Upcoming Changes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html" class="btn btn-neutral float-right" title="pcdsutils.enum.CaseInsensitiveEnumMeta" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
