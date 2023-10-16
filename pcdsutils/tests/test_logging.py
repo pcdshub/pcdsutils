@@ -373,8 +373,7 @@ RuntimeError: wrapped C/C++ object of type Connection has been deleted
 
 @pytest.mark.parametrize(
     ("message", "should_demote"),
-    (msg1, True),
-    (msg2, False),
+    [(msg1, True), (msg2, False)],
 )
 def test_pydm_filter_conditions(
     message: str,
