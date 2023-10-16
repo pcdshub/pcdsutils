@@ -534,16 +534,19 @@ class DemotionFilter(logging.Filter):
     Filter parent class for demoting log records.
 
     Supports:
+
     - Demoting duplicate records when paired with a hashable dataclass
     - Optionally demoting all records that match a specification
     - A counter that tracks how many records have been demoted
 
     Child classes can/should override the following methods:
+
     - should_demote (without super)
     - __init__ (optional, and with super)
 
 
     Child classes should override the following attributes:
+
     - record_dataclass (inherit and customize from RecordInfo)
     - default_logger (logging.Logger instance)
     - cache (just the type annotation)

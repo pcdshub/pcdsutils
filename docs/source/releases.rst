@@ -6,9 +6,9 @@ v0.14.0 (2023-10-16)
 
 Features
 --------
-- Adds :class:`WeakPartialMethodSlot`, which handles cleanup for partial methods
+- Adds :any:`WeakPartialMethodSlot`, which handles cleanup for partial methods
   used as qt slots (callbacks).
-- Adds :class:`PydmDemotionFilter`, which makes Pydm-based applications with logging
+- Adds :any:`PydmDemotionFilter`, which makes Pydm-based applications with logging
   configurations less verbose at close when there are cleanup issues.
 
 Contributors
@@ -22,7 +22,7 @@ v0.13.0 (2023-09-27)
 
 Features
 --------
-- Add cleaned up and performant version of heavily-used ``get_info`` in
+- Add cleaned up and performant version of heavily-used :any:`get_info` in
   :mod:`pcdsutils.info`.
 
 Maintenance
@@ -164,10 +164,10 @@ Added utilities for demoting the level of log messages and for
 redirecting the warnings module to use the logging mechanisms. Most
 relevant additions:
 
-- ``pcdsutils.log.install_log_warning_handler``
-- ``pcdsutils.log.DemotionFilter``
-- ``pcdsutils.log.LogWarningLevelFilter``
-- ``pcdsutils.log.OphydCallbackExceptionDemoter``
+- :any:`pcdsutils.log.install_log_warning_handler`
+- :any:`pcdsutils.log.DemotionFilter`
+- :any:`pcdsutils.log.LogWarningLevelFilter`
+- :any:`pcdsutils.log.OphydCallbackExceptionDemoter`
 
 
 v0.5.0 (2021-07-22)
@@ -211,13 +211,13 @@ v0.4.0 (2020-10-19)
 ===================
 
 Features
-========
+--------
 
 -  Add release notes utility that converts from Github releases to
    ``release_notes.rst`` for documentation.
 -  Transplant bash script interfaces from ``pcdsdaq`` as a more central
-   place to keep them. These currently include ``get_hutch_name``,
-   ``get_run_number`` and ``get_ami_proxy``
+   place to keep them. These currently include :any:`get_hutch_name`,
+   :any:`get_run_number` and :any:`get_ami_proxy`
 
 
 v0.3.1 (2020-09-17)
