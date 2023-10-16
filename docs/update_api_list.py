@@ -117,7 +117,7 @@ skip_prefixes = [
 ]
 
 classes = find_all_classes(
-    (),
+    (object),
     skip_prefixes=skip_prefixes,
 )
 
