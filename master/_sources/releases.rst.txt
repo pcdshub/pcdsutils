@@ -1,6 +1,20 @@
 Release History
 ###############
 
+
+v0.14.1 (2023-12-06)
+====================
+
+Bugfixes
+--------
+- Check existence of :any:`WeakPartialMethodSlot`'s ``signal_owner`` before
+  attempting to disconnect a slot from its signal.
+
+Contributors
+------------
+- tangkong
+
+
 v0.14.0 (2023-10-16)
 ====================
 

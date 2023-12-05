@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.qt.callbacks &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -79,10 +81,13 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Helpers for callbacks</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
 
-<span class="kn">from</span> <span class="nn">qtpy</span> <span class="kn">import</span> <span class="n">QtCore</span>
+<span class="kn">from</span> <span class="nn">qtpy</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">sip</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WeakPartialMethodSlot">
@@ -141,6 +146,7 @@
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signal_owner</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">signal_owner</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">QueuedConnection</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakMethod</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_method_finalizer</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span>
@@ -171,10 +177,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">partial_args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">partial_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">owner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal_owner</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="o">...</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sip</span><span class="o">.</span><span class="n">isdeleted</span><span class="p">(</span><span class="n">owner</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to disconnect _call: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">):</span>
