@@ -1,10 +1,13 @@
 """
 Helpers for callbacks
 """
+import logging
 import weakref
 from types import MethodType
 
-from qtpy import QtCore
+from qtpy import QtCore, sip
+
+logger = logging.getLogger(__name__)
 
 
 class WeakPartialMethodSlot:
@@ -90,11 +93,12 @@ class WeakPartialMethodSlot:
         self.partial_args = []
         self.partial_kwargs = {}
 
-        if self.signal_owner():
-            try:
+        owner = self.signal_owner()
+        try:
+            if (owner is not None) and not sip.isdeleted(owner):
                 self.signal.disconnect(self._call)
-            except Exception:
-                ...
+        except Exception as ex:
+            logger.debug(f'Unable to disconnect _call: {ex}')
         self.signal = None
 
     def _call(self, *new_args, **new_kwargs):
