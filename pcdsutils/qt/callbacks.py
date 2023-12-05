@@ -59,6 +59,7 @@ class WeakPartialMethodSlot:
         **kwargs
     ):
         self.signal = signal
+        self.signal_owner = weakref.ref(signal_owner)
         self.signal.connect(self._call, QtCore.Qt.QueuedConnection)
         self.method = weakref.WeakMethod(method)
         self._method_finalizer = weakref.finalize(
@@ -88,10 +89,12 @@ class WeakPartialMethodSlot:
         self.method = None
         self.partial_args = []
         self.partial_kwargs = {}
-        try:
-            self.signal.disconnect(self._call)
-        except Exception:
-            ...
+
+        if self.signal_owner():
+            try:
+                self.signal.disconnect(self._call)
+            except Exception:
+                ...
         self.signal = None
 
     def _call(self, *new_args, **new_kwargs):
