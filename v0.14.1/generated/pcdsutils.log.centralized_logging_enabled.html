@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.log.centralized_logging_enabled &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pcdsutils.log.configure_pcds_logging" href="pcdsutils.log.configure_pcds_logging.html" />
+    <link rel="prev" title="pcdsutils.log._PassthroughStreamHandler" href="pcdsutils.log._PassthroughStreamHandler.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-enum">pcdsutils.enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ext-scripts">pcdsutils.ext_scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-import-timer">pcdsutils.import_timer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-info">pcdsutils.info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-json-to-table">pcdsutils.json_to_table</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pcdsutils-log">pcdsutils.log</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.DemotionFilter.html">pcdsutils.log.DemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.LogWarningLevelFilter.html">pcdsutils.log.LogWarningLevelFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.OphydCallbackExceptionDemoter.html">pcdsutils.log.OphydCallbackExceptionDemoter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.OphydObjectRecordInfo.html">pcdsutils.log.OphydObjectRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.PydmDemotionFilter.html">pcdsutils.log.PydmDemotionFilter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.RecordInfo.html">pcdsutils.log.RecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.WarningRecordInfo.html">pcdsutils.log.WarningRecordInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._JsonLogQueueHandler.html">pcdsutils.log._JsonLogQueueHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._LogQueueListener.html">pcdsutils.log._LogQueueListener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._PassthroughDatagramHandler.html">pcdsutils.log._PassthroughDatagramHandler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log._PassthroughStreamHandler.html">pcdsutils.log._PassthroughStreamHandler</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pcdsutils.log.centralized_logging_enabled</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pcdsutils.log.centralized_logging_enabled"><code class="docutils literal notranslate"><span class="pre">centralized_logging_enabled()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.configure_pcds_logging.html">pcdsutils.log.configure_pcds_logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.create_log_dictionary_from_record.html">pcdsutils.log.create_log_dictionary_from_record</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.get_file_and_line_from_traceback.html">pcdsutils.log.get_file_and_line_from_traceback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.get_handler.html">pcdsutils.log.get_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.install_log_warning_handler.html">pcdsutils.log.install_log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.log_exception.html">pcdsutils.log.log_exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.log_warning_handler.html">pcdsutils.log.log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.standard_warnings_config.html">pcdsutils.log.standard_warnings_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.uninstall_log_warning_handler.html">pcdsutils.log.uninstall_log_warning_handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.log.validate_log_level.html">pcdsutils.log.validate_log_level</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ophyd-helpers">pcdsutils.ophyd_helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-profile">pcdsutils.profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-callbacks">pcdsutils.qt.callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-designer-display">pcdsutils.qt.designer_display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-lazy">pcdsutils.qt.lazy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-popbar">pcdsutils.qt.popbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-release-notes">pcdsutils.release_notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-requirements">pcdsutils.requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-utils">pcdsutils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-version">pcdsutils.version</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API</a></li>
+      <li class="breadcrumb-item active">pcdsutils.log.centralized_logging_enabled</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/pcdsutils.log.centralized_logging_enabled.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pcdsutils-log-centralized-logging-enabled">
+<h1>pcdsutils.log.centralized_logging_enabled<a class="headerlink" href="#pcdsutils-log-centralized-logging-enabled" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pcdsutils.log.centralized_logging_enabled">
+<span class="sig-prename descclassname"><span class="pre">pcdsutils.log.</span></span><span class="sig-name descname"><span class="pre">centralized_logging_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pcdsutils/log.html#centralized_logging_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.log.centralized_logging_enabled" title="Link to this definition"></a></dt>
+<dd><p>Returns True if centralized logging should be enabled.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pcdsutils.log._PassthroughStreamHandler.html" class="btn btn-neutral float-left" title="pcdsutils.log._PassthroughStreamHandler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pcdsutils.log.configure_pcds_logging.html" class="btn btn-neutral float-right" title="pcdsutils.log.configure_pcds_logging" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

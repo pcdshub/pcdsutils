@@ -1,0 +1,6 @@
+﻿pcdsutils.log.validate\_log\_level
+==================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: validate_log_level

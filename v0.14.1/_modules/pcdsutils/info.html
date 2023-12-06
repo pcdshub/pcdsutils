@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.info &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.info</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.info</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">WS_URL</span> <span class="o">=</span> <span class="s2">&quot;https://pswww.slac.stanford.edu/ws/lgbk&quot;</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="s2">&quot;/cds/group/psdm/&quot;</span>
+<span class="n">UNKNOWN_HUTCH</span> <span class="o">=</span> <span class="s2">&quot;unknown_hutch&quot;</span>
+
+<span class="n">HUTCHES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;tmo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;txi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rix&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;xpp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;xcs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mfx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cxi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mec&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ued&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;det&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lfe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kfe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tst&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;las&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hpl&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># populate hutch-specific subnets here:</span>
+<span class="n">HUTCH_SUBNETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;tmo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;28&quot;</span><span class="p">,</span> <span class="s2">&quot;132&quot;</span><span class="p">,</span> <span class="s2">&quot;133&quot;</span><span class="p">,</span> <span class="s2">&quot;134&quot;</span><span class="p">,</span> <span class="s2">&quot;135&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;txi&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;29&quot;</span><span class="p">,</span> <span class="s2">&quot;136&quot;</span><span class="p">,</span> <span class="s2">&quot;137&quot;</span><span class="p">,</span> <span class="s2">&quot;138&quot;</span><span class="p">,</span> <span class="s2">&quot;139&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;rix&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;31&quot;</span><span class="p">,</span> <span class="s2">&quot;144&quot;</span><span class="p">,</span> <span class="s2">&quot;145&quot;</span><span class="p">,</span> <span class="s2">&quot;146&quot;</span><span class="p">,</span> <span class="s2">&quot;147&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;xpp&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;22&quot;</span><span class="p">,</span> <span class="s2">&quot;84&quot;</span><span class="p">,</span> <span class="s2">&quot;85&quot;</span><span class="p">,</span> <span class="s2">&quot;86&quot;</span><span class="p">,</span> <span class="s2">&quot;87&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;xcs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;25&quot;</span><span class="p">,</span> <span class="s2">&quot;80&quot;</span><span class="p">,</span> <span class="s2">&quot;81&quot;</span><span class="p">,</span> <span class="s2">&quot;82&quot;</span><span class="p">,</span> <span class="s2">&quot;83&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;cxi&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;26&quot;</span><span class="p">,</span> <span class="s2">&quot;68&quot;</span><span class="p">,</span> <span class="s2">&quot;69&quot;</span><span class="p">,</span> <span class="s2">&quot;70&quot;</span><span class="p">,</span> <span class="s2">&quot;71&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;mfx&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;24&quot;</span><span class="p">,</span> <span class="s2">&quot;72&quot;</span><span class="p">,</span> <span class="s2">&quot;73&quot;</span><span class="p">,</span> <span class="s2">&quot;74&quot;</span><span class="p">,</span> <span class="s2">&quot;75&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;mec&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;27&quot;</span><span class="p">,</span> <span class="s2">&quot;76&quot;</span><span class="p">,</span> <span class="s2">&quot;77&quot;</span><span class="p">,</span> <span class="s2">&quot;78&quot;</span><span class="p">,</span> <span class="s2">&quot;79&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;ued&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;36&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;det&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;58&quot;</span><span class="p">,</span> <span class="s2">&quot;59&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;lfe&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;88&quot;</span><span class="p">,</span> <span class="s2">&quot;89&quot;</span><span class="p">,</span> <span class="s2">&quot;90&quot;</span><span class="p">,</span> <span class="s2">&quot;91&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;kfe&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;92&quot;</span><span class="p">,</span> <span class="s2">&quot;93&quot;</span><span class="p">,</span> <span class="s2">&quot;94&quot;</span><span class="p">,</span> <span class="s2">&quot;95&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;tst&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;23&quot;</span><span class="p">,</span> <span class="s2">&quot;148&quot;</span><span class="p">,</span> <span class="s2">&quot;149&quot;</span><span class="p">,</span> <span class="s2">&quot;150&quot;</span><span class="p">,</span> <span class="s2">&quot;151&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;las&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;35&quot;</span><span class="p">,</span> <span class="s2">&quot;160&quot;</span><span class="p">,</span> <span class="s2">&quot;161&quot;</span><span class="p">,</span> <span class="s2">&quot;162&quot;</span><span class="p">,</span> <span class="s2">&quot;163&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;hpl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;64&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="ProgramArguments">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.ProgramArguments.html#pcdsutils.info.ProgramArguments">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">ProgramArguments</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Argparse arguments for get-info-json.&quot;&quot;&quot;</span>
+    <span class="c1">#: The hutch name.</span>
+    <span class="n">hutch</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#: The station number.</span>
+    <span class="n">station</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#: This is used when the user is asking for what the most recent run number</span>
+    <span class="c1">#: is and they don&#39;t want to include the current run if it is still</span>
+    <span class="c1">#: in-progress.</span>
+    <span class="n">ended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#: The user-provided experiment name.</span>
+    <span class="n">experiment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_LogbookInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.info._LogbookInfo.html#pcdsutils.info._LogbookInfo">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">_LogbookInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base dataclass to help with retrieving logbook information and transforming</span>
+<span class="sd">    it into a dataclass.</span>
+
+<span class="sd">    Subclasses should add the required fields for deserializing the given</span>
+<span class="sd">    request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Is this valid information, according to the logbook API?</span>
+    <span class="n">valid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_response_to_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;valid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Experiment">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.Experiment.html#pcdsutils.info.Experiment">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Experiment</span><span class="p">(</span><span class="n">_LogbookInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Experiment information.&quot;&quot;&quot;</span>
+    <span class="c1">#: The experiment name.</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The experiment description.</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The experiment start time.</span>
+    <span class="n">start_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The experiment end time.</span>
+    <span class="n">end_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The lead account information.</span>
+    <span class="n">leader_account</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The lead contact information.</span>
+    <span class="n">contact_info</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The posix group of the experiment.</span>
+    <span class="n">posix_group</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: Experiment parameter information.</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_logbook</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">instrument</span><span class="p">:</span> <span class="n">Instrument</span><span class="p">,</span>
+        <span class="n">experiment_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Experiment</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get Experiment information given an instrument/experiment name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instrument : Instrument</span>
+<span class="sd">            The instrument instance.</span>
+
+<span class="sd">        experiment_name : str, optional</span>
+<span class="sd">            Experiment name. Defaults to the active experiment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: how do we get information about a given experiment?</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">WS_URL</span> <span class="o">+</span> <span class="s2">&quot;/lgbk/ws/activeexperiment_for_instrument_station&quot;</span><span class="p">,</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">instrument_name</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">hutch</span><span class="p">,</span>
+                    <span class="n">station</span><span class="o">=</span><span class="n">instrument</span><span class="o">.</span><span class="n">station</span>
+                <span class="p">),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_response_to_instance</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RunFiles">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.RunFiles.html#pcdsutils.info.RunFiles">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">RunFiles</span><span class="p">(</span><span class="n">_LogbookInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;For a given run, information about the files generated.&quot;&quot;&quot;</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_logbook</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">Run</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunFiles</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get RunFile information given an experiment/run, queried from the</span>
+<span class="sd">        logbook.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        experiment : Experiment</span>
+<span class="sd">            The experiment instance.</span>
+
+<span class="sd">        run : Run</span>
+<span class="sd">            The Run instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">WS_URL</span><span class="si">}</span><span class="s2">/lgbk/</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;/ws/</span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">num</span><span class="si">}</span><span class="s2">/files_for_live_mode&quot;</span>
+            <span class="p">)</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RunFiles</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">DATA_PATH</span> <span class="o">+</span> <span class="n">fn</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+        <span class="n">run_files</span> <span class="o">=</span> <span class="n">RunFiles</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="n">valid</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
+        <span class="n">run_files</span><span class="o">.</span><span class="n">num_files</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_num_files</span><span class="p">(</span><span class="n">run_files</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_files</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_num_files</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of files in this run.</span>
+
+<span class="sd">        Some are filtered, as per Silke:</span>
+<span class="sd">        &gt; s0x are the nominal data streams (for LCLS1). They start counting at 0,</span>
+<span class="sd">        &gt; so you already have s00, up to however many dss-nodes you used. s8x</span>
+<span class="sd">        &gt; would be IOC recorders. c0x are chunks: we start writing the c00-files</span>
+<span class="sd">        &gt; and when the file gets too big, it will be closed and a new file will</span>
+<span class="sd">        &gt; be opened. This is done by the DAQ stopping triggers for a bit &amp; then</span>
+<span class="sd">        &gt; restarting them. This tripped up a scan at some point if I remember</span>
+<span class="sd">        &gt; right. With the jungfrau4M, CXI is the hutch mostly likely to chunk and</span>
+<span class="sd">        &gt; MEC rarely ever does.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_files</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;c00&quot;</span> <span class="ow">in</span> <span class="n">fn</span> <span class="ow">and</span> <span class="s2">&quot;-s8&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fn</span><span class="p">:</span>
+                <span class="n">num_files</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">num_files</span></div>
+
+
+
+<div class="viewcode-block" id="Run">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.Run.html#pcdsutils.info.Run">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Run</span><span class="p">(</span><span class="n">_LogbookInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run information.&quot;&quot;&quot;</span>
+    <span class="c1">#: An in-progress run.</span>
+    <span class="n">live</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#: The run number.</span>
+    <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#: The run type.</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The run start time.</span>
+    <span class="n">begin_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The run end time.</span>
+    <span class="n">end_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: Run parameter dictionary.</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="c1">#: Editable run parameter dictionary.</span>
+    <span class="n">editable_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="c1">#: Files for this run.</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">RunFiles</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">RunFiles</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_logbook</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Run</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get Run information given an experiment, queried from the logbook.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        experiment : Experiment</span>
+<span class="sd">            The experiment instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">WS_URL</span><span class="si">}</span><span class="s2">/lgbk/</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/ws/current_run&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">run</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_response_to_instance</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">live</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">RunFiles</span><span class="o">.</span><span class="n">from_logbook</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run</span></div>
+
+
+
+<div class="viewcode-block" id="Instrument">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.Instrument.html#pcdsutils.info.Instrument">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Instrument</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-instrument information.&quot;&quot;&quot;</span>
+    <span class="c1">#: The hutch name.</span>
+    <span class="n">hutch</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="c1">#: The daq base.</span>
+    <span class="n">daq_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The instrument name.</span>
+    <span class="n">instrument</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The station number.</span>
+    <span class="n">station</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#: The daq configuration file name.</span>
+    <span class="n">config_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1">#: The total number of stations.</span>
+    <span class="n">nstations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#: Whether the station number is valid or not.</span>
+    <span class="n">station_valid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#: Experiment-related information.</span>
+    <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Experiment</span><span class="p">)</span>
+    <span class="c1">#: Run-related information.</span>
+    <span class="n">run</span><span class="p">:</span> <span class="n">Run</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Run</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fix_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Based on user-provided experimental state information, adjust the</span>
+<span class="sd">        instrument information.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ended : bool, optional</span>
+<span class="sd">            Has the run ended?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ended</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">valid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">end_time</span><span class="p">:</span>
+                <span class="c1"># Really bogus way to determine this; but copying over from</span>
+                <span class="c1"># previous code.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">num</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_hutch</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">hutch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">station</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Instrument</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get Instrument information given a hutch and (optional) station number.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hutch : str</span>
+<span class="sd">            The hutch name.</span>
+
+<span class="sd">        station : int, optional</span>
+<span class="sd">            The station number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">hutch</span><span class="o">=</span><span class="n">fix_hutch_name</span><span class="p">(</span><span class="n">hutch</span><span class="p">))</span>
+
+        <span class="c1"># if hutch.lower() in [&#39;mfx&#39;,&#39;cxi&#39;]:</span>
+        <span class="k">if</span> <span class="n">hutch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;cxi&quot;</span><span class="p">]:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">nstations</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">station</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">is_monitor_host</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()):</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">daq_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hutch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">instrument</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="n">hutch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rix&quot;</span><span class="p">]:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">daq_base</span> <span class="o">=</span> <span class="n">hutch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">instrument</span> <span class="o">=</span> <span class="n">hutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">nstations</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">station</span><span class="p">:</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">info</span><span class="o">.</span><span class="n">station_valid</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">info</span><span class="o">.</span><span class="n">_is_station_invalid</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">daq_base</span><span class="p">:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">daq_base</span><span class="si">}</span><span class="s2">.cnf&quot;</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+    <span class="k">def</span> <span class="nf">update_from_logbook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">experiment_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update information by querying the logbook.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        experiment_name : str, optional</span>
+<span class="sd">            Experiment name. Defaults to the active experiment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="o">.</span><span class="n">from_logbook</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">experiment_name</span><span class="o">=</span><span class="n">experiment_name</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">Run</span><span class="o">.</span><span class="n">from_logbook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">valid</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_is_station_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hutch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;rix&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nstations</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_create_arg_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the argument parser for the get-info-json CLI entrypoint.&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--hutch&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;get experiment for hutch xxx&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--station&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;optional station for hutch with two daqs, e.g. cxi and mfx&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ended&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ended&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--setExp&quot;</span><span class="p">,</span> <span class="s2">&quot;--experiment&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;set experiment name&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<div class="viewcode-block" id="get_hutch_by_hostname">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.get_hutch_by_hostname.html#pcdsutils.info.get_hutch_by_hostname">[docs]</a>
+<span class="k">def</span> <span class="nf">get_hutch_by_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a hostname, get a hutch name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hostname : str, optional</span>
+<span class="sd">        If not specified, ``socket.gethostname()`` will be used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hutch_name : str</span>
+<span class="sd">        The hutch name or ``UNKNOWN_HUTCH``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">hostname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">UNKNOWN_HUTCH</span>
+
+    <span class="c1"># A.B.**C**.D - the C octet</span>
+    <span class="n">subnet</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># use the IP address to match the host to a hutch by subnet</span>
+    <span class="c1"># NOTE: this may look odd but it aims to replicate the existing</span>
+    <span class="c1"># functionality in get_info as-is.</span>
+    <span class="k">for</span> <span class="n">ihutch</span> <span class="ow">in</span> <span class="n">HUTCHES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">HUTCH_SUBNETS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ihutch</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">return</span> <span class="n">ihutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">ihutch</span> <span class="ow">in</span> <span class="n">HUTCHES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ihutch</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ihutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;psusr13&quot;</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;XPP&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;psusr21&quot;</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;XCS&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;psusr22&quot;</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;CXI&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;psusr23&quot;</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;MEC&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;psusr24&quot;</span> <span class="ow">in</span> <span class="n">hostname</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;MFX&quot;</span>
+
+    <span class="c1"># then check current path</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ihutch</span> <span class="ow">in</span> <span class="n">HUTCHES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ihutch</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ihutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="c1"># because we have so many names for the same subnet.</span>
+    <span class="n">xrt</span> <span class="o">=</span> <span class="s2">&quot;xrt&quot;</span> <span class="ow">in</span> <span class="n">path</span> <span class="ow">and</span> <span class="s2">&quot;xrt&quot;</span> <span class="ow">in</span> <span class="n">hostname</span>
+    <span class="n">xtod</span> <span class="o">=</span> <span class="s2">&quot;xtod&quot;</span> <span class="ow">in</span> <span class="n">path</span> <span class="ow">and</span> <span class="s2">&quot;xtod&quot;</span> <span class="ow">in</span> <span class="n">hostname</span>
+    <span class="k">if</span> <span class="n">xrt</span> <span class="ow">or</span> <span class="n">xtod</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;LFE&quot;</span>
+
+    <span class="k">return</span> <span class="n">UNKNOWN_HUTCH</span></div>
+
+
+
+<div class="viewcode-block" id="is_monitor_host">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.is_monitor_host.html#pcdsutils.info.is_monitor_host">[docs]</a>
+<span class="k">def</span> <span class="nf">is_monitor_host</span><span class="p">(</span><span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Is ``hostname`` a monitor host?&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;monitor&quot;</span> <span class="ow">in</span> <span class="n">hostname</span></div>
+
+
+
+<div class="viewcode-block" id="fix_hutch_name">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.fix_hutch_name.html#pcdsutils.info.fix_hutch_name">[docs]</a>
+<span class="k">def</span> <span class="nf">fix_hutch_name</span><span class="p">(</span><span class="n">hutch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fix a user-provided hutch name.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hutch_name : str</span>
+<span class="sd">        The canonical hutch name or ``UNKNOWN_HUTCH``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">hutch</span> <span class="ow">in</span> <span class="n">HUTCHES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">ihutch</span> <span class="ow">in</span> <span class="n">HUTCHES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">hutch</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ihutch</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ihutch</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">UNKNOWN_HUTCH</span></div>
+
+
+
+<div class="viewcode-block" id="get_info">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.get_info.html#pcdsutils.info.get_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">ProgramArguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Instrument</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get top-level Instrument information given ``args``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args : ProgramArguments</span>
+<span class="sd">        Argparse or user-created program arguments.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    instrument : Instrument or None</span>
+<span class="sd">        The instrument information, if available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">hutch</span><span class="p">:</span>
+        <span class="n">hutch</span> <span class="o">=</span> <span class="n">fix_hutch_name</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">hutch</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hutch</span> <span class="o">=</span> <span class="n">get_hutch_by_hostname</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">hutch</span> <span class="o">==</span> <span class="n">UNKNOWN_HUTCH</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">instrument</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_hutch</span><span class="p">(</span><span class="n">hutch</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
+    <span class="n">instrument</span><span class="o">.</span><span class="n">fix_parameters</span><span class="p">(</span><span class="n">ended</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ended</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">instrument</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../generated/pcdsutils.info.main.html#pcdsutils.info.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main entrypoint for get-info-json.&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">_create_arg_parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">namespace</span><span class="o">=</span><span class="n">ProgramArguments</span><span class="p">())</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">get_info</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">info</span><span class="o">.</span><span class="n">update_from_logbook</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">experiment</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dataclasses</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="n">info</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

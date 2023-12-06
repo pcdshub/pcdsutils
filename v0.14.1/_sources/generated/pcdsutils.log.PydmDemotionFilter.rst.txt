@@ -1,0 +1,39 @@
+﻿pcdsutils.log.PydmDemotionFilter
+================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: PydmDemotionFilter
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PydmDemotionFilter.__init__
+      ~PydmDemotionFilter.filter
+      ~PydmDemotionFilter.install
+      ~PydmDemotionFilter.install_self
+      ~PydmDemotionFilter.reset_counter
+      ~PydmDemotionFilter.should_demote
+      ~PydmDemotionFilter.uninstall
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PydmDemotionFilter.default_logger
+      ~PydmDemotionFilter.levelno
+      ~PydmDemotionFilter.levelname
+      ~PydmDemotionFilter.only_duplicates
+      ~PydmDemotionFilter.cache
+      ~PydmDemotionFilter.counter
+   
+   

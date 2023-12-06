@@ -1,0 +1,31 @@
+﻿pcdsutils.info.ProgramArguments
+===============================
+
+.. currentmodule:: pcdsutils.info
+
+.. autoclass:: ProgramArguments
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProgramArguments.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProgramArguments.ended
+      ~ProgramArguments.experiment
+      ~ProgramArguments.hutch
+      ~ProgramArguments.station
+   
+   

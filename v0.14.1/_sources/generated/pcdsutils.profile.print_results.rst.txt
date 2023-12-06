@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.print\_results
+================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: print_results

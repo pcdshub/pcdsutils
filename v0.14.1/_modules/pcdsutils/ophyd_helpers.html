@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.ophyd_helpers &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.ophyd_helpers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.ophyd_helpers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ophyd Device/Signal-related helpers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">ophyd</span>
+<span class="kn">from</span> <span class="nn">ophyd.ophydobj</span> <span class="kn">import</span> <span class="n">OphydObject</span>
+
+<span class="kn">from</span> <span class="nn">.type_hints</span> <span class="kn">import</span> <span class="n">Number</span><span class="p">,</span> <span class="n">PrimitiveType</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Protocol</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">FilterBy</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ophyd</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">ComponentWalk</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="SubscribeCallback">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.SubscribeCallback.html#pcdsutils.ophyd_helpers.SubscribeCallback">[docs]</a>
+<span class="k">class</span> <span class="nc">SubscribeCallback</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span></div>
+
+
+
+<div class="viewcode-block" id="no_device_lazy_load">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.no_device_lazy_load.html#pcdsutils.ophyd_helpers.no_device_lazy_load">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">no_device_lazy_load</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Context manager which disables the ophyd.device.Device</span>
+<span class="sd">    `lazy_wait_for_connection` behavior and later restore its value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">old_val</span> <span class="o">=</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">lazy_wait_for_connection</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ophyd</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">lazy_wait_for_connection</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">ophyd</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">lazy_wait_for_connection</span> <span class="o">=</span> <span class="n">old_val</span></div>
+
+
+
+<div class="viewcode-block" id="subscription_context">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.subscription_context.html#pcdsutils.ophyd_helpers.subscription_context">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">subscription_context</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">objects</span><span class="p">:</span> <span class="n">OphydObject</span><span class="p">,</span>
+    <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    [Context manager] Subscribe to a specific event from all objects</span>
+
+<span class="sd">    Unsubscribes all signals before exiting</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *objects : ophyd.OphydObj</span>
+<span class="sd">        Ophyd objects (signals) to monitor</span>
+<span class="sd">    callback : callable</span>
+<span class="sd">        Callback to run, with same signature as that of</span>
+<span class="sd">        :meth:`ophyd.OphydObj.subscribe`.</span>
+<span class="sd">    event_type : str, optional</span>
+<span class="sd">        The event type to subscribe to</span>
+<span class="sd">    run : bool, optional</span>
+<span class="sd">        Run the previously cached subscription immediately</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">obj_to_cid</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj_to_cid</span><span class="p">[</span><span class="n">obj</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+                    <span class="n">callback</span><span class="p">,</span> <span class="n">event_type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="n">run</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to subscribe to object </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span><span class="n">obj_to_cid</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">obj_to_cid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">cid</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># It&#39;s possible that when the object is being torn down, or</span>
+                <span class="c1"># destroyed that this has already been done.</span>
+                <span class="o">...</span></div>
+
+
+
+<div class="viewcode-block" id="get_all_signals_from_device">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.get_all_signals_from_device.html#pcdsutils.ophyd_helpers.get_all_signals_from_device">[docs]</a>
+<span class="k">def</span> <span class="nf">get_all_signals_from_device</span><span class="p">(</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Device</span><span class="p">,</span>
+    <span class="n">include_lazy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">filter_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FilterBy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all signals in a given device.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    device : ophyd.Device</span>
+<span class="sd">        ophyd Device to monitor</span>
+<span class="sd">    include_lazy : bool, optional</span>
+<span class="sd">        Include lazy signals as well</span>
+<span class="sd">    filter_by : callable, optional</span>
+<span class="sd">        Filter signals, with signature ``callable(ophyd.Device.ComponentWalk)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">default_filter_by</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">filter_func</span> <span class="o">=</span> <span class="n">filter_by</span> <span class="ow">or</span> <span class="n">default_filter_by</span>
+
+    <span class="k">def</span> <span class="nf">_get_signals</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">walk</span><span class="o">.</span><span class="n">item</span>
+            <span class="k">for</span> <span class="n">walk</span> <span class="ow">in</span> <span class="n">device</span><span class="o">.</span><span class="n">walk_signals</span><span class="p">(</span><span class="n">include_lazy</span><span class="o">=</span><span class="n">include_lazy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filter_func</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">include_lazy</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_signals</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">no_device_lazy_load</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">_get_signals</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="subscription_context_device">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.subscription_context_device.html#pcdsutils.ophyd_helpers.subscription_context_device">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">subscription_context_device</span><span class="p">(</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Device</span><span class="p">,</span>
+    <span class="n">callback</span><span class="p">:</span> <span class="n">SubscribeCallback</span><span class="p">,</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">include_lazy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">filter_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FilterBy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    [Context manager] Subscribe to ``event_type`` from signals in ``device``.</span>
+
+<span class="sd">    Unsubscribes all signals before exiting</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    device : ophyd.Device</span>
+<span class="sd">        ophyd Device to monitor</span>
+<span class="sd">    callback : callable</span>
+<span class="sd">        Callback to run, with same signature as that of</span>
+<span class="sd">        :meth:`ophyd.OphydObj.subscribe`</span>
+<span class="sd">    event_type : str, optional</span>
+<span class="sd">        The event type to subscribe to</span>
+<span class="sd">    run : bool, optional</span>
+<span class="sd">        Run the previously cached subscription immediately</span>
+<span class="sd">    include_lazy : bool, optional</span>
+<span class="sd">        Include lazy signals as well</span>
+<span class="sd">    filter_by : callable, optional</span>
+<span class="sd">        Filter signals, with signature ``callable(ophyd.Device.ComponentWalk)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">signals</span> <span class="o">=</span> <span class="n">get_all_signals_from_device</span><span class="p">(</span>
+        <span class="n">device</span><span class="p">,</span> <span class="n">include_lazy</span><span class="o">=</span><span class="n">include_lazy</span><span class="p">,</span> <span class="n">filter_by</span><span class="o">=</span><span class="n">filter_by</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">subscription_context</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">signals</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">event_type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="n">run</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">obj_to_cid</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">obj_to_cid</span></div>
+
+
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">_acquire</span><span class="p">(</span><span class="n">signal</span><span class="p">:</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Signal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    [Context manager] Subscribe to signal, acquire data until the block exits.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    signal : ophyd.Signal</span>
+<span class="sd">        Ophyd object to monitor.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : List[PrimitiveType]</span>
+<span class="sd">        The data acquired.  Guaranteed to have at least one item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">wait_for_connection</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">start_value</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">subscription_context</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">acquire</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">data</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">start_value</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">get</span><span class="p">()])</span>
+
+
+<div class="viewcode-block" id="acquire_blocking">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.acquire_blocking.html#pcdsutils.ophyd_helpers.acquire_blocking">[docs]</a>
+<span class="k">def</span> <span class="nf">acquire_blocking</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Signal</span><span class="p">,</span>
+    <span class="n">duration</span><span class="p">:</span> <span class="n">Number</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PrimitiveType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subscribe to signal, acquire data for ``duration`` seconds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    signal : ophyd.Signal</span>
+<span class="sd">        Ophyd object to monitor.</span>
+
+<span class="sd">    duration : number</span>
+<span class="sd">        Seconds to acquire for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : List[PrimitiveType]</span>
+<span class="sd">        The data acquired.  Guaranteed to have at least one item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">_acquire</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="acquire_async">
+<a class="viewcode-back" href="../../generated/pcdsutils.ophyd_helpers.acquire_async.html#pcdsutils.ophyd_helpers.acquire_async">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">acquire_async</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="n">ophyd</span><span class="o">.</span><span class="n">Signal</span><span class="p">,</span>
+    <span class="n">duration</span><span class="p">:</span> <span class="n">Number</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PrimitiveType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subscribe to signal, acquire data for ``duration`` seconds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    signal : ophyd.Signal</span>
+<span class="sd">        Ophyd object to monitor.</span>
+
+<span class="sd">    duration : number</span>
+<span class="sd">        Seconds to acquire for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : List[PrimitiveType]</span>
+<span class="sd">        The data acquired.  Guaranteed to have at least one item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">_acquire</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿pcdsutils.info.is\_monitor\_host
+================================
+
+.. currentmodule:: pcdsutils.info
+
+.. autofunction:: is_monitor_host

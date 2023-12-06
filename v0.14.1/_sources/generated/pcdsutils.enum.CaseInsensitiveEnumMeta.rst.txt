@@ -1,0 +1,23 @@
+﻿pcdsutils.enum.CaseInsensitiveEnumMeta
+======================================
+
+.. currentmodule:: pcdsutils.enum
+
+.. autoclass:: CaseInsensitiveEnumMeta
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CaseInsensitiveEnumMeta.__init__
+      ~CaseInsensitiveEnumMeta.mro
+   
+   
+
+   
+   
+   

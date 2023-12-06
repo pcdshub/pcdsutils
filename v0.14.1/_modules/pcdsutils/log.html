@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.log &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.log</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.log</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">logging.handlers</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">queue</span> <span class="k">as</span> <span class="nn">queue_module</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">get_fully_qualified_domain_name</span>
+
+<span class="c1"># The special logger:</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pcds-logging&#39;</span><span class="p">)</span>
+
+<span class="c1"># Do not propagate messages to the root logger:</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Exceptions that should just be ignored entirely:</span>
+<span class="n">NO_LOG_EXCEPTIONS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="ne">KeyboardInterrupt</span><span class="p">,</span>
+    <span class="ne">NameError</span><span class="p">,</span>
+    <span class="ne">SyntaxError</span><span class="p">,</span>  <span class="c1"># This doesn&#39;t get propagated, but ignore it anyway</span>
+    <span class="ne">SystemExit</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">DEFAULT_LOG_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PCDS_LOG_HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;ctl-logsrv01.pcdsn&#39;</span><span class="p">)</span>
+<span class="n">DEFAULT_LOG_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PCDS_LOG_PORT&#39;</span><span class="p">,</span> <span class="mi">54320</span><span class="p">))</span>
+<span class="n">DEFAULT_LOG_PROTO</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PCDS_LOG_PROTO&#39;</span><span class="p">,</span> <span class="s1">&#39;tcp&#39;</span><span class="p">)</span>
+<span class="n">ALLOWED_LOG_DOMAINS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PCDS_LOG_DOMAINS&quot;</span><span class="p">,</span> <span class="s2">&quot;.pcdsn .slac.stanford.edu&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">_LOGGER_SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">_LOGGER_ALLOWED_KEYS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># &#39;args&#39;,</span>
+    <span class="c1"># &#39;created&#39;,</span>
+    <span class="c1"># &#39;exc_info&#39;,</span>
+    <span class="s1">&#39;exc_text&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;filename&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;funcName&#39;,</span>
+    <span class="c1"># &#39;levelname&#39;,</span>
+    <span class="c1"># &#39;levelno&#39;,</span>
+    <span class="s1">&#39;lineno&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;message&#39;,</span>
+    <span class="c1"># &#39;module&#39;,</span>
+    <span class="c1"># &#39;msecs&#39;,</span>
+    <span class="s1">&#39;msg&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;name&#39;,</span>
+    <span class="s1">&#39;pathname&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;process&#39;,</span>
+    <span class="s1">&#39;processName&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;relativeCreated&#39;,</span>
+    <span class="c1"># &#39;stack_info&#39;,</span>
+    <span class="c1"># &#39;thread&#39;,</span>
+    <span class="s1">&#39;threadName&#39;</span><span class="p">,</span>
+
+    <span class="c1"># Ones our schema specifies:</span>
+    <span class="s1">&#39;schema&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;versions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hostname&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;host_info&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;exc_filename&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;exc_line&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_LOGGER_KEY_RENAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;created&#39;</span><span class="p">:</span> <span class="s1">&#39;ts&#39;</span><span class="p">,</span>  <span class="c1"># created time -&gt; timestamp (ts)</span>
+    <span class="s1">&#39;levelname&#39;</span><span class="p">:</span> <span class="s1">&#39;severity&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;processName&#39;</span><span class="p">:</span> <span class="s1">&#39;process_name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;threadName&#39;</span><span class="p">:</span> <span class="s1">&#39;thread_name&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_SYSTEM_UNAME_DICT</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
+<span class="n">_CURRENT_HANDLER</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="_PassthroughStreamHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._PassthroughStreamHandler.html#pcdsutils.log._PassthroughStreamHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">_PassthroughStreamHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">SocketHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">makePickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="s1">&#39;Overrides super().makePickle&#39;</span>
+        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="_PassthroughDatagramHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._PassthroughDatagramHandler.html#pcdsutils.log._PassthroughDatagramHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">_PassthroughDatagramHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">DatagramHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">makePickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="s1">&#39;Overrides super().makePickle&#39;</span>
+        <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_LogQueueListener">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._LogQueueListener.html#pcdsutils.log._LogQueueListener">[docs]</a>
+<span class="k">class</span> <span class="nc">_LogQueueListener</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">QueueListener</span><span class="p">):</span>
+    <span class="s1">&#39;A log handler which listens in a separate thread for queued records&#39;</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_get_module_versions</span><span class="p">():</span>
+    <span class="s1">&#39;Yields module version tuples: (module_name, module_version)&#39;</span>
+    <span class="k">def</span> <span class="nf">fix_version</span><span class="p">(</span><span class="n">version</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="c1"># _curses, for example</span>
+            <span class="k">return</span> <span class="n">version</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># Some may have incorrectly specified version as a tuple</span>
+            <span class="k">return</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">version</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">version</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;__version__&#39;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="n">fix_version</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="n">version</span>
+
+
+<span class="k">def</span> <span class="nf">_get_module_version_dict</span><span class="p">():</span>
+    <span class="s1">&#39;Returns module version dictionary: {module_name: module_version}&#39;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_get_module_versions</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="get_file_and_line_from_traceback">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.get_file_and_line_from_traceback.html#pcdsutils.log.get_file_and_line_from_traceback">[docs]</a>
+<span class="k">def</span> <span class="nf">get_file_and_line_from_traceback</span><span class="p">(</span>
+    <span class="n">tb</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">TracebackType</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">on_error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the last source filename and line number from the traceback.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tb : traceback</span>
+<span class="sd">    on_error : str, optional</span>
+<span class="sd">        The default filename if unable to determine the source code location</span>
+<span class="sd">        from the traceback.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">    lineno : int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">last_frame</span><span class="p">,</span> <span class="n">exc_line</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">walk_tb</span><span class="p">(</span><span class="n">tb</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">last_frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">,</span> <span class="n">exc_line</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">on_error</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_log_dictionary_from_record">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.create_log_dictionary_from_record.html#pcdsutils.log.create_log_dictionary_from_record">[docs]</a>
+<span class="k">def</span> <span class="nf">create_log_dictionary_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a PCDS logging-compliant dictionary from a given logging.LogRecord</span>
+
+<span class="sd">    Ensure that exceptions have been formatted with `logging.Handler` prior to</span>
+<span class="sd">    calling this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    record : logging.LogRecord or dict</span>
+<span class="sd">        The record to interpret</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        The ready-to-be-JSON&#39;d record dictionary</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Shallow-copy the record dictionary</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">record</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">vars</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;python-event-</span><span class="si">{</span><span class="n">_LOGGER_SCHEMA_VERSION</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="nf">failsafe_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">value_on_failure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_on_failure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;FAILURE: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">return</span> <span class="n">value_on_failure</span>
+
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">failsafe_call</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module}</span><span class="s1">.</span><span class="si">{funcName}</span><span class="s1">:</span><span class="si">{lineno}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="o">**</span><span class="n">ret</span><span class="p">)</span>
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;versions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">failsafe_call</span><span class="p">(</span><span class="n">_get_module_version_dict</span><span class="p">)</span>
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;pathname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">failsafe_call</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">,</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;pathname&#39;</span><span class="p">]))</span>
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">failsafe_call</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">)</span>
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;host_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_SYSTEM_UNAME_DICT</span>
+    <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">exc_traceback</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span>
+        <span class="k">if</span> <span class="n">exc_traceback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">exc_file</span><span class="p">,</span> <span class="n">exc_line</span><span class="p">)</span> <span class="o">=</span> <span class="n">get_file_and_line_from_traceback</span><span class="p">(</span>
+                <span class="n">exc_traceback</span>
+            <span class="p">)</span>
+            <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;exc_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exc_file</span>
+            <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;exc_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exc_line</span>
+
+    <span class="k">for</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span> <span class="ow">in</span> <span class="n">_LOGGER_KEY_RENAMES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ret</span><span class="p">[</span><span class="n">to</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">from_</span><span class="p">)</span>
+
+    <span class="n">other_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">-</span> <span class="n">_LOGGER_ALLOWED_KEYS</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">other_keys</span><span class="p">:</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<div class="viewcode-block" id="_JsonLogQueueHandler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._JsonLogQueueHandler.html#pcdsutils.log._JsonLogQueueHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">_JsonLogQueueHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">QueueHandler</span><span class="p">):</span>
+    <span class="s1">&#39;Logging handler which pushes `logging.LogRecord`s to a separate thread&#39;</span>
+<div class="viewcode-block" id="_JsonLogQueueHandler.__init__">
+<a class="viewcode-back" href="../../generated/pcdsutils.log._JsonLogQueueHandler.html#pcdsutils.log._JsonLogQueueHandler.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">handlers</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span> <span class="ow">or</span> <span class="n">queue_module</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span> <span class="o">=</span> <span class="n">_LogQueueListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">handlers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="s1">&#39;Overrides QueueHandle prepare&#39;</span>
+        <span class="c1"># Avoid modifying the record in-place; other handlers will be affected</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span><span class="p">:</span>
+            <span class="c1"># Format the traceback into record.exc_text:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+        <span class="c1"># Send along the serialized JSON to any downstream handlers, at least</span>
+        <span class="c1"># `self.listener`</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_log_dictionary_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="configure_pcds_logging">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.configure_pcds_logging.html#pcdsutils.log.configure_pcds_logging">[docs]</a>
+<span class="k">def</span> <span class="nf">configure_pcds_logging</span><span class="p">(</span>
+    <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">log_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_LOG_HOST</span><span class="p">,</span>
+    <span class="n">log_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_LOG_PORT</span><span class="p">,</span>
+    <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_LOG_PROTO</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set a new handler on the ``logging.getLogger(&#39;pcds-logging&#39;)`` logger.</span>
+
+<span class="sd">    If this is called more than once, the handler from the previous invocation</span>
+<span class="sd">    is removed (if still present) and replaced.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_host : str, optional</span>
+<span class="sd">        The log host server host. Defaults to the environment variable</span>
+<span class="sd">        PCDS_LOG_HOST.</span>
+
+<span class="sd">    log_port : int, optional</span>
+<span class="sd">        The log host server port. Defaults to the environment variable</span>
+<span class="sd">        PCDS_LOG_PORT.</span>
+
+<span class="sd">    protocol : {&#39;tcp&#39;, &#39;udp&#39;}</span>
+<span class="sd">        Use UDP or TCP as the transport protocol. Defaults to the environment</span>
+<span class="sd">        variable PCDS_LOG_PROTO.</span>
+
+<span class="sd">    level : str or int</span>
+<span class="sd">        Minimum logging level, given as string or corresponding integer.</span>
+<span class="sd">        Default is &#39;DEBUG&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    handler : logging.Handler</span>
+<span class="sd">        The handler, which has already been added to the &#39;pcds-logging&#39; logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_CURRENT_HANDLER</span>
+
+    <span class="n">handler_cls</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;udp&#39;</span><span class="p">:</span> <span class="n">_PassthroughDatagramHandler</span><span class="p">,</span>
+        <span class="s1">&#39;tcp&#39;</span><span class="p">:</span> <span class="n">_PassthroughStreamHandler</span>
+    <span class="p">}[</span><span class="n">protocol</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+    <span class="n">socket_handler</span> <span class="o">=</span> <span class="n">handler_cls</span><span class="p">(</span><span class="n">log_host</span><span class="p">,</span> <span class="n">log_port</span><span class="p">)</span>
+
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">_JsonLogQueueHandler</span><span class="p">(</span><span class="n">socket_handler</span><span class="p">)</span>
+
+    <span class="n">levelno</span> <span class="o">=</span> <span class="n">validate_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">levelno</span><span class="p">)</span>
+
+    <span class="c1"># handler.setFormatter(_LogFormatter(PLAIN_LOG_FORMAT))</span>
+    <span class="k">if</span> <span class="n">_CURRENT_HANDLER</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">_CURRENT_HANDLER</span><span class="p">)</span>
+        <span class="n">_CURRENT_HANDLER</span><span class="o">.</span><span class="n">listener</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">_CURRENT_HANDLER</span> <span class="o">=</span> <span class="n">handler</span>
+
+    <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">getEffectiveLevel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">levelno</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">levelno</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">handler</span></div>
+
+
+
+<div class="viewcode-block" id="validate_log_level">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.validate_log_level.html#pcdsutils.log.validate_log_level">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a logging level integer for level comparison.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    level : str or int</span>
+<span class="sd">        The logging level string or integer value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log_level : int</span>
+<span class="sd">        The integral log level.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the logging level is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">level</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">levelno</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLevelName</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">level</span><span class="p">)</span><span class="si">}</span><span class="s2"> of argument level. &quot;</span>
+            <span class="s2">&quot;Must be of type int or str.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">levelno</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid logging level </span><span class="si">{</span><span class="n">levelno</span><span class="si">!r}</span><span class="s2"> (use e.g., DEBUG or 6)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">levelno</span></div>
+
+
+
+<div class="viewcode-block" id="get_handler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.get_handler.html#pcdsutils.log.get_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">get_handler</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the handler configured by the most recent call to</span>
+<span class="sd">    :func:`configure_pcds_logging`.</span>
+
+<span class="sd">    If :func:`configure_pcds_logging` has not yet been called, this returns</span>
+<span class="sd">    ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_CURRENT_HANDLER</span></div>
+
+
+
+<div class="viewcode-block" id="log_exception">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.log_exception.html#pcdsutils.log.log_exception">[docs]</a>
+<span class="k">def</span> <span class="nf">log_exception</span><span class="p">(</span>
+    <span class="n">exc_info</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">context</span><span class="o">=</span><span class="s1">&#39;exception&#39;</span><span class="p">,</span>
+    <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log an exception to the central server (i.e., logstash/grafana).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exc_info : (exc_type, exc_value, exc_traceback)</span>
+<span class="sd">        The exception information.</span>
+
+<span class="sd">    context : str, optional</span>
+<span class="sd">        Additional context for the log message.</span>
+
+<span class="sd">    message : str, optional</span>
+<span class="sd">        Override the default log message.</span>
+
+<span class="sd">    level : int, optional</span>
+<span class="sd">        The log level to use.  Defaults to ERROR.</span>
+
+<span class="sd">    stacklevel : int, optional</span>
+<span class="sd">        The stack level of the message being reported.  Defaults to 1, meaning</span>
+<span class="sd">        that the message will be reported as having come from the caller of</span>
+<span class="sd">        ``log_exception_to_central_server``.  Applies only to Python 3.8+, and</span>
+<span class="sd">        ignored below.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">exc_info</span>
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">NO_LOG_EXCEPTIONS</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="c1"># Do not allow log messages unless the central logger has been</span>
+        <span class="c1"># configured with a log handler.  Otherwise, the log message will hit</span>
+        <span class="c1"># the default handler and output to the terminal.</span>
+        <span class="k">return</span>
+
+    <span class="n">message</span> <span class="o">=</span> <span class="n">message</span> <span class="ow">or</span> <span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s1">] </span><span class="si">{</span><span class="n">exc_value</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">stacklevel</span><span class="o">=</span><span class="n">stacklevel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">exc_info</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="centralized_logging_enabled">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.centralized_logging_enabled.html#pcdsutils.log.centralized_logging_enabled">[docs]</a>
+<span class="k">def</span> <span class="nf">centralized_logging_enabled</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if centralized logging should be enabled.&quot;&quot;&quot;</span>
+    <span class="n">fqdn</span> <span class="o">=</span> <span class="n">get_fully_qualified_domain_name</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">fqdn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span> <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">ALLOWED_LOG_DOMAINS</span><span class="p">)</span></div>
+
+
+
+<span class="n">warnings_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">.warnings&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="log_warning_handler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.log_warning_handler.html#pcdsutils.log.log_warning_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">log_warning_handler</span><span class="p">(</span>
+    <span class="n">message</span><span class="p">:</span> <span class="ne">Warning</span><span class="p">,</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="ne">Warning</span><span class="p">],</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">lineno</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">file</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">TextIO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">line</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">warnings_logger</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Warning handler that redirects all of the warnings to a logger.</span>
+
+<span class="sd">    This can be used as a drop-in replacement for warnings.showwarning to</span>
+<span class="sd">    redirect unfiltered warnings into the logging stream.</span>
+
+<span class="sd">    Rather than duplicate the warning display text, this handler opts to</span>
+<span class="sd">    simplify it and put the extra details into the &quot;extra&quot; dictionary</span>
+<span class="sd">    argument in the logging library.</span>
+
+<span class="sd">    The warnings module displays the warnings as:</span>
+<span class="sd">    filename:lineno: category: message\\nline</span>
+<span class="sd">    (where, in all cases I&#39;ve seen, &quot;line&quot; is generated by reading the file)</span>
+
+<span class="sd">    The log message generated here will simply be:</span>
+<span class="sd">    category: message</span>
+
+<span class="sd">    All arguments (except &quot;logger&quot;) will be included in the &quot;extra&quot; dictionary.</span>
+<span class="sd">    This means they can be used in log filters without parsing the message.</span>
+<span class="sd">    The keys used will be &quot;warning_{key}&quot; for each keyword parameter to this</span>
+<span class="sd">    function, to avoid collisions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : Warning</span>
+<span class="sd">        This is the Warning object created by a warnings.warn call.</span>
+<span class="sd">        When converted using str, this becomes the string message</span>
+<span class="sd">        that was passed into warnings.warn. This will be put into the</span>
+<span class="sd">        generated log message text and into the extra dict.</span>
+<span class="sd">    category : type[Warning]</span>
+<span class="sd">        The warning type, e.g. UserWarning, DeprecationWarning, etc.</span>
+<span class="sd">        this will be put into the generated log message text and into</span>
+<span class="sd">        the extra dict.</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        The name of the source code file that generated the warning.</span>
+<span class="sd">        This will be put into the extra dict.</span>
+<span class="sd">    lineno : int</span>
+<span class="sd">        The line number in the file that generated the warning. This will</span>
+<span class="sd">        be put into the extra dict.</span>
+<span class="sd">    file : file-like, optional</span>
+<span class="sd">        A file-like object that is normally used in the warnings handler as</span>
+<span class="sd">        the destination for warnings, defaulting to sys.stderr. This will</span>
+<span class="sd">        be put into the extra dict.</span>
+<span class="sd">    line : str, optional</span>
+<span class="sd">        The string line in the file that generated the warning. I have never</span>
+<span class="sd">        seen this passed into the warning handler. This will be put into</span>
+<span class="sd">        the extra dict.</span>
+<span class="sd">    logger : Logger, optional</span>
+<span class="sd">        Use this argument to override the default logger for the warnings</span>
+<span class="sd">        handler, which is the warnings_logger defined in this module.</span>
+<span class="sd">        This is currently the pcdsutils.log.warnings logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">message</span><span class="p">,</span>
+        <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;warning_message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span>
+            <span class="s1">&#39;warning_category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span>
+            <span class="s1">&#39;warning_filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+            <span class="s1">&#39;warning_lineno&#39;</span><span class="p">:</span> <span class="n">lineno</span><span class="p">,</span>
+            <span class="s1">&#39;warning_file&#39;</span><span class="p">:</span> <span class="n">file</span><span class="p">,</span>
+            <span class="s1">&#39;warning_line&#39;</span><span class="p">:</span> <span class="n">line</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="install_log_warning_handler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.install_log_warning_handler.html#pcdsutils.log.install_log_warning_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">install_log_warning_handler</span><span class="p">(</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">warnings_logger</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replaces warnings.showwarning with the log_warning_handler above.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : Logger, optional</span>
+<span class="sd">        Use this argument to override the default logger for the warnings</span>
+<span class="sd">        handler, which is the warnings_logger defined in this module.</span>
+<span class="sd">        This is currently the pcdsutils.log.warnings logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">showwarning</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+        <span class="n">log_warning_handler</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="uninstall_log_warning_handler">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.uninstall_log_warning_handler.html#pcdsutils.log.uninstall_log_warning_handler">[docs]</a>
+<span class="k">def</span> <span class="nf">uninstall_log_warning_handler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Restores the default behavior of the warnings module.</span>
+
+<span class="sd">    Intended to undo the effects of &quot;install_log_warning_handler&quot;</span>
+<span class="sd">    from this module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">showwarning</span> <span class="o">=</span> <span class="n">warnings</span><span class="o">.</span><span class="n">_showwarning_orig</span></div>
+
+
+
+<div class="viewcode-block" id="RecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.RecordInfo.html#pcdsutils.log.RecordInfo">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RecordInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parent dataclass to define the interface for DemotionFilter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecordInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a OphydObjectRecordInfo from a LogRecord.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Received invalid record&#39;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
+
+
+
+<div class="viewcode-block" id="DemotionFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.DemotionFilter.html#pcdsutils.log.DemotionFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">DemotionFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter parent class for demoting log records.</span>
+
+<span class="sd">    Supports:</span>
+
+<span class="sd">    - Demoting duplicate records when paired with a hashable dataclass</span>
+<span class="sd">    - Optionally demoting all records that match a specification</span>
+<span class="sd">    - A counter that tracks how many records have been demoted</span>
+
+<span class="sd">    Child classes can/should override the following methods:</span>
+
+<span class="sd">    - should_demote (without super)</span>
+<span class="sd">    - __init__ (optional, and with super)</span>
+
+
+<span class="sd">    Child classes should override the following attributes:</span>
+
+<span class="sd">    - record_dataclass (inherit and customize from RecordInfo)</span>
+<span class="sd">    - default_logger (logging.Logger instance)</span>
+<span class="sd">    - cache (just the type annotation)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    level: str or int, optional</span>
+<span class="sd">        The level to demote matching messages to. Defaults to logging.DEBUG,</span>
+<span class="sd">        but this behavior can be overridden in the child class.</span>
+<span class="sd">    only_duplicates: bool, optional</span>
+<span class="sd">        If True, the default, only demote duplicated log messages.</span>
+<span class="sd">        If False, demote all log messages that pass through should_demote.</span>
+<span class="sd">        This must be False if no record_dataclass is provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">record_dataclass</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">RecordInfo</span>
+    <span class="n">default_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">levelno</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">levelname</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">only_duplicates</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">cache</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">RecordInfo</span><span class="p">]</span>
+    <span class="n">counter</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DemotionFilter.__init__">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.DemotionFilter.html#pcdsutils.log.DemotionFilter.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+        <span class="n">only_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span> <span class="o">=</span> <span class="n">validate_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLevelName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelno</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_duplicates</span> <span class="o">=</span> <span class="n">only_duplicates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_level_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">install</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+        <span class="n">only_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DemotionFilter</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create and apply the DemotionFilter to a specific logger,</span>
+<span class="sd">        or the default logger.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        level : str or int, optional</span>
+<span class="sd">            The log level or name of the log level to reduce</span>
+<span class="sd">            log messages to. Defaults to logging.DEBUG.</span>
+<span class="sd">        only_duplicates: bool, optional</span>
+<span class="sd">            If True, the default, only apply this to duplicated log messages.</span>
+<span class="sd">            If False, apply it to all log messages.</span>
+<span class="sd">        logger : logging.Logger, optional</span>
+<span class="sd">            The logger to apply the filter to, or the default logger.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        filt : DemotionFilter</span>
+<span class="sd">            The filter object that we&#39;ve applied to the logger. Useful for</span>
+<span class="sd">            debugging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filt</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+            <span class="n">only_duplicates</span><span class="o">=</span><span class="n">only_duplicates</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filt</span><span class="o">.</span><span class="n">install_self</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filt</span>
+
+    <span class="k">def</span> <span class="nf">install_self</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience method for adding this filter to a logger.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        logger : logging.Logger, optional</span>
+<span class="sd">            The logger to apply the filter to. Defaults to the class-defined</span>
+<span class="sd">            default_logger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+    <span class="k">def</span> <span class="nf">uninstall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience method for removing this filter.</span>
+
+<span class="sd">        Requires the filter to have been originally created and applied using</span>
+<span class="sd">        the &quot;install&quot; class method or the &quot;install_self&quot; method.</span>
+
+<span class="sd">        Intended to help with the unit testing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">removeFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Demote the log message if appropriate, return True to let it pass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_dataclass</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_demote</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_duplicates</span><span class="p">:</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelname</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># Assume we&#39;re applied either to a logger or to a handler</span>
+                <span class="c1"># Find the logger or handler instance and check the level</span>
+                <span class="c1"># If our demoted level is too low, return False here to veto</span>
+                <span class="c1"># Required since level is checked before filter</span>
+                <span class="c1"># If we&#39;ve seen the logger before, use the cache</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level_cache</span><span class="p">[</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">level</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="o">...</span>
+                <span class="c1"># Check all parent loggers and handlers until we find it</span>
+                <span class="n">check_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">depth</span> <span class="o">=</span> <span class="mi">10</span>
+                <span class="k">while</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">check_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">check_logger</span><span class="o">.</span><span class="n">filters</span><span class="p">:</span>
+                        <span class="c1"># We found it!</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_level_cache</span><span class="p">[</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_logger</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;=</span> <span class="n">check_logger</span><span class="o">.</span><span class="n">level</span>
+                    <span class="k">for</span> <span class="n">check_handler</span> <span class="ow">in</span> <span class="n">check_logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">check_handler</span><span class="o">.</span><span class="n">filters</span><span class="p">:</span>
+                            <span class="c1"># We found it!</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_level_cache</span><span class="p">[</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_handler</span>
+                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;=</span> <span class="n">check_handler</span><span class="o">.</span><span class="n">level</span>
+                    <span class="n">check_logger</span> <span class="o">=</span> <span class="n">check_logger</span><span class="o">.</span><span class="n">parent</span>
+                    <span class="c1"># Escape hatch for potential infinite loops</span>
+                    <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="c1"># If we got this far, just let the record pass</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">reset_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if we should demote the record, False otherwise.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        record: logging.LogRecord</span>
+<span class="sd">            The record instance passed into the filter.</span>
+<span class="sd">        info: RecordInfo</span>
+<span class="sd">            The record info dataclass, which may be more convenient</span>
+<span class="sd">            for implementing this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Implement me in child class&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="WarningRecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.WarningRecordInfo.html#pcdsutils.log.WarningRecordInfo">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">WarningRecordInfo</span><span class="p">(</span><span class="n">RecordInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hashable collection of the unique information from a warnings.warn call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="ne">Warning</span><span class="p">]</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">lineno</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WarningRecordInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a WarningRecordInfo from a LogRecord.</span>
+
+<span class="sd">        This can be used as a utility to inspect or compare warnings log</span>
+<span class="sd">        messages inside a log filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">warning_message</span><span class="p">),</span>
+                <span class="n">category</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">warning_category</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">warning_filename</span><span class="p">,</span>
+                <span class="n">lineno</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">warning_lineno</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Received invalid record, must be from &#39;</span>
+                <span class="s1">&#39;the log_warning_handler&#39;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
+
+
+
+<div class="viewcode-block" id="LogWarningLevelFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.LogWarningLevelFilter.html#pcdsutils.log.LogWarningLevelFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">LogWarningLevelFilter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter to decrease the log level of repeat warnings.</span>
+
+<span class="sd">    Once installed, the first instance of a &quot;warnings.warn&quot; converted to</span>
+<span class="sd">    a log message will be at &quot;WARNING&quot; level, while subsequent repeats of</span>
+<span class="sd">    the same warning will be at &quot;DEBUG&quot; level.</span>
+
+<span class="sd">    When running a normal program, typically the warnings module will</span>
+<span class="sd">    handle warning filtering for you as the default behavior, making every</span>
+<span class="sd">    unique warning only appear once.</span>
+
+<span class="sd">    When running in ipython, the warnings cache is reset prior to running</span>
+<span class="sd">    every command, so it&#39;s possible to see repeat warnings during or after</span>
+<span class="sd">    each command. This is a annoying. The filter here allows us to</span>
+<span class="sd">    adjust the level of the repeat messages to avoid cluttering the user&#39;s</span>
+<span class="sd">    view, or to remove them entirely.</span>
+
+<span class="sd">    This filter incorporates a resettable counter that will count the number</span>
+<span class="sd">    of demoted log messages.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    level : str or int, optional</span>
+<span class="sd">        The log level or name of the log level to reduce duplicate</span>
+<span class="sd">        log messages to. Defaults to logging.DEBUG.</span>
+<span class="sd">    only_duplicates: bool, optional</span>
+<span class="sd">        If True, the default, only demote duplicated log messages.</span>
+<span class="sd">        If False, demote all log messages that pass through should_demote.</span>
+<span class="sd">        This must be False if no record_dataclass is provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">record_dataclass</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">WarningRecordInfo</span>
+    <span class="n">default_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">warnings_logger</span>
+
+    <span class="n">cache</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">WarningRecordInfo</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All warnings should be demoted (only_duplicates=True)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="standard_warnings_config">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.standard_warnings_config.html#pcdsutils.log.standard_warnings_config">[docs]</a>
+<span class="k">def</span> <span class="nf">standard_warnings_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LogWarningLevelFilter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use the standard pcds warnings config.</span>
+
+<span class="sd">    This installs the log warning handler pointed to the &quot;warnings_logger&quot;</span>
+<span class="sd">    and also installs the LogWarningLevelFilter at logging.DEBUG level</span>
+<span class="sd">    and returns it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filt : LogWarningLevelFilter</span>
+<span class="sd">        The filter installed on the warnings logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">install_log_warning_handler</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">LogWarningLevelFilter</span><span class="o">.</span><span class="n">install</span><span class="p">()</span></div>
+
+
+
+<span class="n">objects_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;ophyd.objects&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="OphydObjectRecordInfo">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.OphydObjectRecordInfo.html#pcdsutils.log.OphydObjectRecordInfo">[docs]</a>
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">OphydObjectRecordInfo</span><span class="p">(</span><span class="n">RecordInfo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hashable collection of the unique information from an ophyd.objects log</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">exception</span><span class="p">:</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OphydObjectRecordInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a OphydObjectRecordInfo from a LogRecord.</span>
+
+<span class="sd">        This can be used as a utility to inspect or compare warnings log</span>
+<span class="sd">        messages inside a log filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exception</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span>
+                <span class="n">pathname</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">pathname</span><span class="p">,</span>
+                <span class="n">exception</span><span class="o">=</span><span class="n">exception</span><span class="p">,</span>
+                <span class="n">object_name</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">ophyd_object_name</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Recieved invalid record, must be from &#39;</span>
+                <span class="s1">&#39;the ophyd.objects logging adapters&#39;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span></div>
+
+
+
+<div class="viewcode-block" id="OphydCallbackExceptionDemoter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.OphydCallbackExceptionDemoter.html#pcdsutils.log.OphydCallbackExceptionDemoter">[docs]</a>
+<span class="k">class</span> <span class="nc">OphydCallbackExceptionDemoter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter that demotes the logging level of callback exceptions.</span>
+
+<span class="sd">    Ophyd object callback exceptions are logged at ERROR level.</span>
+<span class="sd">    This causes some usage problems when the user is trying to use the</span>
+<span class="sd">    terminal and a callback exception is being thrown on every update</span>
+<span class="sd">    of a fast-updating PV.</span>
+
+<span class="sd">    This filter will apply itself to the ophyd.objects logger, and</span>
+<span class="sd">    will switch the log level of either all exceptions or repeat exceptions</span>
+<span class="sd">    only depending on the initialization arguments.</span>
+
+<span class="sd">    This filter incorporates a resettable counter that will count the number</span>
+<span class="sd">    of demoted log messages.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    level : str or int, optional</span>
+<span class="sd">        The log level or name of the log level to reduce duplicate</span>
+<span class="sd">        log messages to. Defaults to logging.DEBUG.</span>
+<span class="sd">    only_duplicates: bool, optional</span>
+<span class="sd">        If True, the default, only apply this to duplicated log messages.</span>
+<span class="sd">        If False, apply it to all log messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">record_dataclass</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">OphydObjectRecordInfo</span>
+    <span class="n">default_logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">objects_logger</span>
+
+    <span class="n">cache</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">OphydObjectRecordInfo</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if we should demote the record, False otherwise.</span>
+
+<span class="sd">        We&#39;ll match the log message template against the one</span>
+<span class="sd">        used for the callback exception messages.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        record: logging.LogRecord</span>
+<span class="sd">            The record instance passed into the filter.</span>
+<span class="sd">        info: RecordInfo</span>
+<span class="sd">            The record info dataclass, which may be more convenient</span>
+<span class="sd">            for implementing this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;Subscription </span><span class="si">%s</span><span class="s1"> callback exception&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span></div>
+
+
+
+<div class="viewcode-block" id="PydmDemotionFilter">
+<a class="viewcode-back" href="../../generated/pcdsutils.log.PydmDemotionFilter.html#pcdsutils.log.PydmDemotionFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">PydmDemotionFilter</span><span class="p">(</span><span class="n">DemotionFilter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Demote verbose logs from pydm, particulary those that come at exit.</span>
+
+<span class="sd">    Currently, this demotes the &quot;Unable to remove connection&quot; logger exit</span>
+<span class="sd">    spam from &quot;ERROR&quot; to &quot;DEBUG&quot;.</span>
+
+<span class="sd">    These can be caused by some poorly understood race conditions at program</span>
+<span class="sd">    close and are not useful for the end user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydm.widgets.channel&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">should_demote</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">RecordInfo</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if we should demote the record, False otherwise.</span>
+
+<span class="sd">        Demote if we see the &quot;Unable to remove connection&quot; error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        record: logging.LogRecord</span>
+<span class="sd">            The record instance passed into the filter.</span>
+<span class="sd">        info: RecordInfo</span>
+<span class="sd">            The record info dataclass, which may be more convenient</span>
+<span class="sd">            for implementing this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Unable to remove connection&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">message</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

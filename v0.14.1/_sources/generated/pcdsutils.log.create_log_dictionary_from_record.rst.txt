@@ -1,0 +1,6 @@
+﻿pcdsutils.log.create\_log\_dictionary\_from\_record
+===================================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: create_log_dictionary_from_record

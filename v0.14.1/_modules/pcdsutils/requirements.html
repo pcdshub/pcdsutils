@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.requirements &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdsutils.requirements</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdsutils.requirements</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="n">PIP_REQUIREMENT_FILES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;requirements.txt&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;dev-requirements.txt&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="p">),</span>
+    <span class="s1">&#39;docs-requirements.txt&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span> <span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">RE_DEPENDENCY_NAME</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^([a-z0-9_-]+)\s*([&gt;&lt;=]?.*)$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+<span class="n">CONDA_NAME_TO_PYPI_NAME</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pyqt&#39;</span><span class="p">:</span> <span class="s1">&#39;pyqt5&#39;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="find_meta_yaml">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.find_meta_yaml.html#pcdsutils.requirements.find_meta_yaml">[docs]</a>
+<span class="k">def</span> <span class="nf">find_meta_yaml</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+    <span class="s1">&#39;Find conda meta.yaml in a repository&#39;</span>
+    <span class="n">metayaml</span> <span class="o">=</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="s1">&#39;conda-recipe&#39;</span> <span class="o">/</span> <span class="s1">&#39;meta.yaml&#39;</span>
+    <span class="k">if</span> <span class="n">metayaml</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">metayaml</span>
+
+    <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">repo_root</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;**/meta.yaml&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;meta.yaml not found in the repository&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Multiple meta.yaml files found in the repository&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="find_conda_deps">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.find_conda_deps.html#pcdsutils.requirements.find_conda_deps">[docs]</a>
+<span class="k">def</span> <span class="nf">find_conda_deps</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+    <span class="s1">&#39;Get conda-recipe meta.yaml requirements as a dictionary from a repo&#39;</span>
+    <span class="n">metayaml</span> <span class="o">=</span> <span class="n">find_meta_yaml</span><span class="p">(</span><span class="n">repo_root</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metayaml</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="c1"># Remove conda-forge specific yaml syntax:</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{%[^%]+%}&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{{[^}]+}}&#39;</span><span class="p">,</span> <span class="s1">&#39;FIXME&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+
+    <span class="n">requirements</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;requirements&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">requirements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="n">requirements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="n">requirements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s1">&#39;docs&#39;</span><span class="p">:</span> <span class="n">requirements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;requires&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_pip_requirements">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.get_pip_requirements.html#pcdsutils.requirements.get_pip_requirements">[docs]</a>
+<span class="k">def</span> <span class="nf">get_pip_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+    <span class="s1">&#39;Get pip requirements from a repo&#39;</span>
+    <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">requirement_key</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">req_file</span> <span class="o">=</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="k">if</span> <span class="n">req_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">req_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">requirements</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">req</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found pip requirements file: </span><span class="si">%s</span><span class="s1"> with deps: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                         <span class="n">req_file</span><span class="p">,</span> <span class="n">requirements</span><span class="p">[</span><span class="n">filename</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">requirements</span></div>
+
+
+
+<div class="viewcode-block" id="get_dependency_name">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.get_dependency_name.html#pcdsutils.requirements.get_dependency_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dependency_name</span><span class="p">(</span><span class="n">dependency</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Dependency line to dependency name</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        &gt;&gt;&gt; print(get_dependency_name(&#39;python&gt;=3.6&#39;))</span>
+<span class="sd">        python</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dependency</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span> <span class="ow">and</span> <span class="n">dependency</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
+        <span class="c1"># A comment</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">RE_DEPENDENCY_NAME</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">dependency</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="requirements_from_conda">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.requirements_from_conda.html#pcdsutils.requirements.requirements_from_conda">[docs]</a>
+<span class="k">def</span> <span class="nf">requirements_from_conda</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">ignore_deps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="s1">&#39;Build pip-style requirements from conda-recipe meta.yaml&#39;</span>
+    <span class="n">ignore_deps</span> <span class="o">=</span> <span class="n">ignore_deps</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="s1">&#39;setuptools&#39;</span><span class="p">}</span>
+    <span class="n">requirements</span> <span class="o">=</span> <span class="n">find_conda_deps</span><span class="p">(</span><span class="n">repo_root</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">category_key</span><span class="p">,</span> <span class="n">deps</span> <span class="ow">in</span> <span class="n">requirements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ret</span><span class="p">[</span><span class="n">category_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dep</span> <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">deps</span>
+                             <span class="k">if</span> <span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_deps</span>
+                             <span class="ow">and</span> <span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                             <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_combine_conda_deps</span><span class="p">(</span><span class="n">deps</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+    <span class="s1">&#39;Combine conda dependencies from multiple keys&#39;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">deps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">dep_name</span> <span class="o">=</span> <span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dep_name</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">dep_name</span> <span class="ow">in</span> <span class="n">CONDA_NAME_TO_PYPI_NAME</span><span class="p">:</span>
+                <span class="n">dep</span> <span class="o">=</span> <span class="n">dep</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dep_name</span><span class="p">,</span> <span class="n">CONDA_NAME_TO_PYPI_NAME</span><span class="p">[</span><span class="n">dep_name</span><span class="p">])</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+
+
+<div class="viewcode-block" id="write_requirements">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.write_requirements.html#pcdsutils.requirements.write_requirements">[docs]</a>
+<span class="k">def</span> <span class="nf">write_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">conda_deps</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="s1">&#39;Write pip requirements to the repository root from conda requirements&#39;</span>
+    <span class="k">for</span> <span class="n">req_file</span><span class="p">,</span> <span class="n">conda_keys</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">deps_for_file</span> <span class="o">=</span> <span class="n">_combine_conda_deps</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">conda_keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">deps_for_file</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Writing requirements file in repo </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">repo_root</span><span class="p">,</span>
+                        <span class="n">req_file</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">dry_run</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Dry-run mode. Write </span><span class="si">%s</span><span class="s1">:&#39;</span><span class="p">,</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="n">req_file</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">deps_for_file</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dep</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">repo_root</span> <span class="o">/</span> <span class="n">req_file</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">deps_for_file</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">dep</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_requirements_from_conda</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="s1">&#39;(Console entry-point)&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Build requirements.txt files from conda meta.yaml&#39;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;REPO_ROOT&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Repository root path&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--dry-run&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Do not write the files&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;DEBUG&#39;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="k">else</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span>
+                        <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">repo_root</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">REPO_ROOT</span><span class="p">)</span>
+    <span class="n">conda_deps</span> <span class="o">=</span> <span class="n">requirements_from_conda</span><span class="p">(</span><span class="n">repo_root</span><span class="o">=</span><span class="n">repo_root</span><span class="p">)</span>
+    <span class="n">write_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">conda_deps</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dry_run</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compare_requirements">
+<a class="viewcode-back" href="../../generated/pcdsutils.requirements.compare_requirements.html#pcdsutils.requirements.compare_requirements">[docs]</a>
+<span class="k">def</span> <span class="nf">compare_requirements</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">pip_deps</span><span class="p">):</span>
+    <span class="s1">&#39;Compare two lists of dependencies&#39;</span>
+    <span class="n">conda_deps</span> <span class="o">=</span> <span class="p">{</span><span class="n">dep</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">conda_deps</span><span class="p">}</span>
+    <span class="n">conda_deps_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">):</span> <span class="n">dep</span>
+                       <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">conda_deps</span>
+                       <span class="p">}</span>
+    <span class="n">pip_deps</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">pip_deps</span><span class="p">)</span>
+    <span class="n">pip_deps_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">):</span> <span class="n">dep</span>
+                     <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">pip_deps</span>
+                     <span class="k">if</span> <span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
+                     <span class="p">}</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found conda deps: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">conda_deps_name</span><span class="p">))))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found pip deps: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pip_deps_name</span><span class="p">))))</span>
+    <span class="n">missing_in_pip</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">conda_deps_name</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">pip_deps_name</span><span class="p">)</span>
+    <span class="n">missing_in_conda</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">pip_deps_name</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">conda_deps_name</span><span class="p">)</span>
+    <span class="n">version_mismatch</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">&quot;conda: </span><span class="si">{</span><span class="n">conda_deps_name</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span><span class="si">}</span><span class="s2"> pip: </span><span class="si">{</span><span class="n">pip_deps_name</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">conda_deps_name</span>
+        <span class="k">if</span> <span class="n">dep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">missing_in_pip</span>
+        <span class="ow">and</span> <span class="n">conda_deps_name</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pip_deps_name</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;missing_in_pip&#39;</span><span class="p">:</span> <span class="n">missing_in_pip</span><span class="p">,</span>
+        <span class="s1">&#39;missing_in_conda&#39;</span><span class="p">:</span> <span class="n">missing_in_conda</span><span class="p">,</span>
+        <span class="s1">&#39;version_mismatch&#39;</span><span class="p">:</span> <span class="n">version_mismatch</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_compare_requirements</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="s1">&#39;(Console entry-point)&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Compare requirements.txt files with conda meta.yaml&#39;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;REPO_ROOT&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Repository root path&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--ignore-docs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ignore documentation differences&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;DEBUG&#39;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="k">else</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span>
+                        <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">repo_root</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">REPO_ROOT</span><span class="p">)</span>
+    <span class="n">conda_deps</span> <span class="o">=</span> <span class="n">requirements_from_conda</span><span class="p">(</span><span class="n">repo_root</span><span class="o">=</span><span class="n">repo_root</span><span class="p">)</span>
+    <span class="n">pip_deps</span> <span class="o">=</span> <span class="n">get_pip_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="o">=</span><span class="n">repo_root</span><span class="p">)</span>
+    <span class="n">has_diff</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">fn</span><span class="p">,</span> <span class="n">conda_keys</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;--- </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> ---&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conda_keys</span><span class="p">))</span>
+        <span class="n">cdeps</span> <span class="o">=</span> <span class="n">_combine_conda_deps</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">conda_keys</span><span class="p">)</span>
+        <span class="n">pdeps</span> <span class="o">=</span> <span class="n">pip_deps</span><span class="p">[</span><span class="n">fn</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Comparing dependencies. cdeps=</span><span class="si">%s</span><span class="s1"> pdeps=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">cdeps</span><span class="p">,</span> <span class="n">pdeps</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">difference</span> <span class="ow">in</span> <span class="n">compare_requirements</span><span class="p">(</span><span class="n">cdeps</span><span class="p">,</span> <span class="n">pdeps</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">difference</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;docs&#39;</span> <span class="ow">in</span> <span class="n">fn</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">ignore_docs</span><span class="p">):</span>
+                    <span class="n">has_diff</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:&#39;</span><span class="p">,</span> <span class="n">display_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">difference</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="n">pretty_diff</span> <span class="o">=</span> <span class="s1">&#39; | &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span>
+                                                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;- </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pretty_diff</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;- </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">has_diff</span> <span class="k">else</span> <span class="mi">0</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

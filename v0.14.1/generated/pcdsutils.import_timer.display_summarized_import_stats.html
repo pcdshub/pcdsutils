@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdsutils.import_timer.display_summarized_import_stats &mdash; pcdsutils  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pcdsutils.import_timer.get_import_chain" href="pcdsutils.import_timer.get_import_chain.html" />
+    <link rel="prev" title="pcdsutils.import_timer.ModuleStatsSummary" href="pcdsutils.import_timer.ModuleStatsSummary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pcdsutils
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Developer Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../upcoming_changes.html">Upcoming Changes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-enum">pcdsutils.enum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ext-scripts">pcdsutils.ext_scripts</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#pcdsutils-import-timer">pcdsutils.import_timer</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.ImportTimeStats.html">pcdsutils.import_timer.ImportTimeStats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.ModuleStatsSummary.html">pcdsutils.import_timer.ModuleStatsSummary</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pcdsutils.import_timer.display_summarized_import_stats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pcdsutils.import_timer.display_summarized_import_stats"><code class="docutils literal notranslate"><span class="pre">display_summarized_import_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.get_import_chain.html">pcdsutils.import_timer.get_import_chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.get_import_stats.html">pcdsutils.import_timer.get_import_stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.get_import_time_text.html">pcdsutils.import_timer.get_import_time_text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.interpret_import_time.html">pcdsutils.import_timer.interpret_import_time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.main.html">pcdsutils.import_timer.main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcdsutils.import_timer.summarize_import_stats.html">pcdsutils.import_timer.summarize_import_stats</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-info">pcdsutils.info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-json-to-table">pcdsutils.json_to_table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-log">pcdsutils.log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-ophyd-helpers">pcdsutils.ophyd_helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-profile">pcdsutils.profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-callbacks">pcdsutils.qt.callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-designer-display">pcdsutils.qt.designer_display</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-lazy">pcdsutils.qt.lazy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-qt-popbar">pcdsutils.qt.popbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-release-notes">pcdsutils.release_notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-requirements">pcdsutils.requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-utils">pcdsutils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#pcdsutils-version">pcdsutils.version</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/pcdshub/pcdsutils">Github Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pcdsutils</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API</a></li>
+      <li class="breadcrumb-item active">pcdsutils.import_timer.display_summarized_import_stats</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/pcdsutils.import_timer.display_summarized_import_stats.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pcdsutils-import-timer-display-summarized-import-stats">
+<h1>pcdsutils.import_timer.display_summarized_import_stats<a class="headerlink" href="#pcdsutils-import-timer-display-summarized-import-stats" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pcdsutils.import_timer.display_summarized_import_stats">
+<span class="sig-prename descclassname"><span class="pre">pcdsutils.import_timer.</span></span><span class="sig-name descname"><span class="pre">display_summarized_import_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_summary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="pcdsutils.import_timer.ModuleStatsSummary.html#pcdsutils.import_timer.ModuleStatsSummary" title="pcdsutils.import_timer.ModuleStatsSummary"><span class="pre">ModuleStatsSummary</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'self_time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">focus_on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pcdsutils/import_timer.html#display_summarized_import_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdsutils.import_timer.display_summarized_import_stats" title="Link to this definition"></a></dt>
+<dd><p>Show a prettytable summary of all the import statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>stats_summary</strong><span class="classifier">dict[str, ModuleStatsSummary]</span></dt><dd><p>The output from summarize_import_stats. This is a mapping from
+root module name to the module stats summary objects.</p>
+</dd>
+<dt><strong>sort_key</strong><span class="classifier">str, optional</span></dt><dd><p>The key to sort the output table on.</p>
+</dd>
+<dt><strong>focus_on</strong><span class="classifier">str, optional</span></dt><dd><p>A module to focus on for the output. If provided, we’ll show
+a detailed breakdown of that module instead of the big table
+of all the imported modules.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pcdsutils.import_timer.ModuleStatsSummary.html" class="btn btn-neutral float-left" title="pcdsutils.import_timer.ModuleStatsSummary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pcdsutils.import_timer.get_import_chain.html" class="btn btn-neutral float-right" title="pcdsutils.import_timer.get_import_chain" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

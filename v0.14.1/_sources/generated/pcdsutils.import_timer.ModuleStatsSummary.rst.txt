@@ -1,0 +1,35 @@
+﻿pcdsutils.import\_timer.ModuleStatsSummary
+==========================================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autoclass:: ModuleStatsSummary
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ModuleStatsSummary.__init__
+      ~ModuleStatsSummary.from_stats
+      ~ModuleStatsSummary.show_detailed_summary
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ModuleStatsSummary.root_module
+      ~ModuleStatsSummary.self_time_raw
+      ~ModuleStatsSummary.self_time
+      ~ModuleStatsSummary.cumulative_time_raw
+      ~ModuleStatsSummary.cumulative_time
+      ~ModuleStatsSummary.submodule_stats
+   
+   

@@ -1,0 +1,39 @@
+﻿pcdsutils.log.LogWarningLevelFilter
+===================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: LogWarningLevelFilter
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LogWarningLevelFilter.__init__
+      ~LogWarningLevelFilter.filter
+      ~LogWarningLevelFilter.install
+      ~LogWarningLevelFilter.install_self
+      ~LogWarningLevelFilter.reset_counter
+      ~LogWarningLevelFilter.should_demote
+      ~LogWarningLevelFilter.uninstall
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LogWarningLevelFilter.default_logger
+      ~LogWarningLevelFilter.cache
+      ~LogWarningLevelFilter.levelno
+      ~LogWarningLevelFilter.levelname
+      ~LogWarningLevelFilter.only_duplicates
+      ~LogWarningLevelFilter.counter
+   
+   

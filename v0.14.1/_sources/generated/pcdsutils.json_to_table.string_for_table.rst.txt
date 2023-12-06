@@ -1,0 +1,6 @@
+﻿pcdsutils.json\_to\_table.string\_for\_table
+============================================
+
+.. currentmodule:: pcdsutils.json_to_table
+
+.. autofunction:: string_for_table
