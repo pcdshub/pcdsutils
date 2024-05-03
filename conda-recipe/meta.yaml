@@ -24,7 +24,6 @@ requirements:
   - prettytable
   - pypandoc
   - pyyaml
-  - qtpyinheritance
   - requests
 
 test:
