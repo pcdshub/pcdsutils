@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.profile &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -81,23 +79,23 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utilities for setting up line_profiler to debug a specific module</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isclass</span><span class="p">,</span> <span class="n">isfunction</span><span class="p">,</span> <span class="n">ismethod</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ModuleType</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isclass</span><span class="p">,</span> <span class="n">isfunction</span><span class="p">,</span> <span class="n">ismethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">_optional_err</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Optional dependency line_profiler missing from python &#39;</span>
                  <span class="s1">&#39;environment. Cannot run profiler.&#39;</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">line_profiler</span> <span class="kn">import</span> <span class="n">LineProfiler</span><span class="p">,</span> <span class="n">show_func</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">line_profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineProfiler</span><span class="p">,</span> <span class="n">show_func</span>
     <span class="n">has_line_profiler</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">has_line_profiler</span> <span class="o">=</span> <span class="kc">False</span>
@@ -110,7 +108,7 @@
 
 <div class="viewcode-block" id="get_profiler">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_profiler.html#pcdsutils.profile.get_profiler">[docs]</a>
-<span class="k">def</span> <span class="nf">get_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the global profiler instance, creating it if necessary.&quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">profiler</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_line_profiler</span><span class="p">:</span>
@@ -123,7 +121,7 @@
 
 <div class="viewcode-block" id="reset_profiler">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.reset_profiler.html#pcdsutils.profile.reset_profiler">[docs]</a>
-<span class="k">def</span> <span class="nf">reset_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_profiler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clears the old global profiler by replacing it with a new one.&quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">profiler</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_line_profiler</span><span class="p">:</span>
@@ -136,7 +134,7 @@
 <div class="viewcode-block" id="profiler_context">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.profiler_context.html#pcdsutils.profile.profiler_context">[docs]</a>
 <span class="nd">@contextmanager</span>
-<span class="k">def</span> <span class="nf">profiler_context</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">profiler_context</span><span class="p">(</span>
     <span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_global_profiler</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -202,7 +200,7 @@
 
 <div class="viewcode-block" id="setup_profiler">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.setup_profiler.html#pcdsutils.profile.setup_profiler">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_profiler</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_profiler</span><span class="p">(</span>
     <span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">use_global_profiler</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LineProfiler</span><span class="p">:</span>
@@ -252,7 +250,7 @@
 
 <div class="viewcode-block" id="toggle_profiler">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.toggle_profiler.html#pcdsutils.profile.toggle_profiler">[docs]</a>
-<span class="k">def</span> <span class="nf">toggle_profiler</span><span class="p">(</span><span class="n">turn_on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">toggle_profiler</span><span class="p">(</span><span class="n">turn_on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Turns the global profiler off or on.&quot;&quot;&quot;</span>
     <span class="n">profiler</span> <span class="o">=</span> <span class="n">get_profiler</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">turn_on</span><span class="p">:</span>
@@ -264,7 +262,7 @@
 
 <div class="viewcode-block" id="get_preamble">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_preamble.html#pcdsutils.profile.get_preamble">[docs]</a>
-<span class="k">def</span> <span class="nf">get_preamble</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_preamble</span><span class="p">(</span>
     <span class="n">timings_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -283,7 +281,7 @@
 
 <div class="viewcode-block" id="save_results">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.save_results.html#pcdsutils.profile.save_results">[docs]</a>
-<span class="k">def</span> <span class="nf">save_results</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_results</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -329,7 +327,7 @@
 
 <div class="viewcode-block" id="print_results">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.print_results.html#pcdsutils.profile.print_results">[docs]</a>
-<span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_results</span><span class="p">(</span>
     <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -372,7 +370,7 @@
 
 <div class="viewcode-block" id="sort_timings">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.sort_timings.html#pcdsutils.profile.sort_timings">[docs]</a>
-<span class="k">def</span> <span class="nf">sort_timings</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_timings</span><span class="p">(</span>
     <span class="n">prof</span><span class="p">:</span> <span class="n">LineProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
@@ -414,7 +412,7 @@
 
 <div class="viewcode-block" id="is_native">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.is_native.html#pcdsutils.profile.is_native">[docs]</a>
-<span class="k">def</span> <span class="nf">is_native</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_native</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if obj was defined in module.</span>
 
@@ -461,7 +459,7 @@
 
 <div class="viewcode-block" id="get_native_functions">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_native_functions.html#pcdsutils.profile.get_native_functions">[docs]</a>
-<span class="k">def</span> <span class="nf">get_native_functions</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_native_functions</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a set of all functions and methods defined in module.</span>
 
@@ -482,7 +480,7 @@
 
 <div class="viewcode-block" id="get_native_methods">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_native_methods.html#pcdsutils.profile.get_native_methods">[docs]</a>
-<span class="k">def</span> <span class="nf">get_native_methods</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_native_methods</span><span class="p">(</span>
     <span class="n">module_or_cls</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">module</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -536,7 +534,7 @@
 
 <div class="viewcode-block" id="get_submodules">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_submodules.html#pcdsutils.profile.get_submodules">[docs]</a>
-<span class="k">def</span> <span class="nf">get_submodules</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_submodules</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of the imported module plus all submodules.&quot;&quot;&quot;</span>
     <span class="n">submodule_names</span> <span class="o">=</span> <span class="n">get_submodule_names</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">import_modules</span><span class="p">(</span><span class="n">submodule_names</span><span class="p">)</span></div>
@@ -545,7 +543,7 @@
 
 <div class="viewcode-block" id="get_submodule_names">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.get_submodule_names.html#pcdsutils.profile.get_submodule_names">[docs]</a>
-<span class="k">def</span> <span class="nf">get_submodule_names</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_submodule_names</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a list of the module name plus all importable submodule names.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -577,7 +575,7 @@
 
 <div class="viewcode-block" id="import_modules">
 <a class="viewcode-back" href="../../generated/pcdsutils.profile.import_modules.html#pcdsutils.profile.import_modules">[docs]</a>
-<span class="k">def</span> <span class="nf">import_modules</span><span class="p">(</span><span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_modules</span><span class="p">(</span><span class="n">module_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ModuleType</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Utility function to import an iterator of module names as a list.</span>
 
@@ -608,7 +606,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

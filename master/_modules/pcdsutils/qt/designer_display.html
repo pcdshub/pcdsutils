@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.qt.designer_display &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,28 +79,28 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Helper for using designer to layout GUIs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">qtpy.uic</span> <span class="kn">import</span> <span class="n">loadUiType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qtpy.uic</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadUiType</span>
 
 
 <div class="viewcode-block" id="_UiForm">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.designer_display._UiForm.html#pcdsutils.qt.designer_display._UiForm">[docs]</a>
-<span class="k">class</span> <span class="nc">_UiForm</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_UiForm</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
     <span class="nd">@staticmethod</span>  <span class="c1"># &lt;-- this is not entirely true, but PyQt5 uses it as such</span>
-    <span class="k">def</span> <span class="nf">setupUi</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setupUi</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="o">...</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">retranslateUi</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retranslateUi</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="o">...</span></div>
 
 
 
 <div class="viewcode-block" id="DesignerDisplay">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.designer_display.DesignerDisplay.html#pcdsutils.qt.designer_display.DesignerDisplay">[docs]</a>
-<span class="k">class</span> <span class="nc">DesignerDisplay</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DesignerDisplay</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class for loading designer .ui files and adding logic.&quot;&quot;&quot;</span>
 
     <span class="c1"># You must set a filename, the path to your .ui file</span>
@@ -113,7 +111,7 @@
     <span class="n">ui_form</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">_UiForm</span><span class="p">]]</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_load_ui_if_needed</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_ui_if_needed</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the UI file on first load.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;ui_form&quot;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -124,18 +122,18 @@
 
 <div class="viewcode-block" id="DesignerDisplay.__init__">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.designer_display.DesignerDisplay.html#pcdsutils.qt.designer_display.DesignerDisplay.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the file to this widget when the instance is created&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_ui_if_needed</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ui_form</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">retranslateUi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retranslateUi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Required function for setupUi to work in __init__&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ui_form</span><span class="o">.</span><span class="n">retranslateUi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">show_type_hints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_type_hints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Show type hints of widgets included in the display for development help.&quot;&quot;&quot;</span>
         <span class="n">cls_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">obj_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
@@ -163,7 +161,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

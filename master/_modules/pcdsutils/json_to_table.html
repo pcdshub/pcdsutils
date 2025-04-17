@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.json_to_table &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -84,19 +82,19 @@
 <span class="sd">PrettyTable from it.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">dataclasses</span>
-<span class="kn">import</span> <span class="nn">enum</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">import</span> <span class="nn">prettytable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">prettytable</span>
 
 
 <div class="viewcode-block" id="TableStyle">
 <a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.TableStyle.html#pcdsutils.json_to_table.TableStyle">[docs]</a>
-<span class="k">class</span> <span class="nc">TableStyle</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TableStyle</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Table style/format to print.&quot;&quot;&quot;</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
     <span class="n">csv</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
@@ -115,7 +113,7 @@
 <div class="viewcode-block" id="ProgramArguments">
 <a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.ProgramArguments.html#pcdsutils.json_to_table.ProgramArguments">[docs]</a>
 <span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">ProgramArguments</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProgramArguments</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Argparse arguments for json_to_table.&quot;&quot;&quot;</span>
     <span class="n">input_file</span><span class="p">:</span> <span class="n">BinaryIO</span>
     <span class="n">sort_key</span><span class="p">:</span> <span class="nb">str</span>
@@ -128,7 +126,7 @@
 
 <div class="viewcode-block" id="string_for_table">
 <a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.string_for_table.html#pcdsutils.json_to_table.string_for_table">[docs]</a>
-<span class="k">def</span> <span class="nf">string_for_table</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">string_for_table</span><span class="p">(</span>
     <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">list_delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix the value for display in the table.&quot;&quot;&quot;</span>
@@ -147,7 +145,7 @@
 
 <div class="viewcode-block" id="table_from_json">
 <a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.table_from_json.html#pcdsutils.json_to_table.table_from_json">[docs]</a>
-<span class="k">def</span> <span class="nf">table_from_json</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">table_from_json</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">sort_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -174,7 +172,7 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../generated/pcdsutils.json_to_table.main.html#pcdsutils.json_to_table.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">ProgramArguments</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">ProgramArguments</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
     <span class="n">table</span> <span class="o">=</span> <span class="n">table_from_json</span><span class="p">(</span>
         <span class="n">data</span><span class="p">,</span>
@@ -197,7 +195,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_create_argparser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_argparser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Format a table given JSON with PrettyTable&quot;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--sort-key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sort key&quot;</span><span class="p">)</span>
@@ -234,7 +232,7 @@
     <span class="k">return</span> <span class="n">parser</span>
 
 
-<span class="k">def</span> <span class="nf">_entrypoint</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_entrypoint</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">_create_argparser</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
     <span class="n">main</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">ProgramArguments</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
@@ -251,7 +249,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

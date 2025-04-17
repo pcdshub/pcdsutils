@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.qt.lazy &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -78,14 +76,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pcdsutils.qt.lazy</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">qtpy</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qtpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
 
 
 <div class="viewcode-block" id="LazyWidget">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.lazy.LazyWidget.html#pcdsutils.qt.lazy.LazyWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">LazyWidget</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LazyWidget</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A lazy widget which only is created when first shown.</span>
 
@@ -104,7 +102,7 @@
 
 <div class="viewcode-block" id="LazyWidget.__init__">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.lazy.LazyWidget.html#pcdsutils.qt.lazy.LazyWidget.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">]):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget_cls</span> <span class="o">=</span> <span class="n">widget_cls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="kc">None</span>
@@ -113,12 +111,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">())</span></div>
 
 
-    <span class="k">def</span> <span class="nf">hideEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QHideEvent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hideEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QHideEvent</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hook for when the tool is hidden.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">hideEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget_hidden</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_create_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make the widget no longer lazy.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -129,7 +127,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_widget_created</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">showEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QShowEvent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">showEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QShowEvent</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hook for when the tool is shown in the suite.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_create_widget</span><span class="p">()</span>
@@ -137,13 +135,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">showEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget_shown</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">minimumSizeHint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">minimumSizeHint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Minimum size hint forwarder from the embedded widget.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">minimumSizeHint</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizeHint</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">sizeHint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sizeHint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Size hint forwarder from the embedded widget.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">sizeHint</span><span class="p">()</span>
@@ -158,7 +156,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

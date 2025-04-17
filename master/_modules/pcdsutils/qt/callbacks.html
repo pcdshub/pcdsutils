@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.qt.callbacks &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,18 +79,18 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Helpers for callbacks</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">weakref</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodType</span>
 
-<span class="kn">from</span> <span class="nn">qtpy</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">sip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qtpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">sip</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WeakPartialMethodSlot">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.callbacks.WeakPartialMethodSlot.html#pcdsutils.qt.callbacks.WeakPartialMethodSlot">[docs]</a>
-<span class="k">class</span> <span class="nc">WeakPartialMethodSlot</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WeakPartialMethodSlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt-compatible slot for a partial method.</span>
 
@@ -137,7 +135,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="WeakPartialMethodSlot.__init__">
 <a class="viewcode-back" href="../../../generated/pcdsutils.qt.callbacks.WeakPartialMethodSlot.html#pcdsutils.qt.callbacks.WeakPartialMethodSlot.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">signal_owner</span><span class="p">:</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span>
         <span class="n">signal</span><span class="p">:</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Signal</span><span class="p">,</span>
@@ -159,7 +157,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">partial_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_signal_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_signal_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback: the owner of the signal was destroyed; clean up.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -169,7 +167,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">partial_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_method_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_method_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback: the owner of the method was destroyed; clean up.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -186,7 +184,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to disconnect _call: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">new_kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        PyQt callback slot which handles the internal WeakMethod.</span>
 
@@ -209,7 +207,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

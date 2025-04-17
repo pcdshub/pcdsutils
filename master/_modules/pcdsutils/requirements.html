@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pcdsutils.requirements &mdash; pcdsutils  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -78,12 +76,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pcdsutils.requirements</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -100,7 +98,7 @@
 
 <div class="viewcode-block" id="find_meta_yaml">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.find_meta_yaml.html#pcdsutils.requirements.find_meta_yaml">[docs]</a>
-<span class="k">def</span> <span class="nf">find_meta_yaml</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_meta_yaml</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
     <span class="s1">&#39;Find conda meta.yaml in a repository&#39;</span>
     <span class="n">metayaml</span> <span class="o">=</span> <span class="n">repo_root</span> <span class="o">/</span> <span class="s1">&#39;conda-recipe&#39;</span> <span class="o">/</span> <span class="s1">&#39;meta.yaml&#39;</span>
     <span class="k">if</span> <span class="n">metayaml</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -117,7 +115,7 @@
 
 <div class="viewcode-block" id="find_conda_deps">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.find_conda_deps.html#pcdsutils.requirements.find_conda_deps">[docs]</a>
-<span class="k">def</span> <span class="nf">find_conda_deps</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_conda_deps</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
     <span class="s1">&#39;Get conda-recipe meta.yaml requirements as a dictionary from a repo&#39;</span>
     <span class="n">metayaml</span> <span class="o">=</span> <span class="n">find_meta_yaml</span><span class="p">(</span><span class="n">repo_root</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metayaml</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -143,7 +141,7 @@
 
 <div class="viewcode-block" id="get_pip_requirements">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.get_pip_requirements.html#pcdsutils.requirements.get_pip_requirements">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pip_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pip_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">):</span>
     <span class="s1">&#39;Get pip requirements from a repo&#39;</span>
     <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">requirement_key</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -163,7 +161,7 @@
 
 <div class="viewcode-block" id="get_dependency_name">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.get_dependency_name.html#pcdsutils.requirements.get_dependency_name">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dependency_name</span><span class="p">(</span><span class="n">dependency</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_dependency_name</span><span class="p">(</span><span class="n">dependency</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Dependency line to dependency name</span>
 
@@ -182,7 +180,7 @@
 
 <div class="viewcode-block" id="requirements_from_conda">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.requirements_from_conda.html#pcdsutils.requirements.requirements_from_conda">[docs]</a>
-<span class="k">def</span> <span class="nf">requirements_from_conda</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">ignore_deps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">requirements_from_conda</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">ignore_deps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="s1">&#39;Build pip-style requirements from conda-recipe meta.yaml&#39;</span>
     <span class="n">ignore_deps</span> <span class="o">=</span> <span class="n">ignore_deps</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="s1">&#39;setuptools&#39;</span><span class="p">}</span>
     <span class="n">requirements</span> <span class="o">=</span> <span class="n">find_conda_deps</span><span class="p">(</span><span class="n">repo_root</span><span class="p">)</span>
@@ -197,7 +195,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_combine_conda_deps</span><span class="p">(</span><span class="n">deps</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_combine_conda_deps</span><span class="p">(</span><span class="n">deps</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
     <span class="s1">&#39;Combine conda dependencies from multiple keys&#39;</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
@@ -213,7 +211,7 @@
 
 <div class="viewcode-block" id="write_requirements">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.write_requirements.html#pcdsutils.requirements.write_requirements">[docs]</a>
-<span class="k">def</span> <span class="nf">write_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">conda_deps</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_requirements</span><span class="p">(</span><span class="n">repo_root</span><span class="p">,</span> <span class="n">conda_deps</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="s1">&#39;Write pip requirements to the repository root from conda requirements&#39;</span>
     <span class="k">for</span> <span class="n">req_file</span><span class="p">,</span> <span class="n">conda_keys</span> <span class="ow">in</span> <span class="n">PIP_REQUIREMENT_FILES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">deps_for_file</span> <span class="o">=</span> <span class="n">_combine_conda_deps</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">conda_keys</span><span class="p">)</span>
@@ -232,7 +230,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_requirements_from_conda</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_requirements_from_conda</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="s1">&#39;(Console entry-point)&#39;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Build requirements.txt files from conda meta.yaml&#39;</span>
@@ -252,7 +250,7 @@
 
 <div class="viewcode-block" id="compare_requirements">
 <a class="viewcode-back" href="../../generated/pcdsutils.requirements.compare_requirements.html#pcdsutils.requirements.compare_requirements">[docs]</a>
-<span class="k">def</span> <span class="nf">compare_requirements</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">pip_deps</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_requirements</span><span class="p">(</span><span class="n">conda_deps</span><span class="p">,</span> <span class="n">pip_deps</span><span class="p">):</span>
     <span class="s1">&#39;Compare two lists of dependencies&#39;</span>
     <span class="n">conda_deps</span> <span class="o">=</span> <span class="p">{</span><span class="n">dep</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">conda_deps</span><span class="p">}</span>
     <span class="n">conda_deps_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">get_dependency_name</span><span class="p">(</span><span class="n">dep</span><span class="p">):</span> <span class="n">dep</span>
@@ -283,7 +281,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_compare_requirements</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compare_requirements</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="s1">&#39;(Console entry-point)&#39;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Compare requirements.txt files with conda meta.yaml&#39;</span>
@@ -329,7 +327,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -13,6 +13,11 @@
 
    .. autosummary::
    
+      ~HelpfulIntEnum.conjugate
+      ~HelpfulIntEnum.bit_length
+      ~HelpfulIntEnum.to_bytes
+      ~HelpfulIntEnum.from_bytes
+      ~HelpfulIntEnum.as_integer_ratio
       ~HelpfulIntEnum.from_any
       ~HelpfulIntEnum.include
       ~HelpfulIntEnum.exclude
@@ -20,5 +25,14 @@
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HelpfulIntEnum.real
+      ~HelpfulIntEnum.imag
+      ~HelpfulIntEnum.numerator
+      ~HelpfulIntEnum.denominator
    
    
