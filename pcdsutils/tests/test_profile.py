@@ -3,8 +3,11 @@ Check some of the profiler internal utilities.
 """
 import logging
 import os.path
+import sys
 
+import line_profiler
 import pytest
+from packaging.version import Version
 
 from ..profile import (get_native_functions, get_submodules, is_native,
                        profiler_context)
@@ -59,8 +62,17 @@ def test_basic_profiler():
         for (file, lineno, func), stats in timings.items() if stats
     ]
     logger.debug(functions_profiled)
-    assert ('dummy_submodule.py', '__init__') in functions_profiled
+    print(functions_profiled)
+    # line_profiler 5.0.0 uses qualified name for py>=3.11
+    if (
+        sys.version_info.minor >= 11
+        and Version(line_profiler.__version__) >= Version("5.0.0")
+    ):
+        method_qualifier = "SomeClass."
+    else:
+        method_qualifier = ""
+    assert ('dummy_submodule.py', f'{method_qualifier}__init__') in functions_profiled
     assert ('dummy_submodule.py', 'some_function') in functions_profiled
-    assert ('dummy_submodule.py', 'method') in functions_profiled
-    assert ('dummy_submodule.py', 'cls_method') in functions_profiled
-    assert ('dummy_submodule.py', 'stat_method') in functions_profiled
+    assert ('dummy_submodule.py', f'{method_qualifier}method') in functions_profiled
+    assert ('dummy_submodule.py', f'{method_qualifier}cls_method') in functions_profiled
+    assert ('dummy_submodule.py', f'{method_qualifier}stat_method') in functions_profiled
