@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.setup\_profiler
+=================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: setup_profiler

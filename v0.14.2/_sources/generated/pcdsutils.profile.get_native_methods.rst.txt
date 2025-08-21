@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.get\_native\_methods
+======================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: get_native_methods

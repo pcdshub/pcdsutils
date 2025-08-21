@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.get\_current\_experiment
+===============================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: get_current_experiment

@@ -1,0 +1,6 @@
+﻿pcdsutils.release\_notes.generate\_releases
+===========================================
+
+.. currentmodule:: pcdsutils.release_notes
+
+.. autofunction:: generate_releases

@@ -1,0 +1,22 @@
+﻿pcdsutils.ophyd\_helpers.SubscribeCallback
+==========================================
+
+.. currentmodule:: pcdsutils.ophyd_helpers
+
+.. autoclass:: SubscribeCallback
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SubscribeCallback.__init__
+   
+   
+
+   
+   
+   

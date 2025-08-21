@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.toggle\_profiler
+==================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: toggle_profiler

@@ -1,0 +1,28 @@
+﻿pcdsutils.log.\_LogQueueListener
+================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: _LogQueueListener
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~_LogQueueListener.__init__
+      ~_LogQueueListener.dequeue
+      ~_LogQueueListener.enqueue_sentinel
+      ~_LogQueueListener.handle
+      ~_LogQueueListener.prepare
+      ~_LogQueueListener.start
+      ~_LogQueueListener.stop
+   
+   
+
+   
+   
+   

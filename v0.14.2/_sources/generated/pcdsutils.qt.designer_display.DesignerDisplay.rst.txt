@@ -1,0 +1,32 @@
+﻿pcdsutils.qt.designer\_display.DesignerDisplay
+==============================================
+
+.. currentmodule:: pcdsutils.qt.designer_display
+
+.. autoclass:: DesignerDisplay
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DesignerDisplay.__init__
+      ~DesignerDisplay.retranslateUi
+      ~DesignerDisplay.show_type_hints
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DesignerDisplay.filename
+      ~DesignerDisplay.ui_dir
+      ~DesignerDisplay.ui_form
+   
+   

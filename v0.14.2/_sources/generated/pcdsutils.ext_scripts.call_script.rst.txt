@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.call\_script
+===================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: call_script

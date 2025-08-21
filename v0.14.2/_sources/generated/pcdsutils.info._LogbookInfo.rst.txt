@@ -1,0 +1,28 @@
+﻿pcdsutils.info.\_LogbookInfo
+============================
+
+.. currentmodule:: pcdsutils.info
+
+.. autoclass:: _LogbookInfo
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~_LogbookInfo.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~_LogbookInfo.valid
+   
+   

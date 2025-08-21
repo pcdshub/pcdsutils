@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.get\_preamble
+===============================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: get_preamble

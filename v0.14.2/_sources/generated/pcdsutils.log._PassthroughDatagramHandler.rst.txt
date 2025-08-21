@@ -1,0 +1,48 @@
+﻿pcdsutils.log.\_PassthroughDatagramHandler
+==========================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: _PassthroughDatagramHandler
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~_PassthroughDatagramHandler.__init__
+      ~_PassthroughDatagramHandler.acquire
+      ~_PassthroughDatagramHandler.addFilter
+      ~_PassthroughDatagramHandler.close
+      ~_PassthroughDatagramHandler.createLock
+      ~_PassthroughDatagramHandler.createSocket
+      ~_PassthroughDatagramHandler.emit
+      ~_PassthroughDatagramHandler.filter
+      ~_PassthroughDatagramHandler.flush
+      ~_PassthroughDatagramHandler.format
+      ~_PassthroughDatagramHandler.get_name
+      ~_PassthroughDatagramHandler.handle
+      ~_PassthroughDatagramHandler.handleError
+      ~_PassthroughDatagramHandler.makePickle
+      ~_PassthroughDatagramHandler.makeSocket
+      ~_PassthroughDatagramHandler.release
+      ~_PassthroughDatagramHandler.removeFilter
+      ~_PassthroughDatagramHandler.send
+      ~_PassthroughDatagramHandler.setFormatter
+      ~_PassthroughDatagramHandler.setLevel
+      ~_PassthroughDatagramHandler.set_name
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~_PassthroughDatagramHandler.name
+   
+   

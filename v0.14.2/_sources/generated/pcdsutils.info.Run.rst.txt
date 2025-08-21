@@ -1,0 +1,37 @@
+﻿pcdsutils.info.Run
+==================
+
+.. currentmodule:: pcdsutils.info
+
+.. autoclass:: Run
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Run.__init__
+      ~Run.from_logbook
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Run.begin_time
+      ~Run.end_time
+      ~Run.live
+      ~Run.num
+      ~Run.type
+      ~Run.valid
+      ~Run.params
+      ~Run.editable_params
+      ~Run.files
+   
+   

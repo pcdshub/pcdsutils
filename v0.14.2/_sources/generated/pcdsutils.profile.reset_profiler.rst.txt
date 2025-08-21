@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.reset\_profiler
+=================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: reset_profiler

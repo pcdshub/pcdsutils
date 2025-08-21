@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.write\_requirements
+==========================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: write_requirements

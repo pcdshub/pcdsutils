@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.cache\_script
+====================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: cache_script

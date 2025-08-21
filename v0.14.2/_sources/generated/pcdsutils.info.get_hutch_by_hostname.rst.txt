@@ -1,0 +1,6 @@
+﻿pcdsutils.info.get\_hutch\_by\_hostname
+=======================================
+
+.. currentmodule:: pcdsutils.info
+
+.. autofunction:: get_hutch_by_hostname

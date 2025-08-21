@@ -1,0 +1,6 @@
+﻿pcdsutils.ophyd\_helpers.subscription\_context
+==============================================
+
+.. currentmodule:: pcdsutils.ophyd_helpers
+
+.. autofunction:: subscription_context

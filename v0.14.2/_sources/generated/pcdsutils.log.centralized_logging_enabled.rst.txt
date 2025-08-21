@@ -1,0 +1,6 @@
+﻿pcdsutils.log.centralized\_logging\_enabled
+===========================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: centralized_logging_enabled

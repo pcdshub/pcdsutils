@@ -1,0 +1,6 @@
+﻿pcdsutils.log.log\_exception
+============================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: log_exception

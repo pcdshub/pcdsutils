@@ -1,0 +1,6 @@
+﻿pcdsutils.ext\_scripts.clear\_script\_cache
+===========================================
+
+.. currentmodule:: pcdsutils.ext_scripts
+
+.. autofunction:: clear_script_cache

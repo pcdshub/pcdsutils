@@ -1,0 +1,29 @@
+﻿pcdsutils.log.RecordInfo
+========================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: RecordInfo
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RecordInfo.__init__
+      ~RecordInfo.from_record
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RecordInfo.message
+   
+   

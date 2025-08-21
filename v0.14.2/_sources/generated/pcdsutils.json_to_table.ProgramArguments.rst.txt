@@ -1,0 +1,33 @@
+﻿pcdsutils.json\_to\_table.ProgramArguments
+==========================================
+
+.. currentmodule:: pcdsutils.json_to_table
+
+.. autoclass:: ProgramArguments
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProgramArguments.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProgramArguments.format
+      ~ProgramArguments.list_delimiter
+      ~ProgramArguments.max_col_width
+      ~ProgramArguments.input_file
+      ~ProgramArguments.sort_key
+      ~ProgramArguments.columns
+   
+   

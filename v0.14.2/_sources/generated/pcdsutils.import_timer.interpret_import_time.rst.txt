@@ -1,0 +1,6 @@
+﻿pcdsutils.import\_timer.interpret\_import\_time
+===============================================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autofunction:: interpret_import_time

@@ -1,0 +1,6 @@
+﻿pcdsutils.import\_timer.display\_summarized\_import\_stats
+==========================================================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autofunction:: display_summarized_import_stats

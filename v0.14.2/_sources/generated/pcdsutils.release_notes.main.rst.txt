@@ -1,0 +1,6 @@
+﻿pcdsutils.release\_notes.main
+=============================
+
+.. currentmodule:: pcdsutils.release_notes
+
+.. autofunction:: main

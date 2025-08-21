@@ -1,0 +1,6 @@
+﻿pcdsutils.log.standard\_warnings\_config
+========================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: standard_warnings_config

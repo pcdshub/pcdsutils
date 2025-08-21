@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.sort\_timings
+===============================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: sort_timings

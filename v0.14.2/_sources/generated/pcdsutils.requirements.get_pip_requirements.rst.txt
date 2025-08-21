@@ -1,0 +1,6 @@
+﻿pcdsutils.requirements.get\_pip\_requirements
+=============================================
+
+.. currentmodule:: pcdsutils.requirements
+
+.. autofunction:: get_pip_requirements

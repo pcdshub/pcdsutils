@@ -1,0 +1,30 @@
+﻿pcdsutils.json\_to\_table.TableStyle
+====================================
+
+.. currentmodule:: pcdsutils.json_to_table
+
+.. autoclass:: TableStyle
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TableStyle.html
+      ~TableStyle.csv
+      ~TableStyle.latex
+      ~TableStyle.default
+      ~TableStyle.msword_friendly
+      ~TableStyle.plain_columns
+      ~TableStyle.markdown
+      ~TableStyle.orgmode
+      ~TableStyle.double_border
+   
+   

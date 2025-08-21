@@ -1,0 +1,6 @@
+﻿pcdsutils.log.log\_warning\_handler
+===================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autofunction:: log_warning_handler

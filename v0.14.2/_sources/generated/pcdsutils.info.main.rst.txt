@@ -1,0 +1,6 @@
+﻿pcdsutils.info.main
+===================
+
+.. currentmodule:: pcdsutils.info
+
+.. autofunction:: main

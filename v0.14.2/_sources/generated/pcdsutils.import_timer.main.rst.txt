@@ -1,0 +1,6 @@
+﻿pcdsutils.import\_timer.main
+============================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autofunction:: main

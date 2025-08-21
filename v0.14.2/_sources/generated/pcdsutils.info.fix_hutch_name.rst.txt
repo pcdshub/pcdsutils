@@ -1,0 +1,6 @@
+﻿pcdsutils.info.fix\_hutch\_name
+===============================
+
+.. currentmodule:: pcdsutils.info
+
+.. autofunction:: fix_hutch_name

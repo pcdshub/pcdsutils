@@ -1,0 +1,41 @@
+﻿pcdsutils.enum.HelpfulIntEnum
+=============================
+
+.. currentmodule:: pcdsutils.enum
+
+.. autoclass:: HelpfulIntEnum
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HelpfulIntEnum.conjugate
+      ~HelpfulIntEnum.bit_length
+      ~HelpfulIntEnum.bit_count
+      ~HelpfulIntEnum.to_bytes
+      ~HelpfulIntEnum.from_bytes
+      ~HelpfulIntEnum.as_integer_ratio
+      ~HelpfulIntEnum.is_integer
+      ~HelpfulIntEnum.from_any
+      ~HelpfulIntEnum.include
+      ~HelpfulIntEnum.exclude
+      ~HelpfulIntEnum.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HelpfulIntEnum.real
+      ~HelpfulIntEnum.imag
+      ~HelpfulIntEnum.numerator
+      ~HelpfulIntEnum.denominator
+   
+   

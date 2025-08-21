@@ -1,0 +1,6 @@
+﻿pcdsutils.ophyd\_helpers.subscription\_context\_device
+======================================================
+
+.. currentmodule:: pcdsutils.ophyd_helpers
+
+.. autofunction:: subscription_context_device

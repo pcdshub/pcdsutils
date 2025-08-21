@@ -1,0 +1,39 @@
+﻿pcdsutils.log.OphydCallbackExceptionDemoter
+===========================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: OphydCallbackExceptionDemoter
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OphydCallbackExceptionDemoter.__init__
+      ~OphydCallbackExceptionDemoter.filter
+      ~OphydCallbackExceptionDemoter.install
+      ~OphydCallbackExceptionDemoter.install_self
+      ~OphydCallbackExceptionDemoter.reset_counter
+      ~OphydCallbackExceptionDemoter.should_demote
+      ~OphydCallbackExceptionDemoter.uninstall
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OphydCallbackExceptionDemoter.default_logger
+      ~OphydCallbackExceptionDemoter.cache
+      ~OphydCallbackExceptionDemoter.levelno
+      ~OphydCallbackExceptionDemoter.levelname
+      ~OphydCallbackExceptionDemoter.only_duplicates
+      ~OphydCallbackExceptionDemoter.counter
+   
+   

@@ -1,0 +1,6 @@
+﻿pcdsutils.info.get\_info
+========================
+
+.. currentmodule:: pcdsutils.info
+
+.. autofunction:: get_info

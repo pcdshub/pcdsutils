@@ -1,0 +1,22 @@
+﻿pcdsutils.qt.callbacks.WeakPartialMethodSlot
+============================================
+
+.. currentmodule:: pcdsutils.qt.callbacks
+
+.. autoclass:: WeakPartialMethodSlot
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WeakPartialMethodSlot.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,37 @@
+﻿pcdsutils.info.Experiment
+=========================
+
+.. currentmodule:: pcdsutils.info
+
+.. autoclass:: Experiment
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Experiment.__init__
+      ~Experiment.from_logbook
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Experiment.contact_info
+      ~Experiment.description
+      ~Experiment.end_time
+      ~Experiment.leader_account
+      ~Experiment.name
+      ~Experiment.posix_group
+      ~Experiment.start_time
+      ~Experiment.valid
+      ~Experiment.params
+   
+   

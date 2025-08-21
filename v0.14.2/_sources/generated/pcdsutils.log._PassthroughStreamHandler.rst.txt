@@ -1,0 +1,48 @@
+﻿pcdsutils.log.\_PassthroughStreamHandler
+========================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: _PassthroughStreamHandler
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~_PassthroughStreamHandler.__init__
+      ~_PassthroughStreamHandler.acquire
+      ~_PassthroughStreamHandler.addFilter
+      ~_PassthroughStreamHandler.close
+      ~_PassthroughStreamHandler.createLock
+      ~_PassthroughStreamHandler.createSocket
+      ~_PassthroughStreamHandler.emit
+      ~_PassthroughStreamHandler.filter
+      ~_PassthroughStreamHandler.flush
+      ~_PassthroughStreamHandler.format
+      ~_PassthroughStreamHandler.get_name
+      ~_PassthroughStreamHandler.handle
+      ~_PassthroughStreamHandler.handleError
+      ~_PassthroughStreamHandler.makePickle
+      ~_PassthroughStreamHandler.makeSocket
+      ~_PassthroughStreamHandler.release
+      ~_PassthroughStreamHandler.removeFilter
+      ~_PassthroughStreamHandler.send
+      ~_PassthroughStreamHandler.setFormatter
+      ~_PassthroughStreamHandler.setLevel
+      ~_PassthroughStreamHandler.set_name
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~_PassthroughStreamHandler.name
+   
+   

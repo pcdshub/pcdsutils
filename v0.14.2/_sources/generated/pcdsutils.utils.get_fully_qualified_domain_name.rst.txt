@@ -1,0 +1,6 @@
+﻿pcdsutils.utils.get\_fully\_qualified\_domain\_name
+===================================================
+
+.. currentmodule:: pcdsutils.utils
+
+.. autofunction:: get_fully_qualified_domain_name

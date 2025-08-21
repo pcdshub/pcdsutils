@@ -1,0 +1,35 @@
+﻿pcdsutils.import\_timer.ImportTimeStats
+=======================================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autoclass:: ImportTimeStats
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ImportTimeStats.__init__
+      ~ImportTimeStats.from_line
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ImportTimeStats.module
+      ~ImportTimeStats.root_module
+      ~ImportTimeStats.self_time_raw
+      ~ImportTimeStats.self_time
+      ~ImportTimeStats.cumulative_time_raw
+      ~ImportTimeStats.cumulative_time
+      ~ImportTimeStats.indent_level
+   
+   

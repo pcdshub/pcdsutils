@@ -1,0 +1,6 @@
+﻿pcdsutils.import\_timer.get\_import\_time\_text
+===============================================
+
+.. currentmodule:: pcdsutils.import_timer
+
+.. autofunction:: get_import_time_text

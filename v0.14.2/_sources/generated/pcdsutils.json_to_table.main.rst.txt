@@ -1,0 +1,6 @@
+﻿pcdsutils.json\_to\_table.main
+==============================
+
+.. currentmodule:: pcdsutils.json_to_table
+
+.. autofunction:: main

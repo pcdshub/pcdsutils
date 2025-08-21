@@ -1,0 +1,32 @@
+﻿pcdsutils.log.OphydObjectRecordInfo
+===================================
+
+.. currentmodule:: pcdsutils.log
+
+.. autoclass:: OphydObjectRecordInfo
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OphydObjectRecordInfo.__init__
+      ~OphydObjectRecordInfo.from_record
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OphydObjectRecordInfo.pathname
+      ~OphydObjectRecordInfo.exception
+      ~OphydObjectRecordInfo.object_name
+      ~OphydObjectRecordInfo.message
+   
+   

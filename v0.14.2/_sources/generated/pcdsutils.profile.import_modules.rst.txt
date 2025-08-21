@@ -1,0 +1,6 @@
+﻿pcdsutils.profile.import\_modules
+=================================
+
+.. currentmodule:: pcdsutils.profile
+
+.. autofunction:: import_modules
