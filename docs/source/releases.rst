@@ -2,6 +2,19 @@ Release History
 ###############
 
 
+v0.14.2 (2025-10-17)
+====================
+
+Bugfixes
+--------
+- adjust test_profiler to account for new line_profiler 5.0.0
+
+Contributors
+------------
+- tangkong
+
+
+
 v0.14.1 (2023-12-06)
 ====================
 
