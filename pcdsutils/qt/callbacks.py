@@ -107,7 +107,7 @@ class WeakPartialMethodSlot:
 
         Adds the received arguments to the stored partial arguments.
         """
-        method = self.method()
+        method = self.method
         if method is None:
             self._method_destroyed()
             return
