@@ -108,7 +108,7 @@ class WeakPartialMethodSlot:
         Adds the received arguments to the stored partial arguments.
         """
         if self.method is None:
-            # we have already cleaned up already
+            # we have already cleaned up
             return
         method = self.method()
         if method is None:
