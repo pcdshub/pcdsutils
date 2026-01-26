@@ -8,20 +8,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>API &mdash; pcdsutils  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pcdsutils.enum.CaseInsensitiveEnumMeta" href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html" />
-    <link rel="prev" title="87 bug_prof_naming" href="upcoming_release_notes/87-bug_prof_naming.html" /> 
+    <link rel="prev" title="90 bug_wpms_call" href="upcoming_release_notes/90-bug_wpms_call.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -407,7 +407,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.centralized_logging_enabled.html#pcdsutils.log.centralized_logging_enabled" title="pcdsutils.log.centralized_logging_enabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.centralized_logging_enabled</span></code></a>()</p></td>
 <td><p>Returns True if centralized logging should be enabled.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.configure_pcds_logging.html#pcdsutils.log.configure_pcds_logging" title="pcdsutils.log.configure_pcds_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.configure_pcds_logging</span></code></a>([file, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.configure_pcds_logging.html#pcdsutils.log.configure_pcds_logging" title="pcdsutils.log.configure_pcds_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.configure_pcds_logging</span></code></a>([file])</p></td>
 <td><p>Set a new handler on the <code class="docutils literal notranslate"><span class="pre">logging.getLogger('pcds-logging')</span></code> logger.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.create_log_dictionary_from_record.html#pcdsutils.log.create_log_dictionary_from_record" title="pcdsutils.log.create_log_dictionary_from_record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.create_log_dictionary_from_record</span></code></a>(record)</p></td>
@@ -419,7 +419,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.get_handler.html#pcdsutils.log.get_handler" title="pcdsutils.log.get_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.get_handler</span></code></a>()</p></td>
 <td><p>Return the handler configured by the most recent call to <code class="xref py py-func docutils literal notranslate"><span class="pre">configure_pcds_logging()</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.install_log_warning_handler.html#pcdsutils.log.install_log_warning_handler" title="pcdsutils.log.install_log_warning_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.install_log_warning_handler</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pcdsutils.log.install_log_warning_handler.html#pcdsutils.log.install_log_warning_handler" title="pcdsutils.log.install_log_warning_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.install_log_warning_handler</span></code></a>(logger)</p></td>
 <td><p>Replaces warnings.showwarning with the log_warning_handler above.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/pcdsutils.log.log_exception.html#pcdsutils.log.log_exception" title="pcdsutils.log.log_exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pcdsutils.log.log_exception</span></code></a>(exc_info, *[, ...])</p></td>
@@ -648,14 +648,14 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="upcoming_release_notes/87-bug_prof_naming.html" class="btn btn-neutral float-left" title="87 bug_prof_naming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="upcoming_release_notes/90-bug_wpms_call.html" class="btn btn-neutral float-left" title="90 bug_wpms_call" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="generated/pcdsutils.enum.CaseInsensitiveEnumMeta.html" class="btn btn-neutral float-right" title="pcdsutils.enum.CaseInsensitiveEnumMeta" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2026, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
